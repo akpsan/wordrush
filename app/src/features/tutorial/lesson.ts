@@ -4,7 +4,7 @@
  */
 
 import { t, type CopyId } from '../../copy';
-import { playScripted, toIndex, type CellIndex, type GameState, type Lexicon } from '../../engine';
+import { moveContext, playScripted, toIndex, waysOut, type CellIndex, type GameState, type Lexicon } from '../../engine';
 import {
   boardView,
   createSession,
@@ -14,7 +14,7 @@ import {
   type Feedback,
   type Session,
 } from '../game';
-import { BOX_IN, CHAIN, STEPS, type Step } from './script';
+import { BOX_IN, BOX_IN_WORD, CHAIN, STEPS, type Step } from './script';
 
 export interface Lesson {
   /** 0-based index into STEPS. */
@@ -69,11 +69,11 @@ function positionFor(step: number, lesson: Lesson, p: Positions, lex: Lexicon): 
       return { game: { ...p.chain[5]!, toMove: 0 }, popped: null };
     case 7: {
       if (!lesson.won) return { game: p.boxIn, popped: null };
-      const won = playScripted(lex, [{ word: 'pope', dir: 'across', row: 4 }], p.boxIn);
+      const won = playScripted(lex, [BOX_IN_WORD], p.boxIn);
       return { game: won, popped: last(won) };
     }
     default: {
-      const done = playScripted(lex, [{ word: 'pope', dir: 'across', row: 4 }], p.boxIn);
+      const done = playScripted(lex, [BOX_IN_WORD], p.boxIn);
       return { game: done, popped: null };
     }
   }
@@ -98,7 +98,7 @@ export interface LessonView {
   /** The continue button's label, when the step continues with a button. */
   readonly continueLabel: CopyId | null;
   readonly keyEmphasis: (key: string) => 'next' | 'dim' | undefined;
-  /** Step 8's danger meters, before and after POPE. */
+  /** Step 8's danger meters, before and after the winning word. */
   readonly meters: { readonly them: string; readonly themSegments: number } | null;
   readonly note: CopyId | null;
 }
@@ -167,14 +167,17 @@ export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): 
       if (complete) return 'dim';
       return key === word[typed.length] ? 'next' : 'dim';
     },
-    meters:
-      step.kind === 'type' && step.board === 'boxIn'
-        ? lesson.won
-          ? { them: t('learn.8.won.meter'), themSegments: 0 }
-          : { them: t('learn.8.meter.them'), themSegments: 1 }
-        : null,
+    meters: step.kind === 'type' && step.board === 'boxIn' ? opponentMeter(game, lex) : null,
     note: step.kind === 'type' && !lesson.won ? (step.note ?? null) : null,
   };
+}
+
+/** Orange's room in the last lesson, measured like the game's own meter. */
+function opponentMeter(game: GameState, lex: Lexicon): { them: string; themSegments: number } {
+  const ways = waysOut(moveContext(game, 1), lex);
+  return ways === 0
+    ? { them: t('learn.8.won.meter'), themSegments: 0 }
+    : { them: t('learn.8.meter.them', { n: ways }), themSegments: Math.min(ways, 4) };
 }
 
 interface Progress {
@@ -221,7 +224,7 @@ function spotlight(
   addWord(popped);
   if (step === 7) {
     addWord(game.lastWord[1]); // JAIL
-    if (game.result) game.board.forEach((_, i) => lit.add(i)); // after POPE, show everything that closed it
+    if (game.result) game.board.forEach((_, i) => lit.add(i)); // after the win, show everything that closed it
   }
   return lit;
 }

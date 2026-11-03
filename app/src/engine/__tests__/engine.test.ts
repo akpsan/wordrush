@@ -107,23 +107,16 @@ describe('the Learn to play script', () => {
     expect(checkEntry(tutorialBoard(), lex, 'cat')).toEqual({ ok: false, problem: 'no-room' });
   });
 
-  it('step 8: POPE boxes in JAIL, taking Orange from 63 moves to 0', () => {
+  it('step 8: PLANT boxes in DOGS, with every gap too small for any word', () => {
+    // Played with the full playable list: the lesson must hold in a real game.
     let s = newGame();
-    const script: [string, 'across' | 'down', ('start' | 'end')?][] = [
-      ['acts', 'across'], ['hull', 'down'], ['sheep', 'down'], ['jail', 'across', 'end'],
-    ];
-    for (const [w, d, at] of script) s = playWord(s, w, d, at);
-    expect(render(s).split('\n').slice(4, 8)).toEqual([
-      '. . . P . . . h',
-      '. . . . . . . u',
-      '. . . . j a i l',
-      '. . . . . . . l',
-    ]);
-    expect(legalMoves(s, lex, 1)).toHaveLength(63);
-    const pope = checkEntry(s, lex, 'pope');
-    expect(pope.ok).toBe(true);
-    const across = pope.ok ? pope.spots.find((p) => p.dir === 'across' && p.row === 4)! : null;
-    s = play(s, lex, across!);
+    const script: [string, 'across' | 'down'][] = [['team', 'across'], ['star', 'down'], ['maple', 'across'], ['dogs', 'down']];
+    for (const [w, d] of script) s = playWord(s, w, d);
+    expect(render(s).split('\n').slice(0, 2)).toEqual(['T E A M A P L E', '. . . . . . . d']);
+    expect(legalMoves(s, lex, 1).length).toBeGreaterThan(1000);
+    const plant = checkEntry(s, lex, 'plant');
+    expect(plant.ok && plant.spots.map((p) => [p.row, p.col, p.dir])).toEqual([[0, 5, 'down']]);
+    s = play(s, lex, plant.ok ? plant.spots[0]! : (undefined as never));
     expect(s.result).toEqual({ winner: 0, reason: 'boxed-in', boxedWord: 3 });
   });
 });

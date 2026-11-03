@@ -56,3 +56,14 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Menu hero board | Built through the engine. The mockup's CUB and ARC became SUB and GAS, because CUB isn't in the word list. |
 | Tutorial copy the deck doesn't list | "Type **CAT**" (step 7 before typing) and "Tap **Flip** to try the next spot." (a scripted word on another spot, outside step 4). |
 | Tutorial keyboard after the bump | Inactive until "Got it", as in the mockup. |
+
+## Build decisions (word list, accessibility, tests)
+
+| Topic | Decision |
+| --- | --- |
+| What counts as a word | **The full playable list** (13,424 words: ENABLE minus 87 offensive words), decided with the product owner. The everyday list rejected common words (HUG, OWL, NAP, CRAB). Hints still suggest only everyday words. Simulated fairness under the current rules: Blue wins 53–55%. Details in `data/dictionaries/README.md`. |
+| Tutorial's last lesson | **DOGS, boxed in by PLANT**, replacing JAIL and POPE. Under the full list, TAJ and RAJ escape JAIL, so the old lesson wasn't true in a real game. The new board leaves only one-square gaps, so it holds under any dictionary. The meter shows ways out, like the real game. Copy updated in the deck (`learn.8.*`). |
+| Dark-theme Blue | **#256EF4** instead of the design's #3D7EF5: white text on the old blue was 3.8:1, below WCAG AA's 4.5:1. Same hue, slightly darker. |
+| Contrast on the main menu button | The subtitle is no longer faded, and the "New? Start here" pill darkens the blue behind it instead of lightening it (WCAG AA). |
+| "+n squares" under reduced motion | Hidden: it can't fade out without animation, so it would stay forever. The feedback line already says what was played. |
+| Fonts | Bundled with the app (Fontsource), instead of loaded from Google Fonts: no third-party requests, works offline, stable screenshots. |

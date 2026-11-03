@@ -91,7 +91,7 @@ const editing = (s: Session, typed: string, filter = s.filter): Session => ({
   problem: null,
 });
 
-export function sessionReducer(lex: Lexicon) {
+export function sessionReducer(lex: Lexicon, hintWords?: ReadonlySet<string>) {
   return function reduce(s: Session, action: SessionAction): Session {
     const over = s.game.result !== null;
     switch (action.type) {
@@ -120,7 +120,7 @@ export function sessionReducer(lex: Lexicon) {
       case 'showResults':
         return { ...s, resultsShown: true };
       case 'hint':
-        return over ? s : revealHint(s, lex);
+        return over ? s : revealHint(s, lex, hintWords);
       case 'newGame':
         return createSession(newGame(s.game.rules), noHints(s.hints.perGame));
     }
@@ -144,11 +144,11 @@ function attemptPlay(s: Session, lex: Lexicon): Session {
 }
 
 /** Show a hint, or one more letter of the current hint. Each use counts against the player's allowance. */
-function revealHint(s: Session, lex: Lexicon): Session {
+function revealHint(s: Session, lex: Lexicon, hintWords?: ReadonlySet<string>): Session {
   if (hintsLeft(s) <= 0) return s;
   const mover = s.game.toMove;
   const firstMove = s.game.lastWord[mover] === null;
-  const spot = s.hints.current?.spot ?? pickHint(s.game, lex);
+  const spot = s.hints.current?.spot ?? pickHint(s.game, lex, hintWords);
   if (!spot) return s;
   const revealed = s.hints.current?.revealed ?? [];
   const next = nextReveal(spot, revealed, firstMove);

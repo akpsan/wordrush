@@ -31,7 +31,7 @@ app/src/
 
 - `engine/__tests__/conformance.test.ts` replays 1,350 simulator games. The TypeScript engine must make exactly the same decisions as the Python simulator. Regenerate the fixture with `sim/scripts/export_conformance.py` after a rule change.
 - `engine/__tests__/engine.test.ts` pins the behaviors the design depends on: first moves, the tutorial script, check order, previews and ways out.
-- UI states are checked with Playwright screenshots against the handoff mockups (`design/handoff/`), at phone and desktop sizes, in both themes (to be added with the screens).
+- `app/e2e/` (Playwright, `npm run e2e`): real flows, keyboard behaviour, WCAG 2.1 AA scans with axe-core in both themes, and screenshot tests at phone and desktop sizes. Screenshot baselines were checked by eye against the mockups; after an intended visual change, review and run `npm run e2e -- --update-snapshots=all`.
 
 ## Inside a feature
 

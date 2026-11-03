@@ -5,8 +5,8 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { getLexicon } from '../../dictionary';
-import { legalMoves, newGame, play, type GameState, type Placement } from '..';
+import everyday from '../../../../data/dictionaries/everyday-3to5.txt?raw';
+import { createLexicon, legalMoves, newGame, parseWordList, play, type GameState, type Placement } from '..';
 import fixture from './fixtures/sim-games.json';
 
 interface SimGame {
@@ -30,12 +30,14 @@ function decode(text: string, size: number): Placement {
 }
 
 describe('conformance with the Python simulator', () => {
-  const lex = getLexicon();
+  // The simulator played these games with the everyday list.
+  const lex = createLexicon(parseWordList(everyday));
   const games = (fixture as unknown as { games: SimGame[] }).games;
 
   it('has games to replay', () => expect(games.length).toBeGreaterThan(1000));
 
-  it('replays every game with identical decisions', () => {
+  // 1,350 full games: give it time on a busy machine.
+  it('replays every game with identical decisions', { timeout: 60_000 }, () => {
     for (const [g, sim] of games.entries()) {
       let state: GameState = newGame();
       for (const [move, nLegal] of sim.plies) {

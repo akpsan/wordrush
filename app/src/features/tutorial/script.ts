@@ -52,13 +52,20 @@ export const CHAIN: readonly ScriptedMove[] = [
   { word: 'top', dir: 'across' },
 ];
 
-/** The position for the last lesson: JAIL is running out of room. */
+/**
+ * The position for the last lesson. DOGS is against the right edge, with MAPLE above and
+ * STAR below; PLANT closes the left side. Every gap left is one square, so DOGS is boxed in
+ * under any dictionary (verified against the full playable list).
+ */
 export const BOX_IN: readonly ScriptedMove[] = [
-  { word: 'acts', dir: 'across' },
-  { word: 'hull', dir: 'down' },
-  { word: 'sheep', dir: 'down' },
-  { word: 'jail', dir: 'across', at: 'end' },
+  { word: 'team', dir: 'across' },
+  { word: 'star', dir: 'down' },
+  { word: 'maple', dir: 'across' },
+  { word: 'dogs', dir: 'down' },
 ];
+
+/** The lesson's winning word. */
+export const BOX_IN_WORD: ScriptedMove = { word: 'plant', dir: 'down' };
 
 export const STEPS: readonly Step[] = [
   { kind: 'intro', tag: 'learn.1.tag', coach: 'learn.1.coach' },
@@ -112,8 +119,8 @@ export const STEPS: readonly Step[] = [
     kind: 'type',
     tag: 'learn.8.tag',
     coach: 'learn.8.coach',
-    word: 'pope',
-    spot: { row: 4, col: 3, dir: 'across' },
+    word: 'plant',
+    spot: { row: 0, col: 5, dir: 'down' },
     empty: 'learn.4.empty',
     ready: 'learn.8.ready',
     flip: 'learn.flip.generic',

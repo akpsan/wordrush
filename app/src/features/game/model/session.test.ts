@@ -95,21 +95,10 @@ describe('ending', () => {
   });
 
   it('boxing someone in shows the boxed-in moment, then the results', () => {
-    // The tutorial's last lesson: POPE boxes in JAIL.
-    let s = run([
-      ...playWord('acts'),
-      ...playWord('hull', 1), // down into the corner
-      ...playWord('sheep', 1),
-      ...type('jail'),
-    ]);
-    // JAIL must end on the L of HULL, going across.
-    const spots = entryView(s, lex).spots;
-    const across = spots.findIndex((p) => p.dir === 'across' && p.anchorAt === 'end');
-    s = run([...Array.from({ length: across }, () => ({ type: 'flip' }) as const), { type: 'play' }], s);
+    // The tutorial's last lesson: PLANT boxes in DOGS.
+    let s = run([...playWord('team'), ...playWord('star', 1), ...playWord('maple'), ...playWord('dogs', 1)]);
     expect(playerStatus(s, lex, 1).ways).toBeGreaterThan(0);
-    s = run(type('pope'), s);
-    const pope = entryView(s, lex).spots.findIndex((p) => p.dir === 'across' && p.row === 4);
-    s = run([...Array.from({ length: pope }, () => ({ type: 'flip' }) as const), { type: 'play' }], s);
+    s = run(playWord('plant'), s);
     expect(s.game.result).toMatchObject({ winner: 0, reason: 'boxed-in' });
     expect(s.resultsShown).toBe(false);
     expect(playerStatus(s, lex, 1)).toMatchObject({ ways: 0, label: 'Boxed in' });

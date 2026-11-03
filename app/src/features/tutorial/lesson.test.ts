@@ -24,7 +24,8 @@ describe('Learn to play', () => {
     l = run(type('cat'), l);
     expect(view(l)).toMatchObject({ bumped: true, continueLabel: 'learn.7.button' });
     expect(view(l).feedback.text).toBe('No room: your own **E** is in the way.');
-    l = run([{ type: 'next' }, ...type('pope'), { type: 'play' }], l); // → boxed in
+    expect(view(run([{ type: 'next' }], l)).meters?.themSegments).toBeGreaterThan(0);
+    l = run([{ type: 'next' }, ...type('plant'), { type: 'play' }], l); // → boxed in
     expect(view(l)).toMatchObject({ continueLabel: 'learn.8.button', meters: { themSegments: 0 } });
     expect(view(l).game.result).toMatchObject({ winner: 0, reason: 'boxed-in' });
     l = run([{ type: 'next' }], l);

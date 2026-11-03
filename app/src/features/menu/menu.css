@@ -48,3 +48,6 @@
 .wr.menu.phone{padding:calc(8px + env(safe-area-inset-top,0px)) max(20px,calc((100vw - 440px) / 2)) calc(24px + env(safe-area-inset-bottom,0px))}
 .wr.menu.phone .mboardwrap{flex:1 1 auto;min-height:0;container-type:size;align-items:center}
 .wr.menu.phone .mboard{width:min(286px,100cqw,100cqh)}
+/* App: contrast (WCAG AA). The design faded this subtitle and lightened the pill behind white text. */
+.mbtn.pri .mt span{opacity:1}
+.mbtn.pri .mpill{background:color-mix(in srgb,#000 24%,transparent)}

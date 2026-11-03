@@ -83,7 +83,7 @@ export function GameOverPanel({ game, hintsUsed, onPlayAgain }: GameOverPanelPro
   return (
     <div className="panel">
       <div className="ohead">
-        <div className="otext">
+        <div className="otext" role="status">
           <span className={winner === 0 ? 'otitle a' : 'otitle b'}>{title}</span>
           {sub && <span className="osub">{sub}</span>}
         </div>

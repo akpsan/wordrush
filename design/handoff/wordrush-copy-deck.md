@@ -226,13 +226,13 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | learn.7.bump.line | Step 7 | Feedback line, with shake | No room: your own **E** is in the way. |
 | learn.7.button | Step 7 | Continue | Got it |
 | learn.8.tag | Step 8 | Coach label | Box them in |
-| learn.8.coach | Step 8 | Coach line | Your opponent's last word, JAIL, is running out of room. Box it in with **POPE**. |
+| learn.8.coach | Step 8 | Coach line | Your opponent's last word, DOGS, is up against the edge. Close off its last side with **PLANT**. |
 | learn.8.meter.you | Step 8 | Your meter | Lots of room |
-| learn.8.meter.them | Step 8 | Opponent's meter, before | 63 moves left |
-| learn.8.ready | Step 8 | Ready | **POPE** blocks JAIL from above. Play it! |
+| learn.8.meter.them | Step 8 | Opponent's meter, before | {n} ways out |
+| learn.8.ready | Step 8 | Ready | **PLANT** closes off DOGS from the left. Play it! |
 | learn.8.won.tag | Step 8 | Coach label after the win | Boxed in! |
-| learn.8.won.coach | Step 8 | Coach line after the win | JAIL has no room left, and no word ends in J. **You win!** |
-| learn.8.won.meter | Step 8 | Opponent's meter, after | No moves left |
+| learn.8.won.coach | Step 8 | Coach line after the win | DOGS has no room left: every gap is too small for a word. **You win!** |
+| learn.8.won.meter | Step 8 | Opponent's meter, after | Boxed in |
 | learn.8.won.line | Step 8 | Feedback line | You boxed in **Orange**! |
 | learn.8.button | Step 8 | Continue | Finish |
 | learn.9.tag | Step 9 | Coach label | All done |

@@ -15,12 +15,16 @@ const ENOUGH_ROOM = 3;
 
 /**
  * A word that fits, preferring one that leaves the player the most room afterwards
- * (or wins outright by boxing the opponent in). Deterministic for a given position.
+ * (or wins outright by boxing the opponent in), and a familiar word when one fits.
+ * Deterministic for a given position.
  */
-export function pickHint(state: GameState, lex: Lexicon): Placement | null {
+export function pickHint(state: GameState, lex: Lexicon, familiar?: ReadonlySet<string>): Placement | null {
   if (state.result) return null;
   const mover = state.toMove;
-  const moves = legalMoves(state, lex).sort(
+  const legal = legalMoves(state, lex);
+  // Suggest familiar words when any fit; otherwise any word will do.
+  const preferred = familiar ? legal.filter((m) => familiar.has(m.word)) : legal;
+  const moves = (preferred.length ? preferred : legal).sort(
     (a, b) => a.word.localeCompare(b.word) || a.row - b.row || a.col - b.col || a.dir.localeCompare(b.dir),
   );
   let best: Placement | null = null;

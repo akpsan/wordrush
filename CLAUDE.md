@@ -34,7 +34,7 @@ Two-player word chain game on a grid (Tron light cycles crossed with Shiritori).
 
 ## Current rules
 
-Rules v4 in `docs/rules.md`, which is `CURRENT` (= `V9`) in `engine/rules.py`: no revive, no crossing, no timer, **a cornered player loses**, A's first word at most 4 letters. If the board fills (never seen in simulation), more cells wins and B wins a tie. Older presets (V1–V8) and the experiments that used them are kept for reproducibility; don't redefine them.
+Rules v4 in `docs/rules.md`, which is `CURRENT` (= `V9`) in `engine/rules.py`: no revive, no crossing, no timer, **a cornered player loses**, A's first word at most 4 letters, and any word in `data/dictionaries/playable-3to5.txt` counts (hints use `hints-3to5.txt`). If the board fills (never seen in simulation), more cells wins and B wins a tie. Older presets (V1–V8) and the experiments that used them are kept for reproducibility; don't redefine them.
 
 ## Simulation decisions
 

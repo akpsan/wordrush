@@ -15,7 +15,7 @@ Decided Nov 3, 2026 after the simulation batches ([findings.md](findings.md)). C
 **Setup**
 
 1. Grid: 8 × 8. Two players, A and B, alternate turns. A goes first.
-2. Words: 3 to 5 letters from a shared dictionary. A word already on the board can't be played again.
+2. Words: 3 to 5 letters. Any word in the playable list counts: the ENABLE word list minus offensive words (`data/dictionaries/`). A word already on the board can't be played again.
 3. Words read left to right or top to bottom only.
 4. **Typing:** players type their own words on an on-screen keyboard (Wordle-style), then choose the placement.
 

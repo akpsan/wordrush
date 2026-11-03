@@ -67,3 +67,5 @@
 
 /* App: the mockup loops "+n" so it's visible on a static canvas; in play it rises once. */
 .delta{animation-iteration-count:1;animation-fill-mode:forwards}
+/* With reduced motion the fade-out can't run, so "+n" would never leave; the feedback line already says what was played. */
+@media (prefers-reduced-motion:reduce){.delta{display:none}}
