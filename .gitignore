@@ -13,3 +13,6 @@ sim/runs/
 .DS_Store
 .vscode/
 .idea/
+
+# Throwaway local scripts
+app/scripts/.*.mjs
