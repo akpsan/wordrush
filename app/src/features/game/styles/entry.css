@@ -57,3 +57,5 @@
 
 /* App: keep "1 of 2" on one line. The Space key cap lives in the help line, not in the button. */
 .cnt{white-space:nowrap}
+.entrywrap{display:flex;flex-direction:column;gap:7px}
+.tnote.off{visibility:hidden}

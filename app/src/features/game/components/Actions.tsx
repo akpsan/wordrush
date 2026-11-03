@@ -1,5 +1,6 @@
 import { plain, t } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
+import '../styles/entry.css';
 import { RichText } from '../../../ui/RichText';
 import type { EntryView } from '../model/entry';
 

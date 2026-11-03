@@ -42,4 +42,16 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Key caps on desktop buttons | Only Play shows its key (Enter). The Space cap on Flip didn't fit the 360px column with the "1 of 2" counter; the help line under the buttons already says Space flips. |
 | Flipped spot while editing | **Kept.** The design reset the preview to the first spot on every key press. Now the chosen spot (its letter, start or end, and direction) is kept while the word still fits there, and falls back to the first spot otherwise. Flipping TEA down and adding M keeps TEAM going down. |
 | Accent colour after the game | The winner's colour (buttons, highlights). |
-| Features not built yet | The "?" button (Learn to play), hints and Watch replay are hidden until their features exist, so no button does nothing. |
+| Features not built yet | Hints and Watch replay are hidden until their features exist, so no button does nothing. |
+
+## Build decisions (menu, saved games, Learn to play)
+
+| Topic | Decision |
+| --- | --- |
+| Saved game | Only the move list is saved. Continue replays it through the engine, so a damaged or out-of-date save is discarded rather than loading an illegal board. Finished games aren't saved. |
+| First-launch menu | Shown until the player has finished or skipped Learn to play, or started a game. |
+| Back to the menu from a game | A "Back to menu" button in the in-game menu sheet. The game stays saved for Continue. |
+| "Play now" at the end of Learn to play | Continues the saved game if there is one, otherwise starts a new game. |
+| Menu hero board | Built through the engine. The mockup's CUB and ARC became SUB and GAS, because CUB isn't in the word list. |
+| Tutorial copy the deck doesn't list | "Type **CAT**" (step 7 before typing) and "Tap **Flip** to try the next spot." (a scripted word on another spot, outside step 4). |
+| Tutorial keyboard after the bump | Inactive until "Got it", as in the mockup. |

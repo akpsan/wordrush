@@ -40,3 +40,11 @@
 .desk .mbtns{margin-top:0}
 .desk .mfoot{justify-content:flex-start}
 @media (max-width:900px){.wr.menu.desk{grid-template-columns:1fr;grid-template-areas:"top" "right" "left"}}
+
+/* App: the mockup set these inline. The menu fills the screen like the game does. */
+.mlogo{margin:0}
+.menuleft{display:flex;flex-direction:column;flex:1;min-height:0}
+.wr.menu.desk .menuleft{flex:none}
+.wr.menu.phone{padding:calc(8px + env(safe-area-inset-top,0px)) max(20px,calc((100vw - 440px) / 2)) calc(24px + env(safe-area-inset-bottom,0px))}
+.wr.menu.phone .mboardwrap{flex:1 1 auto;min-height:0;container-type:size;align-items:center}
+.wr.menu.phone .mboard{width:min(286px,100cqw,100cqh)}

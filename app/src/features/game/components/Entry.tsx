@@ -1,5 +1,6 @@
 import { plain, t } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
+import '../styles/entry.css';
 import { RichText } from '../../../ui/RichText';
 import type { EntryView } from '../model/entry';
 import type { Feedback } from '../model/feedback';
@@ -60,6 +61,7 @@ export function Entry({ entry, feedback, problemId, firstWordNote }: EntryProps)
         {feedback.tone === 'good' && <Icon name="check" />}
         {feedback.tone === 'err' && <Icon name="info" />}
         {feedback.tone === 'warn' && <Icon name="warn" />}
+        {feedback.tone === 'steer' && <Icon name="note" />}
         {feedback.pip !== null && <span className={feedback.pip === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />}
         <span>
           <RichText text={feedback.text} />

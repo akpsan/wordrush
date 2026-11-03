@@ -34,6 +34,8 @@ export interface CellView {
 export interface BoardOptions {
   /** Dots on the remaining exits when a player is down to 1 or 2 ways out. */
   readonly showWaysOut: boolean;
+  /** Pulse the mover's letters (default true). The tutorial turns it off while you watch. */
+  readonly showAnchors?: boolean;
 }
 
 const ownerClass = (p: Player) => (p === 0 ? 'a' : 'b');
@@ -50,7 +52,8 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   // Cells of each player's last word ("recent"), and the mover's letters to build from.
   const recentOf = (p: Player) => new Set(game.lastWord[p] === null ? [] : game.words[game.lastWord[p]!]!.cells);
   const recent: [Set<CellIndex>, Set<CellIndex>] = [recentOf(0), recentOf(1)];
-  const anchors = myTurn && !firstMove ? recent[mover] : new Set<CellIndex>();
+  const showAnchors = opts.showAnchors ?? true;
+  const anchors = showAnchors && myTurn && !firstMove ? recent[mover] : new Set<CellIndex>();
 
   // The previewed spot.
   const ghost = new Map<CellIndex, { letter: string; k: number; link: boolean }>();
@@ -135,11 +138,11 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
       cls.push('pop');
       delay = popAt * 60;
     }
-    if (firstMove && index === corner && !g) {
+    if (showAnchors && firstMove && index === corner && !g) {
       cls.push('start', mover === 0 ? 'sa' : 'sb');
       mark = mover === 0 ? t('board.start') : t('board.end');
     }
-    if (firstMove && mover === 0 && index === n * n - 1 && !cell && !g) {
+    if (showAnchors && firstMove && mover === 0 && index === n * n - 1 && !cell && !g) {
       cls.push('endmark');
       mark = t('board.end');
     }

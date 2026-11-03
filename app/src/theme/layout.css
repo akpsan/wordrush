@@ -88,3 +88,6 @@ body {
   left: max(0px, calc((100vw - 480px) / 2));
   right: max(0px, calc((100vw - 480px) / 2));
 }
+
+/* The controls never shrink; the board absorbs any shortage of space. */
+.wr.phone .bottom { flex: none; }

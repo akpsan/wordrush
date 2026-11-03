@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { t } from '../../copy';
-import type { Lexicon } from '../../engine';
+import type { GameState, Lexicon } from '../../engine';
 import { useIsDesktop } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
@@ -19,24 +19,24 @@ import { boardView } from './model/board';
 import { feedbackFor } from './model/feedback';
 import { letterChoices, playerStatus, turnStatus } from './model/status';
 import { useGame } from './useGame';
-import './styles/status.css';
-import './styles/board.css';
-import './styles/entry.css';
-import './styles/panels.css';
 
 type Overlay = 'settings' | 'giveUp' | null;
 
 export interface GameScreenProps {
   readonly lex: Lexicon;
-  /** Opens Learn to play from the "?" button, once that feature is wired in. */
+  /** A saved game to continue. Omit to start a new one. */
+  readonly initialGame?: GameState;
+  /** Back to the main menu (from the menu sheet). The game stays saved. */
+  readonly onMenu: () => void;
+  /** Opens Learn to play from the "?" button. */
   readonly onHelp?: () => void;
 }
 
-export function GameScreen({ lex, onHelp }: GameScreenProps) {
+export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps) {
   const { settings } = useSettings();
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
-  const { session, entry, dispatch } = useGame(lex);
+  const { session, entry, dispatch } = useGame(lex, initialGame);
   const [overlay, setOverlay] = useState<Overlay>(null);
 
   const { game } = session;
@@ -107,7 +107,16 @@ export function GameScreen({ lex, onHelp }: GameScreenProps) {
       </section>
 
       {overlay === 'settings' && (
-        <SettingsSheet title={t('gsettings.title')} rows={['highlight', 'waysOut']} onClose={() => setOverlay(null)} />
+        <SettingsSheet
+          title={t('gsettings.title')}
+          rows={['highlight', 'waysOut']}
+          onClose={() => setOverlay(null)}
+          extra={
+            <button type="button" className="btn sec" onClick={onMenu}>
+              {t('nav.menu')}
+            </button>
+          }
+        />
       )}
       {overlay === 'giveUp' && (
         <GiveUpSheet

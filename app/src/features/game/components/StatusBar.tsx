@@ -1,6 +1,7 @@
 import { plain, t } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
 import type { PlayerStatus, TurnStatus } from '../model/status';
+import '../styles/status.css';
 
 function PlayerCard({ p }: { p: PlayerStatus }) {
   const side = p.player === 0 ? 'a' : 'b';

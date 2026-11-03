@@ -3,6 +3,7 @@ import { playerName, t } from '../../../copy';
 import { otherPlayer, squares, type GameState, type Player } from '../../../engine';
 import { Icon } from '../../../ui/Icon';
 import { RichText } from '../../../ui/RichText';
+import '../styles/panels.css';
 
 /** The moment a player is boxed in, before the results. */
 export function BoxedInPanel({ game, onContinue }: { game: GameState; onContinue: () => void }) {

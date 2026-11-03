@@ -1,6 +1,7 @@
 import { plain } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
 import { Logo } from '../../../ui/Logo';
+import '../styles/status.css';
 
 export interface HeaderProps {
   readonly onMenu: () => void;

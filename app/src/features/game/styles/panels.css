@@ -29,5 +29,3 @@
 /* App additions: layout the design set inline in the mockup's markup. */
 .ohead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .otext{display:flex;flex-direction:column;gap:4px;min-width:0}
-.entrywrap{display:flex;flex-direction:column;gap:7px}
-.tnote.off{visibility:hidden}

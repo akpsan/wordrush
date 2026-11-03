@@ -16,6 +16,8 @@ export interface SettingsSheetProps {
   readonly title: string;
   readonly rows: readonly SettingsRow[];
   readonly onClose: () => void;
+  /** Extra actions above Done (the game adds "Back to menu"). */
+  readonly extra?: ReactNode;
 }
 
 function Row({ label, help, children }: { label: string; help: string; children: ReactNode }) {
@@ -30,7 +32,7 @@ function Row({ label, help, children }: { label: string; help: string; children:
   );
 }
 
-export function SettingsSheet({ title, rows, onClose }: SettingsSheetProps) {
+export function SettingsSheet({ title, rows, onClose, extra }: SettingsSheetProps) {
   const { settings, update } = useSettings();
   return (
     <Sheet title={title} onClose={onClose}>
@@ -66,6 +68,7 @@ export function SettingsSheet({ title, rows, onClose }: SettingsSheetProps) {
           />
         </Row>
       )}
+      {extra}
       <button type="button" className="btn sec" onClick={onClose}>
         {t('settings.done')}
       </button>

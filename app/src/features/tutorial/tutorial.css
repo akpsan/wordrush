@@ -40,3 +40,7 @@
 @keyframes chainloop{0%{transform:scale(.3);opacity:0}4%{transform:scale(1);opacity:1}86%{opacity:1}94%,100%{opacity:0;transform:scale(.9)}}
 .desk .coachbar{min-height:0}
 .desk .cline{font-size:18px}
+
+/* App: the design's .btn grows to share a row (flex:1); in these vertical panels it must keep its height. */
+.intro .btn,.donep .orow{flex:none}
+.mm .segs{flex:none}

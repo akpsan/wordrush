@@ -11,16 +11,19 @@ app/src/
 ├── theme/        Design tokens (CSS variables) and global styles, from the handoff's wordrush.css.
 ├── ui/           Shared building blocks with no game knowledge: Frame, Sheet, Icon, RichText, controls.
 ├── platform/     Small adapters for the outside world: storage, keyboard input, media queries.
-├── features/     One folder per feature: game, menu, tutorial, settings, hints.
-│                 Each owns its components, hooks and state, and uses the engine only through engine/index.ts.
-└── app/          Wires the features together (screens and navigation). Thin.
+├── features/     One folder per feature: game, menu, tutorial, settings (hints and replay to come).
+│                 Each owns its components, model, state and styles. Other code uses a feature only
+│                 through its index.ts. The tutorial reuses the game's Board, Entry and Keyboard that way.
+└── app/          Navigation and player progress. Features report what happened (onExit, onMenu);
+                  only the app decides which screen comes next.
 ```
 
 ## Rules for keeping it modular
 
 - **The engine is the only place rules live.** UI code never re-implements a rule. It asks the engine (`previewEntry`, `checkEntry`, `legalMoves`, `waysOut`, `play`).
 - **A rule change is a config change.** Board size, word lengths and the first-word limit are in `engine/rules.ts`. A new rule gets a field there first.
-- **Features don't import each other's internals.** They communicate through props, the app layer, or small public `index.ts` files.
+- **Features don't import each other's internals.** They communicate through props, the app layer, or small public `index.ts` files. Components import their own CSS, so reusing a component brings its styles along.
+- **Pre-made positions go through the engine** (`playScripted`). The menu board and the tutorial can never show an illegal position, and tests fail if a scripted word stops being valid.
 - **Copy and tokens are data.** Changing wording or colors never touches logic.
 - **Removing a feature** (for example hints) means deleting its folder and its one registration line in `app/`.
 

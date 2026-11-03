@@ -6,7 +6,8 @@ import type { EntryView } from './entry';
 import type { Session } from './session';
 import { letterChoices, waysOutFor } from './status';
 
-export type FeedbackTone = 'neutral' | 'good' | 'err' | 'warn';
+/** 'steer' is the tutorial's gentle redirect when the player types something off-script. */
+export type FeedbackTone = 'neutral' | 'good' | 'err' | 'warn' | 'steer';
 
 export interface Feedback {
   readonly tone: FeedbackTone;

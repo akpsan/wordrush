@@ -19,3 +19,4 @@ export {
 export { placementKey, type MoveContext } from './placements';
 export { exitsOf, waysOut, boxedInExplanation, type Exit } from './exits';
 export { previewEntry, checkEntry, type Preview, type Problem, type WordCheck } from './entry';
+export { playScripted, type ScriptedMove } from './scripted';

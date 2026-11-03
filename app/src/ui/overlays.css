@@ -32,3 +32,6 @@
 .crow{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
 .linkbtn{height:44px;border:0;background:transparent;color:var(--muted);font-weight:700;font-size:14px;padding:0 6px}
 .btn.sm{height:44px;font-size:15px;flex:none;padding:0 18px}
+
+/* App: the design's .btn grows to share a row (flex:1); stacked in a sheet, it keeps its height. */
+.sheet > .btn{flex:none}

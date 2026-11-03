@@ -46,6 +46,11 @@ const missing = {
   'keyboard.aria': 'Keyboard',
   'board.aria': 'Board',
   'status.aria': 'Turn and ways out',
+  'nav.menu': 'Back to menu',
+  // Learn to play: lines the tutorial needs that the deck's step list doesn't cover.
+  'learn.7.empty': 'Type **CAT**',
+  'learn.flip.generic': 'Tap **Flip** to try the next spot.',
+  'learn.recap.aria': 'The rules',
 } as const;
 
 export const overrides = { ...composite, ...changed, ...passAndPlay, ...missing };

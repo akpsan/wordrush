@@ -2,6 +2,7 @@ import { plain } from '../../../copy';
 import type { CellIndex } from '../../../engine';
 import { Icon } from '../../../ui/Icon';
 import type { CellView } from '../model/board';
+import '../styles/board.css';
 
 export interface BoardProps {
   readonly cells: readonly CellView[];
