@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv-pypy/
+*.egg-info/
+.pytest_cache/
+
+# Generated simulation output
+sim/runs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

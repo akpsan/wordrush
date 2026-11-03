@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WordRush game screen</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./wordrush.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Bungee&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}">
+<header class="hdr">
+<button class="ibtn" aria-label="Menu and settings" onClick="{{openSettings}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+<div class="logo"><span class="lg" aria-hidden="true"><i></i><i></i></span><span>WORDRUSH</span></div>
+<div class="hbtns">
+<button class="ibtn" aria-label="Give up" onClick="{{openResign}}" disabled="{{noResign}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg></button>
+<button class="ibtn" aria-label="How to play"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6V14"></path><path d="M12 17.5h.01"></path></svg></button>
+</div>
+</header>
+
+<section class="{{sideCls}}" aria-label="Turn and danger levels">
+<div class="score">
+<div class="{{plA.cls}}">
+<div class="ptop"><span class="pip a" aria-hidden="true"></span><span class="pname">Blue</span><sc-if value="{{plA.you}}" hint-placeholder-val="{{ true }}"><span class="you">You</span></sc-if></div>
+<div class="{{roomA.cls}}" role="meter" aria-label="{{roomA.aria}}"><span class="segs"><sc-for list="{{roomA.segs}}" as="sg" hint-placeholder-count="4"><i class="{{sg}}"></i></sc-for></span><sc-if value="{{roomA.warn}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg></sc-if></div>
+<div class="pfoot"><span class="rlbl">{{roomA.lbl}}</span><span class="pcells">{{sa}} squares</span></div>
+<sc-if value="{{dA}}" hint-placeholder-val="{{ false }}"><span class="{{dCls}}">{{dTxt}}</span></sc-if>
+</div>
+<div class="turn" aria-label="{{turnAria}}">
+<span class="tlbl">{{turnLbl}}</span><span class="tnum">{{turnNum}}</span>
+<span class="{{tarrCls}}" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg></span>
+</div>
+<div class="{{plB.cls}}">
+<div class="ptop"><span class="pip b" aria-hidden="true"></span><span class="pname">Orange</span><sc-if value="{{plB.you}}" hint-placeholder-val="{{ false }}"><span class="you">You</span></sc-if></div>
+<div class="{{roomB.cls}}" role="meter" aria-label="{{roomB.aria}}"><span class="segs"><sc-for list="{{roomB.segs}}" as="sg" hint-placeholder-count="4"><i class="{{sg}}"></i></sc-for></span><sc-if value="{{roomB.warn}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg></sc-if></div>
+<div class="pfoot"><span class="rlbl">{{roomB.lbl}}</span><span class="pcells">{{sb}} squares</span></div>
+<sc-if value="{{dB}}" hint-placeholder-val="{{ false }}"><span class="{{dCls}}">{{dTxt}}</span></sc-if>
+</div>
+</div>
+</section>
+
+<section class="{{bwCls}}" aria-label="Board">
+<div class="board">
+<sc-for list="{{cells}}" as="cell" hint-placeholder-count="64">
+<button class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms" onClick="{{cell.tap}}" aria-label="{{cell.label}}"><span class="l">{{cell.l}}</span><sc-if value="{{cell.hasMark}}" hint-placeholder-val="{{ false }}"><span class="mk">{{cell.mark}}</span></sc-if><sc-if value="{{cell.ga}}" hint-placeholder-val="{{ false }}"><span class="gb"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span></sc-if></button>
+</sc-for>
+</div>
+</section>
+
+<section class="bottom">
+<sc-if value="{{showKb}}" hint-placeholder-val="{{ true }}">
+<div class="{{entryWrapCls}}" style="display: flex; flex-direction: column; gap: 7px">
+<sc-if value="{{tnote.show}}" hint-placeholder-val="{{ false }}"><p class="tnote"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.8h.01"></path></svg><span>{{tnote.text}}</span></p></sc-if>
+<sc-if value="{{hint.show}}" hint-placeholder-val="{{ false }}"><p class="hintchip"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg><span>Hint</span><span class="htiles"><sc-for list="{{hint.tiles}}" as="ht" hint-placeholder-count="3"><i class="{{ht.cls}}">{{ht.l}}</i></sc-for></span><span>{{hint.left}}</span></p></sc-if>
+<sc-if value="{{waiting}}" hint-placeholder-val="{{ false }}"><div class="typing"><span class="{{waitPip}}" aria-hidden="true"></span><span>{{waitTxt}}</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div></sc-if>
+<sc-if value="{{notWaiting}}" hint-placeholder-val="{{ true }}">
+<div class="{{entryCls}}" role="textbox" aria-label="{{entryAria}}">
+<sc-for list="{{slots}}" as="sl" hint-placeholder-count="5"><span class="{{sl.cls}}">{{sl.l}}</span></sc-for>
+</div>
+</sc-if>
+<p class="{{fb.cls}}" role="status"><sc-if value="{{fb.good}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{fb.err}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5"></path><path d="M12 16.5h.01"></path></svg></sc-if><sc-if value="{{fb.warn}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg></sc-if><sc-if value="{{fb.pipA}}" hint-placeholder-val="{{ false }}"><span class="mini a" aria-hidden="true"></span></sc-if><sc-if value="{{fb.pipB}}" hint-placeholder-val="{{ false }}"><span class="mini b" aria-hidden="true"></span></sc-if><span>{{fb.pre}}</span><b>{{fb.word}}</b><span>{{fb.post}}</span></p>
+</div>
+<div class="{{kbCls}}" role="group" aria-label="Keyboard">
+<sc-for list="{{krows}}" as="kr" hint-placeholder-count="3">
+<div class="{{kr.cls}}">
+<sc-for list="{{kr.keys}}" as="k" hint-placeholder-count="10"><button class="{{k.cls}}" onClick="{{k.tap}}" aria-label="{{k.aria}}"><sc-if value="{{k.isBk}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H9l-6 6 6 6h12z"></path><path d="M16 10l-4 4M12 10l4 4"></path></svg></sc-if>{{k.l}}</button></sc-for>
+</div>
+</sc-for>
+<div class="{{actCls}}">
+<sc-if value="{{hintsOn}}" hint-placeholder-val="{{ false }}"><button class="btn sec icon" aria-label="{{hintAria}}" onClick="{{useHint}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg></button></sc-if>
+<button class="btn sec" onClick="{{rotate}}" disabled="{{act.noRot}}" aria-label="{{act.rotAria}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 20v-4h-4"></path></svg><span>Flip</span><span class="cnt">{{act.cnt}}</span><span class="kbd">Tab</span></button>
+<button class="{{act.placeCls}}" onClick="{{enter}}" aria-disabled="{{act.ariaDis}}"><span>{{act.placeLbl}}</span><span class="kbd">Enter</span></button>
+</div>
+</div>
+<p class="khelp"><span>Just type!</span><span class="kbd">Enter</span><span>to play</span><span class="kbd">Tab</span><span>or</span><span class="kbd">Space</span><span>to flip</span><span class="kbd">⌫</span><span>to delete</span></p>
+</sc-if>
+
+<sc-if value="{{showCornered}}" hint-placeholder-val="{{ false }}">
+<div class="panel alert" role="alert">
+<div class="ph"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span>Boxed in</span></div>
+<p><b>{{sealedWord}}</b> is boxed in. There's no room for a word from any of its letters.</p>
+<div class="prow"><div class="keyrow"><span class="lk"><i class="kw"></i>In the way</span><span class="lk"><i class="kg"></i>Too small</span></div><button class="btn pri sm" style="background: var(--b); color: var(--bInk); box-shadow: none">See results</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{showOver}}" hint-placeholder-val="{{ false }}">
+<div class="panel">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span class="{{over.cls}}">{{over.title}}</span><span class="osub">{{over.sub}}</span></div>
+<span class="oscore">{{over.score}}</span>
+</div>
+<div class="stats">
+<span></span><span class="h"><span class="mini a" aria-hidden="true"></span>Blue</span><span class="h"><span class="mini b" aria-hidden="true"></span>Orange</span>
+<span>{{over.r1}}</span><span class="v">{{over.r1a}}</span><span class="v">{{over.r1b}}</span>
+<span>{{over.r2}}</span><span class="v">{{over.r2a}}</span><span class="v">{{over.r2b}}</span>
+</div>
+<div class="orow"><button class="btn sec"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg>Watch replay</button><button class="btn pri" onClick="{{reset}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 20v-4h-4"></path></svg>Play again</button></div>
+</div>
+</sc-if>
+</section>
+
+<sc-if value="{{showScrim}}" hint-placeholder-val="{{ false }}"><div class="scrim" onClick="{{closeSheets}}"></div></sc-if>
+
+<sc-if value="{{showResign}}" hint-placeholder-val="{{ false }}">
+<div class="sheet" role="dialog" aria-label="Give up">
+<span class="grab" aria-hidden="true"></span>
+<span class="stitle">Give up this game?</span>
+<p class="stext">Orange wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over!</p>
+<sc-if value="{{hintsOn}}" hint-placeholder-val="{{ true }}">
+<div class="optcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg><div class="ot"><b>Stuck? Try a hint</b><span>{{hintOffer}}</span></div><button class="btn pri sm" onClick="{{useHint}}">Get a hint</button></div>
+</sc-if>
+<div class="orow"><button class="btn sec" onClick="{{closeSheets}}">Keep playing</button><button class="btn danger" onClick="{{doResign}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg>Give up</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{showSettings}}" hint-placeholder-val="{{ false }}">
+<div class="sheet" role="dialog" aria-label="Game settings">
+<span class="grab" aria-hidden="true"></span>
+<span class="stitle">Game settings</span>
+<div class="setrow"><div class="st"><b>Hints per game</b><span>A hint shows one letter of a word that fits. You both get the same number.</span></div><div class="seg" role="group" aria-label="Hints per game"><button class="">Off</button><button class="">1</button><button class="on" aria-pressed="true">3</button></div></div>
+<div class="setrow"><div class="st"><b>Highlight your letters</b><span>Marks your letters on the keyboard.</span></div><button class="tog on" aria-label="Highlight your letters: on" aria-pressed="true"></button></div>
+<div class="setrow"><div class="st"><b>Show ways out</b><span>When you're running out of room, dots show where you can still go.</span></div><button class="tog on" aria-label="Show ways out: on" aria-pressed="true"></button></div>
+<button class="btn sec" onClick="{{closeSheets}}">Done</button>
+</div>
+</sc-if>
+
+<sc-if value="{{coach.show}}" hint-placeholder-val="{{ false }}">
+<div class="coach" style="top: {{coach.top}}px" role="dialog" aria-label="Tutorial">
+<span class="cstep">{{coach.step}}</span>
+<span class="ctitle">{{coach.title}}</span>
+<p class="ctext">{{coach.text}}</p>
+<div class="crow"><button class="linkbtn" onClick="{{tutSkip}}">Skip tour</button><button class="btn pri sm" onClick="{{tutNext}}">{{coach.next}}</button></div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["idle","typePart","typeNoFit","ready","rotated","anchor","errWord","errPlayed","errFit","waiting","dangerYou","dangerThem","cornered","resign","hint","settings","firstA","firstB","over","full","tut1","tut2","tut3","tut4","tut5"],"default":"idle"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidUpdate(pp) {
+    if (pp.scene !== this.props.scene || pp.layout !== this.props.layout) {
+      const st = this.state || {};
+      if (st.for) this.setState({ for: null });
+    }
+  }
+  renderVals() {
+    const self = this;
+    const props = this.props || {};
+    const name = props.scene || 'idle';
+    const raw = this.state || {};
+    const st = raw.for === name ? raw : {};
+    const theme = props.theme === 'light' ? 'light' : 'dark';
+    const layout = props.layout === 'desk' ? 'desk' : 'phone';
+
+    const W = (w, r, c, d, p) => ({ w, r, c, d, p });
+    const T7 = [W('CART', 0, 0, 'h', 'A'), W('STONE', 7, 3, 'h', 'B'), W('TIGER', 0, 3, 'v', 'A'), W('SEVEN', 3, 6, 'v', 'B'), W('STAR', 4, 0, 'h', 'A'), W('BUS', 3, 4, 'h', 'B')];
+    const T13 = T7.concat([W('RAT', 4, 3, 'h', 'A'), W('TOFU', 0, 5, 'v', 'B'), W('TOE', 4, 5, 'v', 'A'), W('FIG', 2, 5, 'h', 'B'), W('ROSE', 6, 2, 'h', 'A'), W('GUM', 2, 7, 'v', 'B')]);
+    const T15 = T13.concat([W('FUR', 6, 0, 'h', 'A'), W('MOP', 4, 7, 'v', 'B')]);
+    const FULL = { L: ['CARTFOGS', 'LOWIREAK', 'APEGUMSY', 'YENEBUSP', 'STARATEM', 'HOPSWOVI', 'FUROSEEN', 'ADOSTONE'], O: ['AAAABBBB', 'ABBABBAB', 'ABBABBAB', 'ABBABBAB', 'AAAAAAAB', 'BBABABAB', 'AAAAAABB', 'AAABBBBB'] };
+    const DICT = {};
+    ('CART STONE TIGER SEVEN STAR BUS RAT TOFU TOE FIG ROSE GUM FUR MOP SODA COAT OPT OPTS TREE TREES TOP TAR TEA SEA SAT SET SIT ART ARC ARM ARMS RAG RAM RAN RAP RAW RAY RUB RUG RUN RUT ROT ROW ROD ROE SOAR STAB STEM STEP STOP SPOT SPIT SNAP SNOW SLOT SLOW SOFA SOAP SOUP SAND TANK TAPE TAME TOAD TOLD TOOL TOYS ARMY ATOM AREA ANT ANY APE ASH ASK ATE AXE OAR JAR CAR BAR EAR FAR WAR TSAR STIR SPUR BLUR CHAR SCAR OUR FIR POTS PITS GETS HATS RATS CATS DOGS LOGS BUGS TOPS MAPS CUPS ODDS ENDS CAB CAT COW CODE COIN CRAB CROW CUBE JUMP LUNG QUIZ JOB MOON STEAM STEER STORE SNORE SCORE SHORE SPORE TRAP TRIP TROT TRAY TART TASK TEAR SEAT RATE RACE RAFT RAIN RANT RASP READ REAL RICE RIDE RIPE ROAD ROAM ROAR ROBE ROCK ROLE ROOF ROOM ROOT RUBY RUDE RUIN RULE RUSH RUST SALT SAIL SAME SEAL SEED SHIP SHOP SIGN SILK SING SINK SOFT SOIL SONG SORT STAY TALE TALL TEAM TENT THIN TIDE TIME TINY TIRE TOMB TONE TOUR TOWN TUBE TUNA AFAR AJAR ALSO AUNT AWAY ACT ADD AGE AID AIM AIR ALE APT ARE ORE OAT ERA USE SUN TIN SPA SKY TWO OWL LIP GAS CAN COB HAT MAT PAT SAD').split(' ').forEach((x) => { DICT[x] = true; });
+
+    const s = { words: T7, turn: 'A', turnNo: 7, flash: -1, typed: '', pi: 0, filter: null, err: null, panel: 'kb', youB: false, tut: 0, endPreview: false, full: null, sealed: false, over: null, sheet: null, hintsOn: false, hintShown: false, delta: null };
+    switch (name) {
+      case 'idle': s.flash = 5; break;
+      case 'typePart': s.typed = 'RA'; break;
+      case 'typeNoFit': s.typed = 'OP'; break;
+      case 'ready': s.typed = 'RAT'; break;
+      case 'rotated': s.typed = 'RAT'; s.pi = 1; break;
+      case 'anchor': s.typed = 'RAT'; s.filter = 33; break;
+      case 'errWord': s.typed = 'RAX'; s.err = 'notword'; break;
+      case 'errPlayed': s.typed = 'BUS'; s.err = 'played'; break;
+      case 'errFit': s.typed = 'TREES'; s.err = 'nofit'; break;
+      case 'waiting': s.words = T7.concat([W('RAT', 4, 3, 'h', 'A')]); s.turn = 'B'; s.turnNo = 8; s.flash = 6; s.panel = 'wait'; s.delta = { p: 'A', txt: '+2' }; break;
+      case 'dangerYou': s.words = T13; s.turnNo = 13; s.flash = 11; break;
+      case 'dangerThem': s.words = T13; s.turnNo = 13; s.youB = true; s.panel = 'wait'; s.flash = 11; break;
+      case 'cornered': s.words = T15; s.turnNo = 15; s.panel = 'cornered'; s.flash = 13; s.sealed = true; break;
+      case 'resign': s.words = T13; s.turnNo = 13; s.sheet = 'resign'; s.hintsOn = true; break;
+      case 'hint': s.words = T13; s.turnNo = 13; s.hintsOn = true; s.hintShown = true; break;
+      case 'settings': s.sheet = 'settings'; s.hintsOn = true; break;
+      case 'firstB': s.words = [T7[0]]; s.turn = 'B'; s.youB = true; s.turnNo = 2; s.typed = 'STONE'; break;
+      case 'over': s.words = T15; s.turn = null; s.turnNo = 15; s.panel = 'over'; s.sealed = true; s.over = 'cornered'; break;
+      case 'full': s.words = []; s.full = FULL; s.turn = null; s.panel = 'over'; s.over = 'full'; break;
+      default:
+        s.words = []; s.turnNo = 1; s.endPreview = true;
+        if (name.indexOf('tut') === 0) { s.tut = Number(name.slice(3)) || 1; if (s.tut === 3 || s.tut === 4) s.typed = 'CAT'; }
+    }
+
+    let words = s.words, turn = s.turn, panel = s.panel, flash = s.flash, turnNo = s.turnNo, pop = -1, delta = s.delta;
+    let typed = st.typed != null ? st.typed : s.typed;
+    let pi = st.pi != null ? st.pi : s.pi;
+    let filter = st.filter !== undefined ? st.filter : s.filter;
+    let err = st.err !== undefined ? st.err : s.err;
+    let sheet = st.sheet !== undefined ? st.sheet : s.sheet;
+    let tut = st.tut != null ? st.tut : s.tut;
+    const hintShown = st.hintShown != null ? st.hintShown : s.hintShown;
+    let overKind = s.over;
+    if (st.resigned) { panel = 'over'; overKind = 'resigned'; turn = null; sheet = null; }
+    if (st.pw) {
+      const mover = turn;
+      words = words.concat([W(st.pw.w, st.pw.r, st.pw.c, st.pw.d, mover)]);
+      flash = words.length - 1; pop = flash; turn = mover === 'A' ? 'B' : 'A';
+      panel = 'wait'; turnNo = turnNo + 1; typed = ''; err = null; filter = null; tut = 0;
+      delta = { p: mover, txt: '+' + st.pw.gain };
+    }
+
+    const pname = (p) => (p === 'A' ? 'Blue' : 'Orange');
+    const youName = (p) => (((p === 'B') === !!s.youB) ? 'You' : pname(p));
+    const inb = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
+    const cellsOf = (w) => { const out = []; for (let k = 0; k < w.w.length; k++) { const r = w.d === 'h' ? w.r : w.r + k; const c = w.d === 'h' ? w.c + k : w.c; out.push(r * 8 + c); } return out; };
+    const buildGrid = (ws) => {
+      const g = []; for (let i = 0; i < 64; i++) g.push({ l: '', o: null, ws: [] });
+      if (s.full) { for (let i = 0; i < 64; i++) { g[i].l = s.full.L[Math.floor(i / 8)][i % 8]; g[i].o = s.full.O[Math.floor(i / 8)][i % 8]; } }
+      ws.forEach((w, wi) => cellsOf(w).forEach((idx, k) => { const c = g[idx]; if (!c.o) { c.o = w.p; c.l = w.w[k]; } c.ws.push(wi); }));
+      return g;
+    };
+    const exitsOn = (g, w) => {
+      const ids = cellsOf(w); const own = {}; ids.forEach((i) => { own[i] = true; });
+      let n = 0; const walls = {}, gaps = {}, route = {};
+      ids.forEach((idx) => {
+        const r = Math.floor(idx / 8), c = idx % 8;
+        [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach((d) => {
+          let k = 0, rr = r + d[0], cc = c + d[1]; const run = [];
+          while (inb(rr, cc) && !g[rr * 8 + cc].o && k < 4) { run.push(rr * 8 + cc); k++; rr += d[0]; cc += d[1]; }
+          if (k >= 2) { n++; run.forEach((x) => { route[x] = true; }); }
+          else { run.forEach((x) => { gaps[x] = true; }); if (inb(rr, cc) && !own[rr * 8 + cc]) walls[rr * 8 + cc] = true; }
+        });
+      });
+      return { n, walls, gaps, route };
+    };
+
+    const grid = buildGrid(words);
+    const lastOf = (p) => { for (let i = words.length - 1; i >= 0; i--) if (words[i].p === p) return i; return -1; };
+    const recent = { A: lastOf('A'), B: lastOf('B') };
+    const corner = turn === 'B' ? 63 : 0;
+    const firstMove = !!turn && recent[turn] < 0 && !s.full;
+    const myTurn = panel === 'kb' && !!turn;
+    const anchors = [];
+    if (myTurn && recent[turn] >= 0) cellsOf(words[recent[turn]]).forEach((x) => anchors.push(x));
+    const anchorSet = {}; anchors.forEach((x) => { anchorSet[x] = true; });
+    const ancLetters = []; anchors.forEach((x) => { const L = grid[x].l; if (ancLetters.indexOf(L) < 0) ancLetters.push(L); });
+    const ancList = ancLetters.length > 1 ? ancLetters.slice(0, -1).join(', ') + ' or ' + ancLetters[ancLetters.length - 1] : ancLetters.join('');
+    const maxLen = firstMove && turn === 'A' ? 4 : 5;
+
+    // legal placements for the typed string
+    const fits = (t, mode) => {
+      const out = []; const L = t.length; if (!L) return out; const seen = {};
+      const add = (r0, c0, d, anc, atStart) => {
+        const key = r0 + ',' + c0 + d; if (seen[key]) return;
+        const ids = [];
+        for (let k = 0; k < Math.max(L, mode === 'prefix' ? 3 : L); k++) { const r = d === 'h' ? r0 : r0 + k; const c = d === 'h' ? c0 + k : c0; if (!inb(r, c)) return; const idx = r * 8 + c; if (idx !== anc && grid[idx].o) return; if (k < L) ids.push(idx); }
+        seen[key] = true; out.push({ r: r0, c: c0, d, anc, atStart, ids });
+      };
+      if (firstMove) {
+        if (turn === 'A') { add(0, 0, 'h', 0, true); add(0, 0, 'v', 0, true); }
+        else { add(7, 8 - L, 'h', 63, false); add(8 - L, 7, 'v', 63, false); }
+      } else {
+        anchors.forEach((a) => {
+          const r = Math.floor(a / 8), c = a % 8, letter = grid[a].l;
+          if (t[0] === letter) { add(r, c, 'h', a, true); add(r, c, 'v', a, true); }
+          if (mode === 'full' && L >= 2 && t[L - 1] === letter) { add(r, c - (L - 1), 'h', a, false); add(r - (L - 1), c, 'v', a, false); }
+        });
+      }
+      out.sort((x, y) => (x.atStart === y.atStart ? 0 : x.atStart ? -1 : 1) || (x.d === y.d ? 0 : x.d === 'h' ? -1 : 1) || x.anc - y.anc);
+      return out;
+    };
+    const L = typed.length;
+    const inDict = !!DICT[typed];
+    const played = words.some((w) => w.w === typed);
+    const full = myTurn && L >= 3 ? fits(typed, 'full') : [];
+    const pre = myTurn ? fits(typed, firstMove && turn === 'B' ? 'full' : 'prefix') : [];
+    let list = [], mode = L ? 'nofit' : 'empty';
+    if (L >= 3 && inDict && !played && full.length) { list = full; mode = 'ready'; }
+    else if (L >= 3 && full.length) { list = full; mode = 'partial'; }
+    else if (pre.length) { list = pre; mode = 'partial'; }
+    if (filter != null) list = list.filter((p) => p.anc === filter);
+    if (!list.length && mode !== 'empty') mode = 'nofit';
+    const N = list.length; const ci = N ? ((pi % N) + N) % N : 0; const cur = N ? list[ci] : null;
+    const ready = mode === 'ready' && !!cur;
+    const ghost = {}; if (cur) cur.ids.forEach((idx, k) => { ghost[idx] = { l: typed[k], k, anc: idx === cur.anc }; });
+
+    const set = (o) => self.setState(Object.assign({ for: name, typed, pi: ci, filter, err: null, sheet, tut, hintShown }, o));
+    const press = (ch) => { if (!myTurn || typed.length >= maxLen) return; set({ typed: typed + ch, pi: 0 }); };
+    const back = () => { if (!myTurn || !typed.length) return; set({ typed: typed.slice(0, -1), pi: 0 }); };
+    const rotate = () => { if (N > 1) set({ pi: ci + 1 }); };
+    const enter = () => {
+      if (!myTurn) return;
+      if (ready) { set({ pw: { w: typed, r: cur.r, c: cur.c, d: cur.d, gain: cur.ids.filter((i) => !grid[i].o).length } }); return; }
+      const e = L < 3 ? 'short' : played ? 'played' : !inDict ? 'notword' : 'nofit';
+      set({ err: e });
+    };
+    const toggleFilter = (idx) => set({ filter: filter === idx ? null : idx, pi: 0 });
+    const reset = () => self.setState({ for: null });
+    const openResign = () => set({ sheet: 'resign' });
+    const openSettings = () => set({ sheet: 'settings' });
+    const closeSheets = () => set({ sheet: null });
+    const doResign = () => set({ resigned: true, sheet: null });
+    const useHint = () => set({ hintShown: true, sheet: null });
+    const tutNext = () => set({ tut: tut >= 5 ? 0 : tut + 1, typed: tut + 1 === 3 ? 'CAT' : typed });
+    const tutSkip = () => set({ tut: 0 });
+
+    // danger meters
+    const loser = overKind === 'cornered' || panel === 'cornered' ? 'A' : overKind === 'resigned' ? 'A' : null;
+    const exitsFor = (p) => {
+      if (s.full) return null;
+      if (recent[p] < 0) return turn === p ? 2 : null;
+      if ((panel === 'over' || panel === 'cornered') && p !== loser) return null;
+      return exitsOn(grid, words[recent[p]]).n;
+    };
+    const room = (p) => {
+      const n = exitsFor(p);
+      const lvl = n == null ? 'unknown' : n === 0 ? 'cornered' : n === 1 ? 'danger' : n === 2 ? 'tight' : 'open';
+      const lbl = n == null ? '—' : n === 0 ? 'Boxed in' : n === 1 ? '1 way out!' : n + ' ways out';
+      return { n, cls: 'room ' + lvl, lbl, segs: [0, 1, 2, 3].map((i) => (n != null && i < Math.min(n, 4) ? 'on' : '')), warn: n != null && n <= 1, aria: pname(p) + ': ' + (n == null ? 'unknown' : lbl) };
+    };
+    const rA = room('A'), rB = room('B');
+    const activeRoom = turn === 'A' ? rA : turn === 'B' ? rB : null;
+    const showRoute = myTurn && !firstMove && !!activeRoom && activeRoom.n != null && activeRoom.n <= 2 && !L;
+    const routeSet = showRoute ? exitsOn(grid, words[recent[turn]]).route : {};
+    const sealedW = s.sealed && recent.A >= 0 ? words[recent.A] : null;
+    const sealRes = sealedW ? exitsOn(grid, sealedW) : null;
+    const sealSet = {}; if (sealedW) cellsOf(sealedW).forEach((x) => { sealSet[x] = true; });
+    const flashSet = {}; let flashP = null;
+    if (flash >= 0 && words[flash]) { flashP = words[flash].p; cellsOf(words[flash]).forEach((x) => { flashSet[x] = true; }); }
+    const popSet = {}; if (pop >= 0) cellsOf(words[pop]).forEach((x, k) => { popSet[x] = k + 1; });
+
+    const cellsOut = grid.map((g, idx) => {
+      const cls = ['cell']; let l = g.l; let ga = false, mark = '', delay = 0;
+      const r = Math.floor(idx / 8), c = idx % 8;
+      if (g.o) { cls.push(g.o === 'A' ? 'a' : 'b'); if (!s.full && g.ws.indexOf(recent[g.o]) >= 0) cls.push('recent'); if (g.ws.length > 1) cls.push(g.o === 'A' ? 'xa' : 'xb'); }
+      const gh = ghost[idx];
+      if (gh) {
+        delay = gh.k * 30;
+        if (!g.o) { cls.push(ready ? 'gnew' : 'gpart'); l = gh.l; if (gh.anc) ga = true; }
+        else { cls.push('gring'); if (!ready) cls.push('weak'); ga = ready; }
+      } else if (anchorSet[idx]) {
+        cls.push(filter === idx ? 'anchor-on' : cur ? 'anchor-dim' : 'anchor');
+      } else if (sealRes && sealRes.walls[idx]) cls.push('wall');
+      else if (flashSet[idx] && !sealSet[idx] && !L) cls.push('flash', flashP === 'A' ? 'fa' : 'fb');
+      if (!gh && routeSet[idx]) cls.push('route');
+      if (sealSet[idx]) cls.push('sealed');
+      if (sealRes && sealRes.gaps[idx] && !g.o) cls.push('gap');
+      if (popSet[idx]) { cls.push('pop'); delay = (popSet[idx] - 1) * 60; }
+      if (firstMove && myTurn && idx === corner && !gh) { cls.push('start', turn === 'A' ? 'sa' : 'sb'); mark = turn === 'A' ? 'START' : 'END'; }
+      if (s.endPreview && !st.pw && idx === 63 && !g.o && turn === 'A' && !gh) { cls.push('endmark'); mark = 'END'; }
+      const owner = gh ? 'preview' : g.o ? pname(g.o) : 'empty';
+      const label = 'Row ' + (r + 1) + ', column ' + (c + 1) + (l ? ', ' + l : '') + ', ' + owner;
+      const tap = gh ? rotate : anchorSet[idx] ? () => toggleFilter(idx) : () => {};
+      return { cls: cls.join(' '), l, ga, hasMark: !!mark, mark, tap, label, delay };
+    });
+    let sa = 0, sb = 0; grid.forEach((g) => { if (g.o === 'A') sa++; else if (g.o === 'B') sb++; });
+
+    // entry slots
+    const ancSlot = cur ? cur.ids.indexOf(cur.anc) : -1;
+    const slots = [];
+    for (let i = 0; i < 5; i++) {
+      const ch = typed[i] || '';
+      let cls = 'slot';
+      if (i >= maxLen) cls += ' cap';
+      else if (ch) cls += err ? ' f bad' : ready ? ' f ok' : ' f';
+      else if (i === L && myTurn) cls += ' cur';
+      if (ch && i === ancSlot) cls += ready ? ' anc' : ' anc weak';
+      slots.push({ cls, l: ch });
+    }
+
+    // feedback line
+    const usesMine = L > 0 && (ancLetters.indexOf(typed[0]) >= 0 || ancLetters.indexOf(typed[L - 1]) >= 0);
+    const ERR = {
+      short: { pre: 'Words need at least', word: '3 letters', post: '' },
+      played: { pre: '', word: typed, post: "has already been played. Try another?" },
+      notword: { pre: 'Hmm,', word: typed, post: "isn't a word we know. Try another?" },
+      nofit: usesMine || firstMove ? { pre: 'No room for', word: typed, post: 'here. Try a shorter word?' } : { pre: 'Start or end with', word: ancList, post: 'to fit it in.' },
+    };
+    let fb;
+    if (panel === 'wait') {
+      const lm = words[flash] ? words[flash].p : 'A';
+      fb = { pip: lm, pre: youName(lm) + ' played', word: words[flash] ? words[flash].w : '', post: delta && delta.p === lm ? '· ' + delta.txt + ' squares' : '' };
+    } else if (err) fb = Object.assign({ tone: 'err' }, ERR[err]);
+    else if (mode === 'ready') fb = { tone: 'good', pre: '', word: typed, post: N > 1 ? 'fits! Flip for ' + (N - 1) + ' more spot' + (N > 2 ? 's' : '') : 'fits!' };
+    else if (mode === 'partial') fb = { pre: '', word: N + (N === 1 ? ' spot' : ' spots'), post: 'so far' };
+    else if (mode === 'nofit') fb = firstMove ? { pre: 'Keep going', word: '', post: '' } : { pre: 'No spot yet. Start or end with', word: ancList, post: '' };
+    else if (firstMove) fb = turn === 'A' ? { pre: 'Start in the', word: 'top-left corner', post: '' } : { pre: 'End your word in the', word: 'bottom-right corner', post: '' };
+    else if (activeRoom && activeRoom.n === 1) fb = { tone: 'warn', pre: "You're down to", word: '1 way out.', post: 'Follow the dots!' };
+    else if (flash >= 0 && words[flash]) fb = { pip: words[flash].p, pre: pname(words[flash].p) + ' played ' + words[flash].w + '. Start or end with', word: ancList, post: '' };
+    else fb = { pre: 'Start or end with', word: ancList, post: '' };
+    const fbOut = { cls: 'fb' + (fb.tone ? ' ' + fb.tone : ''), good: fb.tone === 'good', err: fb.tone === 'err', warn: fb.tone === 'warn', pipA: fb.pip === 'A', pipB: fb.pip === 'B', pre: fb.pre, word: fb.word, post: fb.post };
+
+    // keyboard
+    const rowsTxt = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+    const krows = rowsTxt.map((row, ri) => {
+      const keys = row.split('').map((ch) => ({ l: ch, isBk: false, cls: 'key' + (ancLetters.indexOf(ch) >= 0 ? ' anc' : ''), tap: () => press(ch), aria: ch + (ancLetters.indexOf(ch) >= 0 ? ', anchor letter' : '') }));
+      if (ri === 2) keys.push({ l: '', isBk: true, cls: 'key wide', tap: back, aria: 'Delete' });
+      return { cls: 'krow' + (ri === 1 ? ' mid' : ''), keys };
+    });
+
+    const hintData = recent.A >= 0 && words === T13 ? ['F', '', 'R'] : ['C', '', ''];
+    const hint = { show: myTurn && hintShown, tiles: hintData.map((x, i) => ({ l: x || '_', cls: i === 0 ? 'rev' : '' })), left: '2 left' };
+    const tnote = firstMove && turn === 'A' && myTurn ? { show: true, text: 'First word: 4 letters max, starting in the corner' } : { show: false, text: '' };
+
+    const wA = words.filter((w) => w.p === 'A').length, wB = words.filter((w) => w.p === 'B').length;
+    let over = { cls: 'otitle b', title: '', sub: '', score: '', r1: '', r1a: '', r1b: '', r2: '', r2a: '', r2b: '' };
+    if (overKind === 'cornered') over = { cls: 'otitle b', title: 'Orange boxed you in', sub: (sealedW ? sealedW.w : '') + ' ran out of room on turn ' + turnNo + '. So close! Rematch?', score: '', r1: 'Words played', r1a: wA, r1b: wB, r2: 'Squares', r2a: sa, r2b: sb };
+    if (overKind === 'resigned') over = { cls: 'otitle b', title: 'You gave up', sub: 'Orange takes this one. Up for a rematch?', score: '', r1: 'Words played', r1a: wA, r1b: wB, r2: 'Squares', r2a: sa, r2b: sb };
+    if (overKind === 'full') over = { cls: 'otitle b', title: 'Orange wins the tie!', sub: "The board filled up and nobody got boxed in. It's a tie on squares, and ties go to Orange because Blue went first.", score: sa + ' – ' + sb, r1: 'Squares', r1a: sa, r1b: sb, r2: 'Words played', r2a: '15', r2b: '16' };
+
+    const waitOther = turn || 'B';
+    const oRoom = waitOther === 'A' ? rA : rB;
+    const waitTxt = (oRoom && oRoom.n === 1 ? pname(waitOther) + ' is down to 1 way out' : pname(waitOther) + ' is thinking');
+
+    const COACH = {
+      1: { top: 500, title: 'Build off your last word', text: 'Your new word starts or ends on one of your glowing letters. Your first word starts in this corner.' },
+      2: { top: 236, title: 'Type a word', text: 'A preview pops up on the board as soon as your letters fit.' },
+      3: { top: 520, title: 'Flip it', text: 'Tap Flip, or tap the preview, to try your word in its next spot.' },
+      4: { top: 520, title: 'Play it', text: 'Play lights up when your word is real and fits.' },
+      5: { top: 150, title: "Don't get boxed in", text: 'Every letter blocks the way. If there’s no room for a word off your last word, you lose.' },
+    };
+    const cs = COACH[tut];
+    const coach = cs ? { show: true, top: cs.top, title: cs.title, text: cs.text, step: 'Step ' + tut + ' of 5', next: tut === 5 ? 'Start playing' : 'Next' } : { show: false, top: 0, title: '', text: '', step: '', next: '' };
+
+    const dTxt = delta ? delta.txt : '';
+    const isOver = panel === 'over';
+    const showKb = panel === 'kb' || panel === 'wait';
+    return {
+      rootCls: 'wr ' + theme + ' ' + layout + ' ' + (turn === 'B' ? 'turnB' : 'turnA'),
+      sideCls: 'side' + (tut === 5 ? ' spot' : ''),
+      plA: { cls: 'pl a' + (turn === 'A' ? ' on' : '') + (rA.n === 1 && !isOver ? ' alarm' : ''), you: !s.youB },
+      plB: { cls: 'pl b' + (turn === 'B' ? ' on' : '') + (rB.n === 1 && !isOver ? ' alarm' : ''), you: !!s.youB },
+      roomA: rA, roomB: rB, sa, sb,
+      dA: !!delta && delta.p === 'A', dB: !!delta && delta.p === 'B', dCls: 'delta' + (delta && delta.p === 'B' ? ' db' : ''), dTxt,
+      turnLbl: isOver ? 'GAME' : 'TURN', turnNum: isOver ? 'END' : String(turnNo),
+      turnAria: isOver ? 'Game over' : 'Turn ' + turnNo + ', ' + pname(turn) + ' to move',
+      tarrCls: 'tarr' + (turn === 'B' ? ' r' : '') + (!turn ? ' none' : ''),
+      bwCls: 'boardwrap' + (tut === 1 ? ' spot' : ''),
+      cells: cellsOut,
+      showKb, waiting: panel === 'wait', notWaiting: panel !== 'wait',
+      waitPip: 'mini ' + (waitOther === 'A' ? 'a' : 'b'), waitTxt,
+      entryWrapCls: tut === 2 ? 'spot' : '',
+      entryCls: 'entry' + (err ? ' shake' : ''), entryAria: 'Your word: ' + (typed || 'empty'),
+      slots, fb: fbOut, tnote, hint,
+      kbCls: 'kb' + (myTurn ? '' : ' off') + (tut === 2 ? ' spot' : ''), krows,
+      actCls: 'actions' + (tut === 3 || tut === 4 ? ' spot' : ''),
+      hintsOn: s.hintsOn, hintAria: 'Get a hint, 2 left', hintOffer: 'Shows one letter of a word that fits. You have 2 left.',
+      act: { noRot: N < 2, cnt: N ? (ci + 1) + ' of ' + N : '–', rotAria: N ? 'Flip to the next spot, ' + (ci + 1) + ' of ' + N : 'Flip, no spot yet', ariaDis: ready ? 'false' : 'true', placeLbl: ready ? 'Play ' + typed : 'Play', placeCls: 'btn pri' + (ready ? '' : ' soft') + (tut === 4 ? ' beckon' : '') },
+      rotate, enter, reset, openResign, openSettings, closeSheets, doResign, useHint, tutNext, tutSkip,
+      noResign: !myTurn,
+      showCornered: panel === 'cornered', sealedWord: sealedW ? sealedW.w : '',
+      showOver: isOver, over,
+      showScrim: tut > 0 || !!sheet, showResign: sheet === 'resign', showSettings: sheet === 'settings',
+      coach,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WordRush glossary</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./wordrush.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Bungee&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="wr light turnA" style="width: 980px; height: 1240px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 22px; background: #F4F6F9">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-family: 'Bungee', 'Arial Black', sans-serif; font-size: 32px; font-weight: 400">Player words</h1>
+<p style="margin: 0; font-size: 16px; color: var(--muted)">The words we use with players, everywhere: menu, game, tutorial, messages and buttons. Pick from this list, and keep the words in the last column out of anything a player reads.</p>
+</div>
+<div style="display: grid; grid-template-columns: 170px minmax(0, 1fr) 210px 170px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--surface)">
+<span style="padding: 10px 14px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--surface2)">Say</span>
+<span style="padding: 10px 14px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--surface2)">What it means</span>
+<span style="padding: 10px 14px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--surface2)">Example</span>
+<span style="padding: 10px 14px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--surface2)">Instead of</span>
+<sc-for list="{{terms}}" as="t" hint-placeholder-count="15">
+<span style="padding: 11px 14px; font-weight: 800; font-size: 15px; border-top: 1px solid var(--line)">{{t.say}}</span>
+<span style="padding: 11px 14px; font-size: 14px; line-height: 1.4; border-top: 1px solid var(--line)">{{t.means}}</span>
+<span style="padding: 11px 14px; font-size: 13px; line-height: 1.4; color: var(--aText); font-weight: 700; border-top: 1px solid var(--line)">{{t.ex}}</span>
+<span style="padding: 11px 14px; font-size: 13px; line-height: 1.4; color: var(--muted); text-decoration: line-through; border-top: 1px solid var(--line)">{{t.not}}</span>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div style="padding: 16px 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px">Two things to say early and often</span>
+<span style="font-size: 14px; line-height: 1.45">Words need at least 3 letters.</span>
+<span style="font-size: 14px; line-height: 1.45">Your letter has to be the first or last letter of the new word.</span>
+</div>
+<div style="padding: 16px 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px">Never say to a player</span>
+<span style="font-size: 14px; line-height: 1.45; color: var(--muted)">dictionary · invalid · error · legal · placement · anchor · exit · cornered · sealed · gap · cell · resign</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":980,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      terms: [
+        { say: 'Your last word', means: 'The word you played most recently. Your next word builds off it.', ex: 'Build off your last word.', not: 'latest word, most recent word' },
+        { say: 'Your letters', means: 'The letters of your last word. They glow on the board and on the keyboard.', ex: 'Start or end with S, T, A or R.', not: 'anchors, anchor letters' },
+        { say: 'Link letter', means: 'The one letter your new word shares with your last word.', ex: 'TOP ends on your P.', not: 'anchor cell, shared anchor' },
+        { say: 'Spot', means: 'A place on the board where your word fits, across or down.', ex: '2 more spots', not: 'placement, legal placement' },
+        { say: 'Preview', means: 'Your word shown on the board before you play it.', ex: 'A preview pops up as you type.', not: 'ghost' },
+        { say: 'Flip', means: 'Try your word in its next spot.', ex: 'Tap Flip to send it down.', not: 'rotate, cycle' },
+        { say: 'Play', means: 'Put your word on the board for real.', ex: 'Play RAT', not: 'place, commit, confirm' },
+        { say: 'In the way', means: 'Every letter on the board blocks new words, yours and your opponent’s.', ex: 'Your own P is in the way.', not: 'wall, collision' },
+        { say: 'Ways out', means: 'How many directions your last word can still grow.', ex: '1 way out!', not: 'exits, room, danger level' },
+        { say: 'Running out of room', means: 'Down to just 1 or 2 ways out.', ex: 'JAIL is running out of room.', not: 'in danger, nearly cornered' },
+        { say: 'Boxed in', means: 'No word fits off your last word. That player loses.', ex: 'Orange boxed you in.', not: 'cornered, sealed, no way out' },
+        { say: 'Squares', means: 'The 64 spaces on the board. They only decide a full-board finish.', ex: '18 squares', not: 'cells, score' },
+        { say: 'Hint', means: 'Shows one letter of a word that fits.', ex: 'Stuck? Try a hint.', not: 'reveal, assist' },
+        { say: 'Give up', means: 'End the game early. Your opponent wins.', ex: 'Give up this game?', not: 'resign, forfeit' },
+        { say: 'Your opponent', means: 'The other player. Use their name (Blue or Orange) when it’s clearer.', ex: 'Your opponent starts in the opposite corner.', not: 'player B, the enemy' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

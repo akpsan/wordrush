@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WordRush main menu</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./wordrush.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Bungee&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}">
+<div class="mtop"><button class="ibtn" aria-label="Settings" onClick="{{openSettings}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></button></div>
+
+<div class="menuleft" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
+<div class="mhero">
+<h1 class="mlogo" style="margin: 0"><span class="lg" aria-hidden="true"><i></i><i></i></span><span>WORDRUSH</span></h1>
+<p class="mtag">Chain words. <b>Don't get boxed in.</b></p>
+</div>
+
+<sc-if value="{{phone}}" hint-placeholder-val="{{ true }}">
+<div class="mboardwrap" aria-hidden="true">
+<div class="board mboard"><sc-for list="{{cells}}" as="cell" hint-placeholder-count="64"><div class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms"><span class="l">{{cell.l}}</span></div></sc-for></div>
+</div>
+</sc-if>
+
+<div class="mbtns">
+<sc-if value="{{returning}}" hint-placeholder-val="{{ false }}">
+<button class="mbtn alt"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg><span class="mt"><b>Continue</b><span class="mcont"><span class="mini a" aria-hidden="true"></span>Turn 13 · Blue's move · <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg>1 way out!</span></span></button>
+<button class="mbtn pri"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span class="mt"><b>New game</b><span>2 players, 1 device: take turns</span></span></button>
+<button class="mbtn small"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"></path><path d="M8 7h8M8 11h6"></path></svg><span class="mt"><b>Learn to play</b></span><span class="mpill">2 min</span></button>
+</sc-if>
+<sc-if value="{{firstLaunch}}" hint-placeholder-val="{{ true }}">
+<button class="mbtn pri"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"></path><path d="M8 7h8M8 11h6"></path></svg><span class="mt"><b>Learn to play</b><span>A quick game with tips. Under 2 minutes!</span></span><span class="mpill">New? Start here</span></button>
+<button class="mbtn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span class="mt"><b>New game</b><span>2 players, 1 device: take turns</span></span></button>
+</sc-if>
+</div>
+<p class="mfoot"><span>More ways to play coming soon</span></p>
+</div>
+
+<sc-if value="{{desk}}" hint-placeholder-val="{{ false }}">
+<div class="menuright" aria-hidden="true">
+<div class="board mboard"><sc-for list="{{cells}}" as="cell" hint-placeholder-count="64"><div class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms"><span class="l">{{cell.l}}</span></div></sc-for></div>
+</div>
+</sc-if>
+
+<sc-if value="{{showSettings}}" hint-placeholder-val="{{ false }}">
+<div class="scrim" onClick="{{closeSettings}}"></div>
+<div class="sheet" role="dialog" aria-label="Settings">
+<span class="grab" aria-hidden="true"></span>
+<span class="stitle">Settings</span>
+<div class="setrow"><div class="st"><b>Theme</b><span>Matches your device unless you pick one.</span></div><div class="seg" role="group" aria-label="Theme"><button class="on" aria-pressed="true">Auto</button><button class="">Light</button><button class="">Dark</button></div></div>
+<div class="setrow"><div class="st"><b>Hints per game</b><span>A hint shows one letter of a word that fits. You both get the same number.</span></div><div class="seg" role="group" aria-label="Hints per game"><button class="on" aria-pressed="true">Off</button><button class="">1</button><button class="">3</button></div></div>
+<div class="setrow"><div class="st"><b>Highlight your letters</b><span>Marks your letters on the keyboard.</span></div><button class="tog on" aria-label="Highlight your letters: on" aria-pressed="true"></button></div>
+<button class="btn sec" onClick="{{closeSettings}}">Done</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["first","returning","settings"],"default":"first"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const self = this;
+    const props = this.props || {};
+    const variant = props.variant || 'first';
+    const st = (this.state && this.state.k === variant) ? this.state : {};
+    const theme = props.theme === 'light' ? 'light' : 'dark';
+    const layout = props.layout === 'desk' ? 'desk' : 'phone';
+    const W = (w, r, c, d, p) => ({ w, r, c, d, p });
+    // two chains racing toward each other (legal, from the tutorial game)
+    const words = [W('TEAM', 0, 0, 'h', 'A'), W('DOG', 5, 7, 'v', 'B'), W('MAP', 0, 3, 'v', 'A'), W('BIG', 7, 5, 'h', 'B'), W('TOP', 2, 1, 'h', 'A'), W('CUB', 5, 5, 'v', 'B'), W('TIN', 2, 1, 'v', 'A'), W('ARC', 5, 3, 'h', 'B')];
+    const cellsOf = (w) => { const out = []; for (let k = 0; k < w.w.length; k++) out.push((w.d === 'h' ? w.r : w.r + k) * 8 + (w.d === 'h' ? w.c + k : w.c)); return out; };
+    const grid = []; for (let i = 0; i < 64; i++) grid.push({ l: '', o: null, n: null, last: false });
+    let n = 0;
+    // alternate A/B so both chains grow at the same time
+    words.forEach((w) => cellsOf(w).forEach((idx, k) => { const g = grid[idx]; if (!g.o) { g.o = w.p; g.l = w.w[k]; g.n = n++; } }));
+    const lastA = cellsOf(words[6]), lastB = cellsOf(words[7]);
+    const cells = grid.map((g, idx) => {
+      const cls = ['cell'];
+      if (g.o) { cls.push(g.o === 'A' ? 'a' : 'b', 'loop'); if ((g.o === 'A' ? lastA : lastB).indexOf(idx) >= 0) cls.push('recent'); }
+      return { cls: cls.join(' '), l: g.l, delay: g.n != null ? g.n * 280 : 0 };
+    });
+    const showSettings = st.settings != null ? st.settings : variant === 'settings';
+    return {
+      rootCls: 'wr menu ' + theme + ' ' + layout + ' turnA',
+      phone: layout === 'phone', desk: layout === 'desk',
+      cells,
+      returning: variant !== 'first', firstLaunch: variant === 'first',
+      showSettings,
+      openSettings: () => self.setState({ k: variant, settings: true }),
+      closeSettings: () => self.setState({ k: variant, settings: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

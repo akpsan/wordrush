@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WordRush Learn to play</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./wordrush.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Bungee&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}">
+<header class="thdr hdr">
+<button class="skipbtn" onClick="{{openSkip}}" disabled="{{noSkip}}">{{skipLbl}}</button>
+<div class="tdots" role="progressbar" aria-label="{{progAria}}"><sc-for list="{{dots}}" as="d" hint-placeholder-count="9"><i class="{{d}}"></i></sc-for></div>
+<span class="tcount">{{countLbl}}</span>
+</header>
+
+<section class="side" aria-label="Coach">
+<div class="coachbar" role="status">
+<span class="ctag">{{coach.tag}}</span>
+<p class="cline">{{coach.pre}}<b>{{coach.word}}</b>{{coach.post}}</p>
+<sc-if value="{{meters.show}}" hint-placeholder-val="{{ false }}">
+<div class="mmeters">
+<div class="mm a"><span class="mmh"><span class="mini a" aria-hidden="true"></span>You</span><span class="segs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="rlbl">Lots of room</span></div>
+<div class="{{meters.bCls}}" role="meter" aria-label="{{meters.aria}}"><span class="mmh"><span class="mini b" aria-hidden="true"></span>Orange</span><span class="segs"><sc-for list="{{meters.segs}}" as="sg" hint-placeholder-count="4"><i class="{{sg}}"></i></sc-for></span><span class="rlbl">{{meters.lbl}}</span></div>
+</div>
+</sc-if>
+</div>
+</section>
+
+<section class="boardwrap" aria-label="Board">
+<div class="board">
+<sc-for list="{{cells}}" as="cell" hint-placeholder-count="64">
+<button class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms" onClick="{{cell.tap}}" aria-label="{{cell.label}}"><span class="l">{{cell.l}}</span><sc-if value="{{cell.hasMark}}" hint-placeholder-val="{{ false }}"><span class="mk">{{cell.mark}}</span></sc-if><sc-if value="{{cell.ga}}" hint-placeholder-val="{{ false }}"><span class="gb"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span></sc-if></button>
+</sc-for>
+</div>
+</section>
+
+<section class="bottom">
+<sc-if value="{{showIntro}}" hint-placeholder-val="{{ false }}">
+<div class="intro">
+<p class="bigline">Don't get boxed in</p>
+<p class="sub">You grow from the top-left. Your opponent grows from the bottom-right. Whoever runs out of room first loses. This takes about 2 minutes.</p>
+<button class="btn pri next" onClick="{{advance}}">Let's go</button>
+</div>
+</sc-if>
+
+<sc-if value="{{showDone}}" hint-placeholder-val="{{ false }}">
+<div class="donep panel">
+<span class="otitle a">You're ready!</span>
+<div class="recap">
+<div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Start or end on a letter of your last word</div>
+<div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h4M4 12h7M4 17h10"></path></svg>Words need at least 3 letters</div>
+<div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 12h16M12 4v16"></path></svg>Every letter blocks the way, even yours</div>
+<div><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Get boxed in and you lose</div>
+</div>
+<div class="orow"><button class="btn sec" onClick="{{restart}}">Back to menu</button><button class="btn pri" onClick="{{restart}}">Play now</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{showKb}}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{showEntry}}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{tnote.show}}" hint-placeholder-val="{{ false }}"><p class="tnote"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.8h.01"></path></svg><span>{{tnote.text}}</span></p></sc-if>
+<div class="{{entryCls}}" role="textbox" aria-label="{{entryAria}}">
+<sc-for list="{{slots}}" as="sl" hint-placeholder-count="5"><span class="{{sl.cls}}">{{sl.l}}</span></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{watching}}" hint-placeholder-val="{{ false }}"><div class="typing"><span class="mini b" aria-hidden="true"></span><span>{{watchTxt}}</span></div></sc-if>
+<p class="{{fb.cls}}" role="status"><sc-if value="{{fb.good}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{fb.err}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5"></path><path d="M12 16.5h.01"></path></svg></sc-if><sc-if value="{{fb.steer}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></sc-if><span>{{fb.pre}}</span><b>{{fb.word}}</b><span>{{fb.post}}</span></p>
+<div class="{{kbCls}}" role="group" aria-label="Keyboard">
+<sc-for list="{{krows}}" as="kr" hint-placeholder-count="3">
+<div class="{{kr.cls}}">
+<sc-for list="{{kr.keys}}" as="k" hint-placeholder-count="10"><button class="{{k.cls}}" onClick="{{k.tap}}" aria-label="{{k.aria}}"><sc-if value="{{k.isBk}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H9l-6 6 6 6h12z"></path><path d="M16 10l-4 4M12 10l4 4"></path></svg></sc-if>{{k.l}}</button></sc-for>
+</div>
+</sc-for>
+<div class="actions">
+<sc-if value="{{showTypeActs}}" hint-placeholder-val="{{ true }}">
+<button class="{{act.rotCls}}" onClick="{{rotate}}" disabled="{{act.noRot}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 20v-4h-4"></path></svg><span>Flip</span><span class="cnt">{{act.cnt}}</span><span class="kbd">Tab</span></button>
+<button class="{{act.placeCls}}" onClick="{{place}}" aria-disabled="{{act.ariaDis}}"><span>{{act.placeLbl}}</span><span class="kbd">Enter</span></button>
+</sc-if>
+<sc-if value="{{showContinue}}" hint-placeholder-val="{{ false }}"><button class="btn pri next" onClick="{{advance}}">{{continueLbl}}</button></sc-if>
+</div>
+</div>
+</sc-if>
+</section>
+
+<sc-if value="{{showSkip}}" hint-placeholder-val="{{ false }}">
+<div class="scrim" onClick="{{closeSkip}}"></div>
+<div class="sheet" role="dialog" aria-label="Skip tutorial">
+<span class="grab" aria-hidden="true"></span>
+<span class="stitle">Skip the tutorial?</span>
+<p class="stext">No problem! You can come back to it anytime from <b>Learn to play</b> on the menu.</p>
+<div class="orow"><button class="btn sec" onClick="{{closeSkip}}">Keep learning</button><button class="btn pri" onClick="{{restart}}">Skip</button></div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"step":{"editor":"int","min":1,"max":9,"default":1},"variant":{"editor":"enum","options":["start","typing","ready","rotated","redirect","bump","won","skip"],"default":"start"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const self = this;
+    const props = this.props || {};
+    const key = (props.step || 1) + '|' + (props.variant || 'start');
+    const raw = this.state || {};
+    const st = raw.k === key ? raw : {};
+    const theme = props.theme === 'light' ? 'light' : 'dark';
+    const layout = props.layout === 'desk' ? 'desk' : 'phone';
+    const variant = props.variant || 'start';
+
+    const W = (w, r, c, d, p) => ({ w, r, c, d, p });
+    const TEAM = W('TEAM', 0, 0, 'h', 'A'), DOG = W('DOG', 5, 7, 'v', 'B'), MAP = W('MAP', 0, 3, 'v', 'A'), BIG = W('BIG', 7, 5, 'h', 'B'), TOP = W('TOP', 2, 1, 'h', 'A');
+    const B2 = [W('ACTS', 0, 0, 'h', 'A'), W('HULL', 4, 7, 'v', 'B'), W('SHEEP', 0, 3, 'v', 'A'), W('JAIL', 6, 4, 'h', 'B')];
+    const POPE = W('POPE', 4, 3, 'h', 'A');
+    const SCRIPT = {
+      1: { kind: 'intro', tag: 'How you win', pre: 'Grow your chain. Box in your opponent. Get boxed in and you lose.', word: '', post: '' },
+      2: { kind: 'type', tag: 'Your first word', pre: 'Start in the top-left corner. Type ', word: 'TEAM', post: '!', target: 'TEAM', place: { r: 0, c: 0, d: 'h' }, board: [] },
+      3: { kind: 'opp', tag: 'Your opponent', pre: 'Your opponent starts in the opposite corner.', word: '', post: '', board: [TEAM], opp: DOG },
+      4: { kind: 'type', tag: 'Build off your last word', pre: 'Start or end on any letter of your last word. Type ', word: 'MAP', post: '.', target: 'MAP', place: { r: 0, c: 3, d: 'v' }, board: [TEAM, DOG] },
+      5: { kind: 'opp', tag: 'Your opponent', pre: 'They build off their last word too. ', word: 'BIG', post: ' ends on the G of DOG.', board: [TEAM, DOG, MAP], opp: BIG },
+      6: { kind: 'type', tag: 'Ending works too', pre: 'Your word can also end on one of your letters. Type ', word: 'TOP', post: '.', target: 'TOP', place: { r: 2, c: 1, d: 'h' }, board: [TEAM, DOG, MAP, BIG] },
+      7: { kind: 'wall', tag: 'Letters get in the way', pre: 'Every letter blocks the way, even yours. Try ', word: 'OPEN', post: ' going across.', target: 'OPEN', force: { r: 2, c: 2, d: 'h' }, board: [TEAM, DOG, MAP, BIG, TOP] },
+      8: { kind: 'type', tag: 'Box them in', pre: "Your opponent's last word, JAIL, is running out of room. Box it in with ", word: 'POPE', post: '.', target: 'POPE', place: { r: 4, c: 3, d: 'h' }, board: B2 },
+      9: { kind: 'done', tag: 'All done', pre: "That's the whole game. Now go box someone in!", word: '', post: '', board: B2.concat([POPE]) },
+    };
+    const DICT = {};
+    'TEAM TOAD TEAR TAME TEA TEN MAP MAT MOP TOP TIP TAP OPEN OPT POPE POPS POP PEN PET DOG BIG CAT JAIL SHEEP ACTS HULL STAR RAT ROSE'.split(' ').forEach((x) => { DICT[x] = true; });
+
+    let step = st.step || Math.max(1, Math.min(9, props.step || 1));
+    let typed = st.typed != null ? st.typed : null;
+    let pi = st.pi != null ? st.pi : null;
+    let won = st.won != null ? st.won : (variant === 'won');
+    let skip = st.skip != null ? st.skip : (variant === 'skip');
+    const sc = SCRIPT[step];
+    if (typed == null) {
+      typed = '';
+      if (sc.kind === 'type' || sc.kind === 'wall') {
+        if (variant === 'typing') typed = sc.target.slice(0, 2);
+        if (variant === 'ready' || variant === 'rotated' || variant === 'won' || variant === 'bump') typed = sc.target;
+        if (variant === 'redirect') typed = step === 2 ? 'TOAD' : 'MAT';
+        if (variant === 'skip') typed = sc.target;
+      }
+    }
+    if (pi == null) pi = variant === 'rotated' ? 1 : 0;
+
+    let words = (sc.board || []).slice();
+    let popW = null;
+    if (sc.kind === 'opp') { words.push(sc.opp); popW = sc.opp; }
+    if (step === 8 && won) { words.push(POPE); popW = POPE; }
+    if (sc.kind === 'intro') words = [TEAM, DOG, MAP, BIG, TOP];
+    const turn = sc.kind === 'opp' ? 'B' : 'A';
+
+    const inb = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
+    const cellsOf = (w) => { const out = []; for (let k = 0; k < w.w.length; k++) out.push((w.d === 'h' ? w.r : w.r + k) * 8 + (w.d === 'h' ? w.c + k : w.c)); return out; };
+    const grid = []; for (let i = 0; i < 64; i++) grid.push({ l: '', o: null, ws: [] });
+    words.forEach((w, wi) => cellsOf(w).forEach((idx, k) => { const g = grid[idx]; if (!g.o) { g.o = w.p; g.l = w.w[k]; } g.ws.push(wi); }));
+    const lastOf = (p) => { for (let i = words.length - 1; i >= 0; i--) if (words[i].p === p) return i; return -1; };
+    const recent = { A: lastOf('A'), B: lastOf('B') };
+
+    const typing = (sc.kind === 'type' && !won) || sc.kind === 'wall';
+    const firstMove = step === 2;
+    const anchors = [];
+    if (typing && !firstMove && recent.A >= 0) cellsOf(words[recent.A]).forEach((x) => anchors.push(x));
+    const anchorSet = {}; anchors.forEach((x) => { anchorSet[x] = true; });
+
+    // placement engine (same rules as the game screen)
+    const fits = (t, mode) => {
+      const out = []; const L = t.length; if (!L) return out; const seen = {};
+      const add = (r0, c0, d, anc, atStart) => {
+        const k0 = r0 + ',' + c0 + d; if (seen[k0]) return; const ids = [];
+        for (let k = 0; k < Math.max(L, mode === 'prefix' ? 3 : L); k++) { const r = d === 'h' ? r0 : r0 + k; const c = d === 'h' ? c0 + k : c0; if (!inb(r, c)) return; const idx = r * 8 + c; if (idx !== anc && grid[idx].o) return; if (k < L) ids.push(idx); }
+        seen[k0] = true; out.push({ r: r0, c: c0, d, anc, atStart, ids });
+      };
+      if (firstMove) { add(0, 0, 'h', 0, true); add(0, 0, 'v', 0, true); }
+      else anchors.forEach((a) => {
+        const r = Math.floor(a / 8), c = a % 8, letter = grid[a].l;
+        if (t[0] === letter) { add(r, c, 'h', a, true); add(r, c, 'v', a, true); }
+        if (mode === 'full' && L >= 2 && t[L - 1] === letter) { add(r, c - (L - 1), 'h', a, false); add(r - (L - 1), c, 'v', a, false); }
+      });
+      out.sort((x, y) => (x.atStart === y.atStart ? 0 : x.atStart ? -1 : 1) || (x.d === y.d ? 0 : x.d === 'h' ? -1 : 1) || x.anc - y.anc);
+      return out;
+    };
+
+    const target = sc.target || '';
+    const L = typed.length;
+    const onScript = target.indexOf(typed) === 0;
+    const complete = typed === target && L > 0;
+    let list = [], N = 0, ci = 0, cur = null, onTarget = false, ready = false;
+    const ghost = {};
+    if (sc.kind === 'type' && !won && L) {
+      list = L >= 3 ? fits(typed, 'full') : [];
+      if (!list.length) list = fits(typed, 'prefix');
+      N = list.length; ci = N ? ((pi % N) + N) % N : 0; cur = N ? list[ci] : null;
+      onTarget = !!cur && complete && cur.r === sc.place.r && cur.c === sc.place.c && cur.d === sc.place.d;
+      ready = onTarget && !!DICT[typed];
+      if (cur) cur.ids.forEach((idx, k) => { ghost[idx] = { l: typed[k], k, anc: idx === cur.anc, type: grid[idx].o ? 'ring' : (complete && onScript ? 'new' : 'part') }; });
+    }
+    let bumped = false;
+    if (sc.kind === 'wall' && L) {
+      for (let k = 0; k < L; k++) {
+        const r = sc.force.r, c = sc.force.c + k; if (!inb(r, c)) break; const idx = r * 8 + c;
+        const occ = !!grid[idx].o;
+        ghost[idx] = { l: typed[k], k, anc: k === 0, type: k === 0 ? 'ring' : occ ? 'bump' : 'part' };
+      }
+      bumped = complete || variant === 'bump';
+    }
+
+    const set = (o) => self.setState(Object.assign({ k: key, step, typed, pi: ci, won, skip }, o));
+    const maxLen = firstMove ? 4 : 5;
+    const press = (ch) => { if (!typing || typed.length >= maxLen || bumped) return; set({ typed: typed + ch, pi: 0 }); };
+    const back = () => { if (!typing || !typed.length) return; set({ typed: typed.slice(0, -1), pi: 0 }); };
+    const rotate = () => { if (N > 1) set({ pi: ci + 1 }); };
+    const go = (n) => set({ step: n, typed: '', pi: 0, won: false });
+    const place = () => { if (!ready) return; if (step === 8) set({ won: true }); else go(step + 1); };
+    const advance = () => { if (step === 8 && won) go(9); else if (step < 9) go(step + 1); };
+    const restart = () => self.setState({ k: key, step: 1, typed: '', pi: 0, won: false, skip: false });
+    const openSkip = () => set({ skip: true });
+    const closeSkip = () => set({ skip: false });
+
+    // spotlight
+    const spot = {};
+    const addSpot = (w) => { if (w) cellsOf(w).forEach((x) => { spot[x] = true; }); };
+    Object.keys(ghost).forEach((x) => { spot[x] = true; });
+    anchors.forEach((x) => { spot[x] = true; });
+    if (firstMove) spot[0] = true;
+    if (sc.kind === 'opp') addSpot(sc.opp);
+    if (step === 8) addSpot(B2[3]);
+    // cornering visuals after POPE
+    const sealSet = {}, wallSet = {}, gapSet = {};
+    if (step === 8 && won) {
+      const jail = B2[3]; const own = {}; cellsOf(jail).forEach((x) => { own[x] = true; sealSet[x] = true; });
+      cellsOf(jail).forEach((idx) => {
+        const r = Math.floor(idx / 8), c = idx % 8;
+        [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach((d) => {
+          let rr = r + d[0], cc = c + d[1], k = 0;
+          while (inb(rr, cc) && !grid[rr * 8 + cc].o && k < 4) { gapSet[rr * 8 + cc] = true; k++; rr += d[0]; cc += d[1]; }
+          if (inb(rr, cc) && !own[rr * 8 + cc] && k < 4) wallSet[rr * 8 + cc] = true;
+        });
+      });
+      Object.keys(sealSet).concat(Object.keys(wallSet), Object.keys(gapSet)).forEach((x) => { spot[x] = true; });
+      addSpot(POPE);
+    }
+    const useSpot = sc.kind !== 'intro' && sc.kind !== 'done';
+    const popSet = {}; if (popW) cellsOf(popW).forEach((x, k) => { popSet[x] = k + 1; });
+    let order = 0; const loopOrder = {};
+    if (sc.kind === 'intro') words.forEach((w) => cellsOf(w).forEach((x) => { if (loopOrder[x] == null) loopOrder[x] = order++; }));
+
+    const cellsOut = grid.map((g, idx) => {
+      const cls = ['cell']; let l = g.l, ga = false, mark = '', delay = 0;
+      const r = Math.floor(idx / 8), c = idx % 8;
+      if (g.o) { cls.push(g.o === 'A' ? 'a' : 'b'); if (g.ws.indexOf(recent[g.o]) >= 0) cls.push('recent'); if (g.ws.length > 1) cls.push(g.o === 'A' ? 'xa' : 'xb'); }
+      const gh = ghost[idx];
+      if (gh) {
+        delay = gh.k * 30;
+        if (gh.type === 'bump') { cls.push('bump'); }
+        else if (gh.type === 'ring') { cls.push('gring'); if (!ready) cls.push('weak'); ga = gh.anc; }
+        else { cls.push(gh.type === 'new' ? (ready || onTarget || complete ? 'gnew' : 'gpart') : 'gpart'); l = gh.l; if (gh.anc) ga = true; }
+      } else if (anchorSet[idx]) cls.push(cur ? 'anchor-dim' : 'anchor');
+      if (sealSet[idx]) cls.push('sealed');
+      if (wallSet[idx]) cls.push('wall');
+      if (gapSet[idx]) cls.push('gap');
+      if (popSet[idx]) { cls.push('pop', 'flash', popW.p === 'A' ? 'fa' : 'fb'); delay = (popSet[idx] - 1) * 120 + 200; }
+      if (sc.kind === 'intro' && loopOrder[idx] != null) { cls.push('loop'); delay = loopOrder[idx] * 260; }
+      if (firstMove && idx === 0 && !gh) { cls.push('start', 'sa'); mark = 'START'; }
+      if (useSpot && !spot[idx]) cls.push('dim');
+      const label = 'Row ' + (r + 1) + ', column ' + (c + 1) + (l ? ', ' + l : '');
+      return { cls: cls.join(' '), l, ga, hasMark: !!mark, mark, tap: gh && gh.type !== 'bump' ? rotate : () => {}, label, delay };
+    });
+
+    // entry + feedback
+    const slots = [];
+    for (let i = 0; i < 5; i++) {
+      const ch = typed[i] || ''; let cls = 'slot';
+      if (i >= maxLen) cls += ' cap';
+      else if (ch) cls += bumped ? ' f bad' : (!onScript ? ' f' : ready ? ' f ok' : ' f');
+      else if (i === L && typing && !bumped) cls += ' cur';
+      if (ch && cur && cur.ids.indexOf(cur.anc) === i) cls += ready ? ' anc' : ' anc weak';
+      slots.push({ cls, l: ch });
+    }
+    let fb = { pre: '', word: '', post: '' };
+    if (sc.kind === 'type' && !won) {
+      if (!L) fb = firstMove ? { pre: 'Tap the letters to spell', word: target, post: '' } : { pre: 'Your glowing letters are where you can build', word: '', post: '' };
+      else if (!onScript) fb = { tone: 'steer', pre: (DICT[typed] ? 'Nice word! ' : '') + 'For now, try', word: target, post: '· tap ⌫ to fix' };
+      else if (!complete) fb = { pre: 'Keep going:', word: target, post: '' };
+      else if (!onTarget && step === 4) fb = { tone: 'good', pre: 'Nice! Now tap', word: 'Flip', post: 'to send it down from the M.' };
+      else if (!onTarget) fb = { tone: 'good', pre: 'Tap', word: 'Flip', post: 'to try the next spot.' };
+      else fb = { tone: 'good', pre: '', word: typed, post: step === 6 ? 'ends on your P. Play it!' : step === 8 ? 'blocks JAIL from above. Play it!' : 'fits! Play it.' };
+    } else if (sc.kind === 'wall') {
+      if (bumped) fb = { tone: 'err', pre: 'No room: your own', word: 'P', post: 'is in the way.' };
+      else if (!L) fb = { pre: 'Type', word: 'OPEN', post: '' };
+      else if (!onScript) fb = { tone: 'steer', pre: 'For now, try', word: 'OPEN', post: '· tap ⌫ to fix' };
+      else fb = { pre: 'Keep going:', word: 'OPEN', post: '' };
+    } else if (step === 8 && won) fb = { tone: 'good', pre: 'You boxed in', word: 'Orange', post: '!' };
+    else if (sc.kind === 'opp') fb = { pre: '', word: '', post: '' };
+    const fbOut = { cls: 'fb' + (fb.tone ? ' ' + fb.tone : ''), good: fb.tone === 'good', err: fb.tone === 'err', steer: fb.tone === 'steer', pre: fb.pre, word: fb.word, post: fb.post };
+
+    // keyboard spotlight: next scripted letter, or backspace when off-script
+    let nextKey = null, wantBack = false, wantRot = false, wantPlace = false;
+    if (typing && !bumped) {
+      if (!onScript) wantBack = true;
+      else if (!complete) nextKey = target[L];
+      else if (sc.kind === 'type' && !onTarget) wantRot = true;
+      else if (ready) wantPlace = true;
+    }
+    const rowsTxt = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+    const krows = rowsTxt.map((row, ri) => {
+      const keys = row.split('').map((ch) => ({ l: ch, isBk: false, cls: 'key' + (typing && !bumped ? (ch === nextKey ? ' next' : ' dim') : ''), tap: () => press(ch), aria: ch }));
+      if (ri === 2) keys.push({ l: '', isBk: true, cls: 'key wide' + (typing && !bumped ? (wantBack ? ' next' : ' dim') : ''), tap: back, aria: 'Delete' });
+      return { cls: 'krow' + (ri === 1 ? ' mid' : ''), keys };
+    });
+
+    // opponent meter (step 8)
+    const mN = step === 8 ? (won ? 0 : 63) : null;
+    const meters = { show: step === 8, bCls: 'mm b' + (mN === 0 ? ' zero' : ''), segs: [0, 1, 2, 3].map((i) => (mN && i < 4 ? 'on' : '')), lbl: mN === 0 ? 'No moves left' : mN + ' moves left', aria: 'Orange: ' + (mN === 0 ? 'no moves left' : mN + ' moves left') };
+
+    let coach = { tag: sc.tag, pre: sc.pre, word: sc.word, post: sc.post };
+    if (step === 7 && bumped) coach = { tag: 'Letters get in the way', pre: "Your P is in the way, so OPEN can't go across here.", word: '', post: '' };
+    if (step === 8 && won) coach = { tag: 'Boxed in!', pre: 'JAIL has no room left, and no word ends in J. ', word: 'You win!', post: '' };
+
+    const dots = []; for (let i = 1; i <= 9; i++) dots.push(i === step ? 'on' : i < step ? 'done' : '');
+    const showKb = sc.kind !== 'intro' && sc.kind !== 'done';
+    const showContinue = sc.kind === 'opp' || bumped || (step === 8 && won);
+    return {
+      rootCls: 'wr ' + theme + ' ' + layout + ' ' + (turn === 'B' ? 'turnB' : 'turnA'),
+      skipLbl: step === 9 ? '' : 'Skip', noSkip: step === 9,
+      dots, progAria: 'Step ' + step + ' of 9', countLbl: step + ' / 9',
+      coach, meters, cells: cellsOut,
+      showIntro: sc.kind === 'intro', showDone: sc.kind === 'done',
+      showKb, showEntry: sc.kind !== 'opp', watching: sc.kind === 'opp', watchTxt: 'Your opponent plays ' + (sc.opp ? sc.opp.w : '') + '…',
+      tnote: { show: firstMove, text: 'First word: 4 letters max' },
+      entryCls: 'entry' + (bumped ? ' shake' : ''), entryAria: 'Your word: ' + (typed || 'empty'),
+      slots, fb: fbOut,
+      kbCls: 'kb' + (typing && !bumped ? '' : ' off'), krows,
+      showTypeActs: !showContinue, showContinue, continueLbl: step === 8 && won ? 'Finish' : bumped ? 'Got it' : 'Your turn',
+      act: { noRot: N < 2, cnt: N ? (ci + 1) + ' of ' + N : '–', rotCls: 'btn sec' + (wantRot ? ' next' : typing ? ' dim' : ''), ariaDis: ready ? 'false' : 'true', placeLbl: ready ? 'Play ' + typed : 'Play', placeCls: 'btn pri' + (ready ? (wantPlace ? ' next' : '') : ' soft') },
+      rotate, place, advance, restart, openSkip, closeSkip,
+      showSkip: skip,
+    };
+  }
+}
+</script>
+</body>
+</html>

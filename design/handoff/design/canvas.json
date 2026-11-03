@@ -1,0 +1,168 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-03T04:41:00Z"},
+  "title": "WordRush",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Glossary.dc.html": {"x": -2120, "y": 0, "w": 980, "h": 1240, "title": "Glossary · player-facing words"},
+    "Legend.dc.html": {"x": -1060, "y": 0, "w": 980, "h": 1300, "title": "Board language · cells, ghost, keyboard, danger meter"},
+    "01-your-turn.dc.html": {"x": 0, "y": 0, "w": 852, "h": 892, "title": "01 · Your turn: empty entry, anchors glowing", "is_interactive": true},
+    "02a-typing-fits.dc.html": {"x": 932, "y": 0, "w": 852, "h": 892, "title": "02a · Typing \"RA\": partial ghost, fits so far", "is_interactive": true},
+    "02b-typing-no-fit.dc.html": {"x": 1864, "y": 0, "w": 852, "h": 892, "title": "02b · Typing \"OP\": no fit yet (neutral)", "is_interactive": true},
+    "03-ready-to-place.dc.html": {"x": 2796, "y": 0, "w": 852, "h": 892, "title": "03 · \"RAT\" is a word and fits: ready to place", "is_interactive": true},
+    "04-rotated.dc.html": {"x": 3728, "y": 0, "w": 852, "h": 892, "title": "04 · Rotated: across → down (2 of 3)", "is_interactive": true},
+    "04b-anchor-filter.dc.html": {"x": 4660, "y": 0, "w": 852, "h": 892, "title": "04b · Tapped anchor T: ends on T (1 of 1)", "is_interactive": true},
+    "05a-invalid-not-a-word.dc.html": {"x": 0, "y": 1900, "w": 852, "h": 892, "title": "05a · Invalid: not in the word list", "is_interactive": true},
+    "05b-invalid-already-played.dc.html": {"x": 932, "y": 1900, "w": 852, "h": 892, "title": "05b · Invalid: already on the board", "is_interactive": true},
+    "05c-invalid-doesnt-fit.dc.html": {"x": 1864, "y": 1900, "w": 852, "h": 892, "title": "05c · Invalid: doesn't fit from your anchors", "is_interactive": true},
+    "06-opponent-turn.dc.html": {"x": 2796, "y": 1900, "w": 852, "h": 892, "title": "06 · Opponent's turn: keyboard inactive"},
+    "Main.dc.html": {"x": 3728, "y": 1900, "w": 390, "h": 844, "title": "Play · interactive screen (Tweaks: scene, theme, layout)", "is_interactive": true},
+    "07a-danger-you.dc.html": {"x": 0, "y": 3800, "w": 852, "h": 892, "title": "07a · You're nearly boxed in (Blue's view)", "is_interactive": true},
+    "07b-danger-opponent.dc.html": {"x": 932, "y": 3800, "w": 852, "h": 892, "title": "07b · Your opponent is nearly boxed in (Orange's view, same moment)"},
+    "08-cornered.dc.html": {"x": 1864, "y": 3800, "w": 852, "h": 892, "title": "08 · Cornered: the losing moment"},
+    "09a-resign-confirm.dc.html": {"x": 2796, "y": 3800, "w": 852, "h": 892, "title": "09a · Resign confirmation, with hint offer", "is_interactive": true},
+    "09b-hint-revealed.dc.html": {"x": 3728, "y": 3800, "w": 852, "h": 892, "title": "09b · Hint used: one letter revealed", "is_interactive": true},
+    "09c-hint-setting.dc.html": {"x": 4660, "y": 3800, "w": 852, "h": 892, "title": "09c · Optional setting: hints per game", "is_interactive": true},
+    "10a-first-move-blue.dc.html": {"x": 0, "y": 5700, "w": 852, "h": 892, "title": "10a · First move: Blue starts top-left, up to 4 letters", "is_interactive": true},
+    "10b-first-move-orange.dc.html": {"x": 932, "y": 5700, "w": 852, "h": 892, "title": "10b · First move: Orange ends bottom-right (Orange's view)", "is_interactive": true},
+    "11a-game-over-cornered.dc.html": {"x": 1864, "y": 5700, "w": 852, "h": 892, "title": "11a · Game over: Orange cornered Blue"},
+    "11b-game-over-full-board.dc.html": {"x": 2796, "y": 5700, "w": 852, "h": 892, "title": "11b · Game over (rare): full board, decided on cells"},
+    "menu-1-first-launch.dc.html": {"x": 0, "y": 7600, "w": 852, "h": 892, "title": "Menu · first launch: Learn to play leads", "is_interactive": true},
+    "menu-2-returning.dc.html": {"x": 932, "y": 7600, "w": 852, "h": 892, "title": "Menu · returning player with a game in progress", "is_interactive": true},
+    "menu-3-settings.dc.html": {"x": 1864, "y": 7600, "w": 852, "h": 892, "title": "Menu · settings sheet", "is_interactive": true},
+    "menu-desktop-dark.dc.html": {"x": 2796, "y": 7600, "w": 1440, "h": 900, "title": "Menu · desktop · first launch · dark", "expand": "fill", "is_interactive": true},
+    "menu-desktop-light.dc.html": {"x": 4316, "y": 7600, "w": 1440, "h": 900, "title": "Menu · desktop · returning · light", "expand": "fill", "is_interactive": true},
+    "Menu.dc.html": {"x": 5836, "y": 7600, "w": 390, "h": 844, "title": "Menu component (Tweaks: variant, theme, layout)", "is_interactive": true},
+    "learn-1-goal.dc.html": {"x": 0, "y": 11400, "w": 852, "h": 892, "title": "Learn 1/9 · the goal (chains animate)", "is_interactive": true},
+    "learn-2a-first-word.dc.html": {"x": 932, "y": 11400, "w": 852, "h": 892, "title": "Learn 2/9 · first word: typing TEAM", "is_interactive": true},
+    "learn-2b-try-this-word.dc.html": {"x": 1864, "y": 11400, "w": 852, "h": 892, "title": "Learn 2/9 · off-script: gentle \"try TEAM\"", "is_interactive": true},
+    "learn-3-opponent-first.dc.html": {"x": 2796, "y": 11400, "w": 852, "h": 892, "title": "Learn 3/9 · opponent plays DOG", "is_interactive": true},
+    "learn-4a-chain.dc.html": {"x": 3728, "y": 11400, "w": 852, "h": 892, "title": "Learn 4/9 · chaining: MAP appears across", "is_interactive": true},
+    "learn-4b-rotated.dc.html": {"x": 4660, "y": 11400, "w": 852, "h": 892, "title": "Learn 4/9 · rotated down from the M, ready", "is_interactive": true},
+    "learn-5-opponent-chains.dc.html": {"x": 5592, "y": 11400, "w": 852, "h": 892, "title": "Learn 5/9 · opponent plays BIG", "is_interactive": true},
+    "learn-6-end-on-letter.dc.html": {"x": 0, "y": 13300, "w": 852, "h": 892, "title": "Learn 6/9 · TOP ends on the P", "is_interactive": true},
+    "learn-7-wall-bump.dc.html": {"x": 932, "y": 13300, "w": 852, "h": 892, "title": "Learn 7/9 · walls: OPEN bumps into P", "is_interactive": true},
+    "learn-8a-seal-it.dc.html": {"x": 1864, "y": 13300, "w": 852, "h": 892, "title": "Learn 8/9 · new position: seal JAIL with POPE", "is_interactive": true},
+    "learn-8b-cornered-win.dc.html": {"x": 2796, "y": 13300, "w": 852, "h": 892, "title": "Learn 8/9 · cornered: meter 63 → 0, you win", "is_interactive": true},
+    "learn-9-done.dc.html": {"x": 3728, "y": 13300, "w": 852, "h": 892, "title": "Learn 9/9 · you're ready", "is_interactive": true},
+    "learn-skip-confirm.dc.html": {"x": 4660, "y": 13300, "w": 852, "h": 892, "title": "Learn · skip confirmation", "is_interactive": true},
+    "Tutorial.dc.html": {"x": 5592, "y": 13300, "w": 390, "h": 844, "title": "Learn to play · playable from step 1 (Tweaks: step, variant)", "is_interactive": true},
+    "learn-desktop.dc.html": {"x": 0, "y": 15200, "w": 1440, "h": 900, "title": "Learn · desktop · step 4 · dark", "expand": "fill", "is_interactive": true},
+    "desktop-dark.dc.html": {"x": 0, "y": 9500, "w": 1440, "h": 900, "title": "Desktop · ready to place · dark", "expand": "fill", "is_interactive": true},
+    "desktop-light.dc.html": {"x": 1520, "y": 9500, "w": 1440, "h": 900, "title": "Desktop · ready to place · light", "expand": "fill", "is_interactive": true}
+  },
+  "order": [
+    "Main.dc.html",
+    "Glossary.dc.html",
+    "Legend.dc.html",
+    "01-your-turn.dc.html",
+    "02a-typing-fits.dc.html",
+    "02b-typing-no-fit.dc.html",
+    "03-ready-to-place.dc.html",
+    "04-rotated.dc.html",
+    "04b-anchor-filter.dc.html",
+    "05a-invalid-not-a-word.dc.html",
+    "05b-invalid-already-played.dc.html",
+    "05c-invalid-doesnt-fit.dc.html",
+    "06-opponent-turn.dc.html",
+    "07a-danger-you.dc.html",
+    "07b-danger-opponent.dc.html",
+    "08-cornered.dc.html",
+    "09a-resign-confirm.dc.html",
+    "09b-hint-revealed.dc.html",
+    "09c-hint-setting.dc.html",
+    "10a-first-move-blue.dc.html",
+    "10b-first-move-orange.dc.html",
+    "11a-game-over-cornered.dc.html",
+    "11b-game-over-full-board.dc.html",
+    "menu-1-first-launch.dc.html",
+    "menu-2-returning.dc.html",
+    "menu-3-settings.dc.html",
+    "menu-desktop-dark.dc.html",
+    "menu-desktop-light.dc.html",
+    "Menu.dc.html",
+    "learn-1-goal.dc.html",
+    "learn-2a-first-word.dc.html",
+    "learn-2b-try-this-word.dc.html",
+    "learn-3-opponent-first.dc.html",
+    "learn-4a-chain.dc.html",
+    "learn-4b-rotated.dc.html",
+    "learn-5-opponent-chains.dc.html",
+    "learn-6-end-on-letter.dc.html",
+    "learn-7-wall-bump.dc.html",
+    "learn-8a-seal-it.dc.html",
+    "learn-8b-cornered-win.dc.html",
+    "learn-9-done.dc.html",
+    "learn-skip-confirm.dc.html",
+    "Tutorial.dc.html",
+    "learn-desktop.dc.html",
+    "desktop-dark.dc.html",
+    "desktop-light.dc.html"
+  ],
+  "notes": {
+    "row1": {"x": 0, "y": -300, "text": "Core turn loop: type, preview, rotate, place", "kind": "title1", "maxW": 5512},
+    "row2": {"x": 0, "y": 1600, "text": "Invalid words and waiting", "kind": "title1", "maxW": 4700},
+    "row3": {"x": 0, "y": 3500, "text": "Danger, cornered, resign and hints", "kind": "title1", "maxW": 5512},
+    "row4": {"x": 0, "y": 5400, "text": "First moves and game over", "kind": "title1", "maxW": 3648},
+    "row5": {"x": 0, "y": 7300, "text": "Main menu · mobile, then desktop", "kind": "title1", "maxW": 6226},
+    "row6": {"x": 0, "y": 9200, "text": "Game screen · desktop layout", "kind": "title1", "maxW": 3740},
+    "row7": {"x": 0, "y": 11100, "text": "Learn to play · steps 1–5", "kind": "title1", "maxW": 6444},
+    "row8": {"x": 0, "y": 13000, "text": "Learn to play · steps 6–9, skip, desktop", "kind": "title1", "maxW": 5982},
+
+    "devGlobal": {"x": -1060, "y": 1360, "w": 980, "fill": "purple", "size": "s", "text": "DEV NOTES · APPLIES EVERYWHERE\n\n• Input model = WORD FIRST. The player types; the engine re-computes legal placements on every keystroke and the board shows the first one as a ghost. Rotate (or tap the ghost) cycles; tapping an anchor filters; Place / Enter commits.\n• No timer, no timeouts, one mode.\n• Walls: apart from the anchor, every cell of a new word must be empty. The only shared cells are anchors where two of the SAME player's words meet (mini glyph in the corner).\n• Placements for a typed string: for each cell of your latest word whose letter = first letter → start there, across and down; whose letter = last letter → end there, across (going left) and down (going up). Keep only those where every other cell is in bounds and empty. First move: Blue starts on (1,1), Orange ends on (8,8).\n• Deterministic order so \"2 of 3\" is stable: start-on-anchor before end-on-anchor, across before down, then anchor order along the word.\n• Dictionary must be local (bundled list or trie): live feedback runs on every key press, no network round trip. Same list on the server for validation.\n• Perspective: \"You\" = the local player. Pass-and-play recolours ghost, Place, entry and keyboard anchor keys from one active-player token (--p).\n• Shape is identity: Blue tiles round, Orange tiles square + hatch. % radii so it holds at every size.\n• Accessibility: entry row is role=textbox with the typed word; feedback line is role=status (polite). Meters are role=meter with text. Cells announce row, column, letter, owner. Respect prefers-reduced-motion (no shake: use the message alone)."},
+
+    "devRules": {"x": -1060, "y": 2120, "w": 980, "fill": "red", "size": "s", "text": "DECISIONS TO CONFIRM\n\n• Danger meter: counts EXITS (letter of your latest word + direction with ≥2 empty cells: room for a 3-letter word). Cheap and visible. \"Cornered\" itself must come from the real dictionary check, not the meter.\n• Live dictionary leaks: \"Fits so far\" vs \"no fit yet\" is geometry only, never dictionary, so the feedback can't be used to brute-force words letter by letter. Dictionary validity is only revealed as the green \"fits\" state or on Enter. Confirm this is acceptable.\n• Hints: count per game (Off / 1 / 3), same for both players, shown in results. Should using a hint be visible to the opponent live?\n• Resign available only on your own turn (mock), or any time?\n• Collinear extension: can a word run straight on from the latest word's line? Mock assumes yes when the cells are empty.\n• Adjacency: no Scrabble-style side-word check (mock assumes none).\n• Rematch: who goes first? (Affects the 4-letter offset.)\n• \"A word already on the board can't be played again\" includes the opponent's words (mock assumes yes)."},
+
+    "dev01": {"x": 0, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "01 · YOUR TURN BEGINS\n\n• Keyboard active, entry row empty with a blinking caret in slot 1. Anchors (cells of your latest word) pulse on the board.\n• Keyboard hint: keys for your anchor letters (S T A R) get a tinted fill, a ring and a dot. That tells you what your word must start or end with, without giving an answer. Setting: \"Highlight anchor keys\".\n• Opponent's last word flashes once (~2s) and the feedback line reads \"Orange played BUS · start or end on S, T, A or R\". (The mock loops the flash.)\n• Rotate is disabled (\"–\"), Place looks inactive until something is ready.\n• Status bar: both danger meters, turn number + chevron to the active player, cells in small muted text."},
+
+    "dev02a": {"x": 932, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "02a · TYPING · PARTIAL GHOST\n\n• Each key press: append letter, recompute placements, reset to placement #1, redraw ghost (~30ms letter stagger, no exit animation).\n• While the string is still a prefix (or ≥3 letters but not a real word yet), the ghost is PARTIAL: dotted grey outline, grey letters, the anchor gets a dotted ring. Entry tiles are neutral.\n• Partial placements = words STARTING on an anchor, with room for at least 3 letters from there. End-on-anchor can't be known until the word is complete, so it appears once the last letter matches.\n• Feedback: \"Fits so far · 2 spots · keep typing\". Rotate already works on partial ghosts.\n• Max 5 letters (4 on Blue's first turn): extra key presses do nothing; slots past the cap are drawn dashed and faded."},
+
+    "dev02b": {"x": 1864, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "02b · TYPING · NO FIT YET\n\n• Shown when no placement exists for what's typed so far, e.g. \"OP\": O isn't an anchor letter, and an end-on-anchor fit can only appear once the word is complete (OPTS would end on S).\n• Deliberately neutral: grey text, no icon, no shake, no red. It's not an error yet.\n• Copy: \"No fit yet · start or end on S, T, A or R\".\n• Never block typing because of this state; the player may be heading for an end-on-anchor word."},
+
+    "dev03": {"x": 2796, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "03 · READY TO PLACE\n\n• Ready = real word AND not already on the board AND ≥1 placement (after anchor filter).\n• Ghost switches to the READY look: dashed outline in your colour, tinted fill, breathing; anchor cell gets a ring + link badge. Entry tiles fill with your tint; the anchor letter's tile gets a ring so you can see which letter is shared.\n• Feedback (with check icon): \"RAT fits · Rotate for 2 more spots\".\n• Place button becomes primary and reads \"Place RAT\". Enter does the same.\n• On Place: tiles pop in (~60ms stagger), +n floats on your cells count, both meters recompute, entry clears, turn hands over."},
+
+    "dev04": {"x": 3728, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "04 · ROTATE\n\n• Rotate = index + 1, wrap N → 1. Triggers: the Rotate key on the action row, tapping any ghost cell, Tab or Space on desktop. Never a letter key.\n• No double-tap: it would delay single taps on the board and is invisible. Rotate key + tap-the-ghost cover both thumbs-on-keyboard and eyes-on-board users.\n• Counter lives inside the Rotate key (\"2 of 3\"), so it's where your thumb already is.\n• Typing another letter resets to placement #1 (the set of placements changed).\n• Rotate disabled when N < 2."},
+
+    "dev04b": {"x": 4660, "y": 932, "w": 852, "fill": "teal", "size": "s", "text": "04b · ANCHOR FILTER\n\n• Tap a pulsing anchor cell → only placements that use that cell. Here T: RAT can only end on T (going down), so 1 of 1.\n• Filtered anchor: thick static ring; others dim.\n• Works before typing too (acts like \"placement first\" light): tap T first, then type.\n• If the filter leaves 0 placements for the typed word, show \"No fit yet · …\" and keep the filter; tap the anchor again to clear. Filter resets at end of turn and when the entry is cleared."},
+
+    "dev05a": {"x": 0, "y": 2832, "w": 852, "fill": "teal", "size": "s", "text": "05a · NOT IN THE WORD LIST\n\n• Errors only appear on Enter / Place tap, never while typing.\n• Place looks inactive when not ready, but stays tappable (aria-disabled, not disabled) so tapping it explains why. Same for Enter on a hardware keyboard.\n• Entry row does a Wordle-style shake (~450ms); tiles get a dashed outline. Feedback (info icon, no red): \"RAX isn't in our word list. Try another?\"\n• Error clears on the next key press.\n• The partial ghost can still show (RAX fits geometrically); it never turns into the ready look."},
+
+    "dev05b": {"x": 932, "y": 2832, "w": 852, "fill": "teal", "size": "s", "text": "05b · ALREADY ON THE BOARD\n\n• Check order on Enter: too short (<3) → already played → not a word → doesn't fit. First match wins, one message at a time.\n• Copy: \"BUS is already on the board. Each word plays once.\"\n• Optional polish: briefly outline the existing BUS on the board so the player sees where it is."},
+
+    "dev05c": {"x": 1864, "y": 2832, "w": 852, "fill": "teal", "size": "s", "text": "05c · DOESN'T FIT\n\n• A real, unplayed word with zero placements. TREES: from T there are only 4 cells down; ending on S there are only 4 cells up.\n• Copy: \"No room for TREES from S, T, A or R. Try a shorter word.\"\n• Typed TREE did fit (partial ghost) before the 5th letter: the ghost disappears the moment it stops fitting, which is the early warning.\n• Too short (2 letters + Enter): \"Words need 3 to 5 letters.\""},
+
+    "dev06": {"x": 2796, "y": 2832, "w": 852, "fill": "teal", "size": "s", "text": "06 · OPPONENT'S TURN\n\n• Entry row becomes \"Orange is typing…\" (online: don't stream their letters). Keyboard faded and inert; Rotate/Place inactive; Resign disabled.\n• Board read-only, meters current. Feedback line: \"You played RAT · +2 cells\".\n• Hardware keyboard input is ignored on desktop while waiting (don't buffer letters into your next turn).\n• No timer: decide an online idle policy separately."},
+
+    "devMain": {"x": 4198, "y": 1900, "w": 560, "fill": "gray", "size": "s", "text": "PLAY · PROTOTYPE\n\n• Tweaks jump to any scene, theme or layout.\n• Live: tap keys to type (small built-in word list), watch the partial → ready ghost, Rotate, tap the ghost, tap anchors, Place (meters update), Enter on invalid words for the messages, Resign, hint, tutorial.\n• Not live: physical keyboard (canvas blocks global key handlers)."},
+
+    "dev07a": {"x": 0, "y": 4732, "w": 852, "fill": "teal", "size": "s", "text": "07a · YOU'RE IN DANGER\n\n• Trigger: at turn start your room is 1 (2 = tight, quieter).\n• Your chip pulses (outline, no colour change), meter gets hazard stripes + warning icon + \"1 way out\". No red.\n• Escape route: with room ≤ 2 and the entry empty, the empty cells of each remaining exit get a dotted fill. Hidden as soon as you type (the ghost takes over). Setting: \"Show escape routes\".\n• Feedback: \"Only 1 way out left. Follow the dots.\"\n• Haptic warning + polite screen-reader announcement when it first drops to 1."},
+
+    "dev07b": {"x": 932, "y": 4732, "w": 852, "fill": "teal", "size": "s", "text": "07b · YOUR OPPONENT IS IN DANGER\n\n• Same moment as 07a on Orange's device. Blue's chip shows the same danger treatment.\n• Typing indicator says it: \"Blue is down to 1 way out · typing…\"\n• Don't show Blue's escape-route dots on Orange's device."},
+
+    "dev08": {"x": 1864, "y": 4732, "w": 852, "fill": "teal", "size": "s", "text": "08 · CORNERED\n\n• Checked automatically at the START of the player's turn: no dictionary word fits from any letter of their latest word → immediate loss. The keyboard never appears.\n• Visuals computed from the board: sealed word (heavy outline, short shake), walls that stop each exit (heavy outline + crosshatch, any owner), gaps too short for 3 letters (dotted). Board edges count but aren't drawn.\n• Hold until \"See result\" (or ~3s), then 11a.\n• A gap can be geometrically long enough with no dictionary word that fits it: still cornered. Draw those exits as gaps too."},
+
+    "dev09a": {"x": 2796, "y": 4732, "w": 852, "fill": "teal", "size": "s", "text": "09a · RESIGN\n\n• Flag icon in the header: out of the thumb zone, away from Place, always confirmed.\n• Sheet: \"Resign this game?\" + reassurance that a fitting word exists (you'd already have lost otherwise). If hints are on, a hint offer sits above the buttons as the gentler option.\n• Buttons: Keep playing (left, safe) · Resign (right, high-contrast neutral, not red).\n• Resign → game over \"You resigned · Orange wins\". Log it as the end reason.\n• Tapping the scrim = Keep playing."},
+
+    "dev09b": {"x": 3728, "y": 4732, "w": 852, "fill": "teal", "size": "s", "text": "09b · HINT\n\n• Hint button (bulb) on the action row only when hints are enabled. Also offered from the Resign sheet.\n• A hint = engine picks one legal word (prefer one that leaves room) and reveals ONE letter plus its length and the anchor letter: chip \"F _ R · 2 left\". It never types for you and never places.\n• Reveal a letter that isn't the anchor (the anchor is already known).\n• The chip stays until you place. Using another hint reveals a letter of the same word.\n• Count decrements per game; 0 left → bulb disabled with \"No hints left\"."},
+
+    "dev09c": {"x": 4660, "y": 4732, "w": 852, "fill": "gray", "size": "s", "text": "09c · SETTINGS (MENU)\n\n• Hints per game: Off / 1 / 3. Default Off for ranked/online, 3 for casual vs bot (decide). Both players get the same count; the setting is per match, agreed before start online.\n• Highlight anchor keys: default on.\n• Show escape routes: default on.\n• Settings open from the menu; in-match changes to hints are locked once the match starts (online)."},
+
+    "dev10a": {"x": 0, "y": 6632, "w": 852, "fill": "teal", "size": "s", "text": "10a · FIRST MOVE · BLUE\n\n• Anchor = the empty corner (1,1), pulsing with START. The word must start there, across or down: 2 placements for every word.\n• Max 4 letters: entry shows 4 live slots + a faded 5th; the 5th key press is ignored. Note above the entry: \"First word: up to 4 letters, starting in the corner\". Show it on this turn only.\n• No anchor keys highlighted (any first letter works).\n• Orange's corner shows a faint dashed END preview; hide once Blue places."},
+
+    "dev10b": {"x": 932, "y": 6632, "w": 852, "fill": "teal", "size": "s", "text": "10b · FIRST MOVE · ORANGE\n\n• Orange's word must END on (8,8): placements = across ending in column 8, down ending in row 8. Any 3–5 letters.\n• Because the anchor is the last letter, the ghost can appear from the first letter typed (the end cell is fixed). Mock shows STONE ready, 1 of 2.\n• Pass-and-play: everything recolours to orange. Online: only on Orange's device."},
+
+    "dev11a": {"x": 1864, "y": 6632, "w": 852, "fill": "teal", "size": "s", "text": "11a · GAME OVER · CORNERED\n\n• Headline from the viewer's side: \"Orange cornered you\" / \"You cornered Orange\". Sub: turn + sealed word. Variant for resign: \"You resigned\".\n• Board keeps the sealed word + walls. Loser's meter \"No way out\"; winner \"—\".\n• Stats are secondary: words played, cells.\n• Replay needs the move log {word, row, col, dir, player, turn} + end reason (cornered / resigned / full)."},
+
+    "dev11b": {"x": 2796, "y": 6632, "w": 852, "fill": "teal", "size": "s", "text": "11b · GAME OVER · FULL BOARD (RARE)\n\n• Grid full before anyone is cornered: more cells wins; tie → Orange (Blue moved first). Say why when the tie rule decides it.\n• Only screen where cells are the headline. Meters \"—\".\n• Mock board is a placeholder fill, not a played game.\n• Check \"grid full\" right after each placement, before the next cornered check."},
+
+    "devMenu": {"x": 0, "y": 8532, "w": 1784, "fill": "teal", "size": "s", "text": "MAIN MENU\n\n• First launch (no games played, tutorial not seen): Learn to play is the primary button with a \"Start here\" pill; New game is secondary. No modal: the order does the offering, and nobody is blocked from jumping straight in.\n• Returning with a saved game: Continue first (shows turn, whose move, and the mover's danger level), New game primary, Learn to play as a small dashed row with \"2 min\".\n• Returning without a saved game: same as returning, minus Continue.\n• New game = pass and play for now. Subtitle and the footer line (\"More opponents coming soon\") leave room: later, New game opens a chooser (pass and play / vs computer / online). Don't add a picker until there's more than one option.\n• Hero board: a looping animation of the two chains racing (cells pop in order, hold, fade, restart every ~9s). Decorative: aria-hidden, paused under reduced motion (show the final frame).\n• Settings is a small gear top-right: theme (Auto/Light/Dark), hints per game, anchor-key highlight."},
+    "devMenu2": {"x": 1864, "y": 8532, "w": 852, "fill": "gray", "size": "s", "text": "MENU · STATE & PERSISTENCE\n\n• \"Seen tutorial\" flag: set when the player finishes OR skips. First-launch layout only while unset and no game has been played.\n• Continue restores the full game (board, move log, whose turn, hints left). One saved game slot is enough for pass and play.\n• Starting a New game while one is saved: confirm \"Abandon the game in progress?\""},
+    "devLearn1": {"x": 0, "y": 12332, "w": 3648, "fill": "teal", "size": "s", "text": "LEARN TO PLAY · HOW IT WORKS\n\n• It is the real game screen (same board, keyboard, ghost, Rotate, Place, placement engine) driven by a script of 9 steps. Only the header (Skip · progress dots · n/9) and the coach bar replace the status bar.\n• Each typing step has a scripted word and a scripted placement. The engine still computes all legal placements; Place only enables when the ghost is on the scripted one (step 4: MAP must be rotated down first).\n• Spotlight: cells that matter (anchors, ghost, the opponent's new word, walls) stay bright, everything else drops to ~28% opacity. On the keyboard, the next scripted letter is lifted and filled; all other keys dim but still work.\n• Off-script typing is never an error: the letters stay, the feedback becomes a dashed pill \"For this lesson, try TEAM · tap ⌫ to fix\", and the spotlight moves to Backspace. If it's a real word, say so (\"TOAD is a real word!\").\n• Opponent steps (3, 5): keyboard inert, the word pops in letter by letter (~120ms each) with the opponent flash, then a \"Your turn\" button. Don't auto-advance: the player reads at their own pace.\n• Under 2 minutes: 4 words to type, 2 to watch, 1 bump, 1 win."},
+    "devLearn2": {"x": 0, "y": 14232, "w": 2716, "fill": "teal", "size": "s", "text": "LEARN TO PLAY · STEPS 6–9\n\n• 6: TOP has no ghost until the last letter (end-on-anchor fits only appear when the word is complete). That's a useful moment: the coach line already says \"END on your letter\".\n• 7: the ghost is FORCED across from O (see red note). Typing O-P already shows the P cell bumping; at the full word the entry shakes and the coach explains. \"Got it\" continues. Nothing is placed.\n• 8: new position loads (fade the board, don't animate a whole game). Coach shows both meters; Orange reads \"63 possible moves\". After Place: POPE pops in, Orange's meter drops to \"No moves left\" (animate the number), JAIL gets the sealed outline, the walls and dead gaps light up, then \"Finish\".\n• 9: recap of the 3 rules + Play now (starts a pass-and-play game) / Back to menu.\n• Skip (any step except 9): confirm sheet; Skip goes to the menu and marks the tutorial as seen. Back on the menu, Learn to play always restarts from step 1."},
+    "devLearnRed": {"x": 2796, "y": 14232, "w": 1784, "fill": "red", "size": "s", "text": "SCRIPT CHECKS (for the brief owner)\n\n• Step 7: OPEN does fit DOWN from the O of TOP (column 3, rows 4–6 are empty). In the real game typing OPEN would show a legal ghost, not a shake. The tutorial forces the across attempt so the lesson works. If you want it to be honest in-engine, use a word with no legal spot, e.g. one that's too long for every exit, or pre-block column 3.\n• Step 8: \"63 → 0 moves\" counts real dictionary placements. The game screens' meter counts geometric exits; by that measure JAIL would still show 1 (the 4 empty cells left of J), because only the dictionary rules out words ending in J. Either switch the in-game meter to dictionary moves (recommended now that the tutorial teaches that number) or change step 8's copy to exits.\n• All other steps check out with the placement engine: TEAM across from the corner; DOG down to (8,8); MAP across = placement 1, down = 2 of 2; BIG ends on G; TOP ends on P (1 of 1); POPE across from P is placement 1 of 4."},
+
+    "devDesk": {"x": 3040, "y": 9500, "w": 760, "fill": "teal", "size": "s", "text": "DESKTOP\n\n• ≥1080px: three columns (players + meters | board | entry, keyboard, actions). Below that it stacks like mobile.\n• Physical keyboard types: A–Z letters, Backspace deletes, Enter places (or explains why not), Tab or Space rotates, Esc clears the anchor filter then the entry. Ignore keys while a sheet/modal or a text field has focus, and while it's not your turn.\n• Preventing default on Tab is required (focus would move). Keep a visible \"Tab · rotate\" hint so keyboard users aren't surprised, and keep focus management sane for screen-reader users (Rotate is also a real button).\n• On-screen keyboard stays visible and clickable for mouse users, smaller keys (40px).\n• Key caps on buttons only for fine pointers."}
+  },
+  "designSystems": []
+}
