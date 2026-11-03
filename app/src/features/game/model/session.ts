@@ -7,10 +7,13 @@ import {
   checkEntry,
   giveUp,
   newGame,
+  nextReveal,
+  pickHint,
   play,
   type CellIndex,
   type GameState,
   type Lexicon,
+  type Placement,
   type Problem,
 } from '../../../engine';
 import { entryView } from './entry';
@@ -32,7 +35,20 @@ export interface Session {
   readonly lastPlay: { readonly wordIndex: number; readonly gain: number } | null;
   /** The player has seen the boxed-in moment and moved on to the results. */
   readonly resultsShown: boolean;
+  readonly hints: Hints;
 }
+
+/** Hints for this game. Both players get `perGame`; the setting is fixed when the game starts. */
+export interface Hints {
+  readonly perGame: number;
+  readonly used: readonly [number, number];
+  /** The hint shown this turn: a word that fits, and which of its letters are revealed. */
+  readonly current: { readonly spot: Placement; readonly revealed: readonly number[] } | null;
+}
+
+export const noHints = (perGame = 0, used: readonly [number, number] = [0, 0]): Hints => ({ perGame, used, current: null });
+
+export const hintsLeft = (s: Session): number => s.hints.perGame - s.hints.used[s.game.toMove];
 
 /** A spot, independent of the word: which letter it's on, start or end, and direction. */
 export interface SpotChoice {
@@ -50,9 +66,10 @@ export type SessionAction =
   | { readonly type: 'play' }
   | { readonly type: 'giveUp' }
   | { readonly type: 'showResults' }
+  | { readonly type: 'hint' }
   | { readonly type: 'newGame' };
 
-export const createSession = (game: GameState = newGame()): Session => ({
+export const createSession = (game: GameState = newGame(), hints: Hints = noHints()): Session => ({
   game,
   typed: '',
   preferred: null,
@@ -60,7 +77,12 @@ export const createSession = (game: GameState = newGame()): Session => ({
   problem: null,
   lastPlay: null,
   resultsShown: false,
+  hints,
 });
+
+/** A fresh turn: everything typed is cleared, the game's hint allowance carries on. */
+const nextTurn = (s: Session, game: GameState): Session =>
+  createSession(game, { ...s.hints, current: null });
 
 const editing = (s: Session, typed: string, filter = s.filter): Session => ({
   ...s,
@@ -94,11 +116,13 @@ export function sessionReducer(lex: Lexicon) {
       case 'play':
         return over ? s : attemptPlay(s, lex);
       case 'giveUp':
-        return over ? s : { ...createSession(giveUp(s.game)), resultsShown: true };
+        return over ? s : { ...nextTurn(s, giveUp(s.game)), resultsShown: true };
       case 'showResults':
         return { ...s, resultsShown: true };
+      case 'hint':
+        return over ? s : revealHint(s, lex);
       case 'newGame':
-        return createSession(newGame(s.game.rules));
+        return createSession(newGame(s.game.rules), noHints(s.hints.perGame));
     }
   };
 }
@@ -110,13 +134,28 @@ function attemptPlay(s: Session, lex: Lexicon): Session {
     const gain = gainOf(s.game, spot.word.length, spot.row, spot.col, spot.dir);
     const game = play(s.game, lex, spot);
     return {
-      ...createSession(game),
+      ...nextTurn(s, game),
       lastPlay: { wordIndex: game.words.length - 1, gain },
     };
   }
   const check = checkEntry(s.game, lex, s.typed, s.filter);
   if (check.ok) return s; // ready but no spot selected: can't happen, nothing to do
   return { ...s, problem: { kind: check.problem, id: (s.problem?.id ?? 0) + 1 } };
+}
+
+/** Show a hint, or one more letter of the current hint. Each use counts against the player's allowance. */
+function revealHint(s: Session, lex: Lexicon): Session {
+  if (hintsLeft(s) <= 0) return s;
+  const mover = s.game.toMove;
+  const firstMove = s.game.lastWord[mover] === null;
+  const spot = s.hints.current?.spot ?? pickHint(s.game, lex);
+  if (!spot) return s;
+  const revealed = s.hints.current?.revealed ?? [];
+  const next = nextReveal(spot, revealed, firstMove);
+  if (next === null) return s; // every letter worth showing is already shown
+  const used: [number, number] = [...s.hints.used];
+  used[mover] += 1;
+  return { ...s, hints: { ...s.hints, used, current: { spot, revealed: [...revealed, next] } } };
 }
 
 /** New squares a word would claim (every cell except an existing link letter). */

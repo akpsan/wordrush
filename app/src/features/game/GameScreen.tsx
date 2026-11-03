@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { t } from '../../copy';
-import type { GameState, Lexicon } from '../../engine';
+import type { Lexicon } from '../../engine';
 import { useIsDesktop } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
@@ -17,6 +17,9 @@ import { Keyboard } from './components/Keyboard';
 import { StatusBar } from './components/StatusBar';
 import { boardView } from './model/board';
 import { feedbackFor } from './model/feedback';
+import { hintView } from './model/hint';
+import { hintsLeft } from './model/session';
+import type { SavedSession } from './persistence';
 import { letterChoices, playerStatus, turnStatus } from './model/status';
 import { useGame } from './useGame';
 
@@ -24,19 +27,19 @@ type Overlay = 'settings' | 'giveUp' | null;
 
 export interface GameScreenProps {
   readonly lex: Lexicon;
-  /** A saved game to continue. Omit to start a new one. */
-  readonly initialGame?: GameState;
+  /** A saved game to continue. Omit to start a new one (with the hints setting at that moment). */
+  readonly saved?: SavedSession;
   /** Back to the main menu (from the menu sheet). The game stays saved. */
   readonly onMenu: () => void;
   /** Opens Learn to play from the "?" button. */
   readonly onHelp?: () => void;
 }
 
-export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps) {
+export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
   const { settings } = useSettings();
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
-  const { session, entry, dispatch } = useGame(lex, initialGame);
+  const { session, entry, dispatch } = useGame(lex, saved ? { saved } : { hintsPerGame: settings.hints });
   const [overlay, setOverlay] = useState<Overlay>(null);
 
   const { game } = session;
@@ -53,6 +56,8 @@ export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps
     [session, entry, lex, settings.showWaysOut],
   );
   const feedback = useMemo(() => feedbackFor(session, entry, lex), [session, entry, lex]);
+  const hint = useMemo(() => hintView(session), [session]);
+  const left = session.hints.perGame > 0 ? hintsLeft(session) : null;
   const highlight = useMemo(
     () => new Set(playing && settings.highlightLetters ? letterChoices(game, game.toMove) : []),
     [playing, settings.highlightLetters, game],
@@ -91,6 +96,7 @@ export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps
               feedback={feedback}
               problemId={session.problem?.id ?? null}
               firstWordNote={game.toMove === 0 && game.lastWord[0] === null}
+              hint={hint}
             />
             <Keyboard
               enabled
@@ -98,12 +104,25 @@ export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps
               onLetter={(letter) => dispatch({ type: 'letter', letter })}
               onDelete={() => dispatch({ type: 'delete' })}
             />
-            <Actions entry={entry} enabled onFlip={() => dispatch({ type: 'flip' })} onPlay={() => dispatch({ type: 'play' })} />
+            <Actions
+              entry={entry}
+              enabled
+              onFlip={() => dispatch({ type: 'flip' })}
+              onPlay={() => dispatch({ type: 'play' })}
+              hintsLeft={left}
+              onHint={() => dispatch({ type: 'hint' })}
+            />
             <KeyHelp />
           </>
         )}
         {stage === 'boxed' && <BoxedInPanel game={game} onContinue={() => dispatch({ type: 'showResults' })} />}
-        {stage === 'over' && <GameOverPanel game={game} onPlayAgain={() => dispatch({ type: 'newGame' })} />}
+        {stage === 'over' && (
+          <GameOverPanel
+            game={game}
+            hintsUsed={session.hints.perGame > 0 ? session.hints.used : null}
+            onPlayAgain={() => dispatch({ type: 'newGame' })}
+          />
+        )}
       </section>
 
       {overlay === 'settings' && (
@@ -125,6 +144,11 @@ export function GameScreen({ lex, initialGame, onMenu, onHelp }: GameScreenProps
           onGiveUp={() => {
             setOverlay(null);
             dispatch({ type: 'giveUp' });
+          }}
+          hintsLeft={left}
+          onHint={() => {
+            setOverlay(null);
+            dispatch({ type: 'hint' });
           }}
         />
       )}

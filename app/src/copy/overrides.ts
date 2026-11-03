@@ -8,6 +8,7 @@ const composite = {
   'settings.theme.auto': 'Auto',
   'settings.theme.light': 'Light',
   'settings.theme.dark': 'Dark',
+  'settings.hints.off': 'Off',
   'learn.flip': 'Flip',
   'learn.play': 'Play',
 } as const;
@@ -51,6 +52,7 @@ const missing = {
   'learn.7.empty': 'Type **CAT**',
   'learn.flip.generic': 'Tap **Flip** to try the next spot.',
   'learn.recap.aria': 'The rules',
+  'over.stats.hints': 'Hints used',
 } as const;
 
 export const overrides = { ...composite, ...changed, ...passAndPlay, ...missing };

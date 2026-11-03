@@ -5,8 +5,7 @@
 
 import { useMemo, useState } from 'react';
 import { getLexicon } from '../dictionary';
-import type { GameState } from '../engine';
-import { clearSavedGame, GameScreen, loadSavedGame } from '../features/game';
+import { clearSavedGame, GameScreen, loadSavedGame, type SavedSession } from '../features/game';
 import { MenuScreen } from '../features/menu';
 import { SettingsProvider } from '../features/settings';
 import { TutorialScreen } from '../features/tutorial';
@@ -14,7 +13,7 @@ import { loadProgress, saveProgress, type Progress } from './progress';
 
 type Screen =
   | { readonly name: 'menu' }
-  | { readonly name: 'game'; readonly initial: GameState | null; readonly id: number }
+  | { readonly name: 'game'; readonly saved: SavedSession | null; readonly id: number }
   | { readonly name: 'tutorial'; readonly from: 'menu' | 'game' };
 
 export default function App() {
@@ -30,10 +29,10 @@ export default function App() {
     saveProgress(next);
   };
 
-  const startGame = (initial: GameState | null) => {
-    if (!initial) clearSavedGame();
+  const startGame = (saved: SavedSession | null) => {
+    if (!saved) clearSavedGame();
     if (!progress.hasPlayed) updateProgress({ hasPlayed: true });
-    setScreen({ name: 'game', initial, id: Date.now() });
+    setScreen({ name: 'game', saved, id: Date.now() });
   };
 
   return (
@@ -42,7 +41,7 @@ export default function App() {
         <MenuScreen
           lex={lex}
           firstLaunch={!progress.tutorialSeen && !progress.hasPlayed}
-          saved={saved}
+          saved={saved?.game ?? null}
           onContinue={() => startGame(loadSavedGame(lex))}
           onNewGame={() => startGame(null)}
           onLearn={() => setScreen({ name: 'tutorial', from: 'menu' })}
@@ -52,7 +51,7 @@ export default function App() {
         <GameScreen
           key={screen.id}
           lex={lex}
-          initialGame={screen.initial ?? undefined}
+          saved={screen.saved ?? undefined}
           onMenu={() => setScreen({ name: 'menu' })}
           onHelp={() => setScreen({ name: 'tutorial', from: 'game' })}
         />

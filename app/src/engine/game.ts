@@ -9,7 +9,7 @@ import type { Anchor, Board, GameResult, Placement, PlayedWord, Player } from '.
 export interface GameState {
   readonly rules: Rules;
   readonly board: Board;
-  /** Every word played, in order. Also the move log for replays. */
+  /** Every word played, in order. Also the move log that saved games are restored from. */
   readonly words: readonly PlayedWord[];
   /** Index into `words` of each player's last word, or null before their first word. */
   readonly lastWord: readonly [number | null, number | null];

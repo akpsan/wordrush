@@ -9,14 +9,28 @@ export interface ActionsProps {
   readonly enabled: boolean;
   readonly onFlip: () => void;
   readonly onPlay: () => void;
+  /** Hints left for the player to move, or null when hints are off for this game. */
+  readonly hintsLeft: number | null;
+  readonly onHint: () => void;
 }
 
-export function Actions({ entry, enabled, onFlip, onPlay }: ActionsProps) {
+export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint }: ActionsProps) {
   const n = entry.spots.length;
   const i = entry.index + 1;
   const word = entry.typed.toUpperCase();
   return (
     <div className="actions">
+      {hintsLeft !== null && (
+        <button
+          type="button"
+          className="btn sec icon"
+          onClick={onHint}
+          disabled={!enabled || hintsLeft === 0}
+          aria-label={hintsLeft === 0 ? plain('hint.none.aria') : plain('hint.button.aria', { n: hintsLeft })}
+        >
+          <Icon name="bulb" />
+        </button>
+      )}
       <button
         type="button"
         className="btn sec"

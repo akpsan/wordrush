@@ -31,6 +31,40 @@ export function toCommand(e: Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' |
   }
 }
 
+/*
+ * How each element got focus. Enter and Space press a focused button only if the player
+ * moved focus there with the keyboard (Tab). A button that merely kept focus after a mouse
+ * or touch click (or got it back when a sheet closed) doesn't own them: they go to the game,
+ * so Enter still plays the word. This is how media players like YouTube behave.
+ *
+ * The browser's :focus-visible can't be used for this: Chrome switches it on as soon as any
+ * key is pressed, so by the time Enter arrives a clicked button already looks keyboard-focused.
+ */
+type Source = 'pointer' | 'keyboard';
+let lastInput: Source = 'keyboard';
+const focusSource = new WeakMap<Element, Source>();
+let tracking = false;
+
+function trackFocusSource(): void {
+  if (tracking) return;
+  tracking = true;
+  window.addEventListener('pointerdown', () => (lastInput = 'pointer'), true);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' || e.key.startsWith('Arrow')) lastInput = 'keyboard';
+  }, true);
+  window.addEventListener('focusin', (e) => {
+    if (e.target instanceof Element) focusSource.set(e.target, lastInput);
+  }, true);
+}
+
+function ownsActivationKeys(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLElement &&
+    target.matches('button, [role="button"]') &&
+    focusSource.get(target) === 'keyboard'
+  );
+}
+
 function isTextField(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
@@ -39,14 +73,13 @@ function isTextField(target: EventTarget | null): boolean {
 export function useKeyboardCommands(onCommand: (c: KeyCommand) => void, enabled: boolean): void {
   const handler = useRef(onCommand);
   handler.current = onCommand;
+  useEffect(trackFocusSource, []);
   useEffect(() => {
     if (!enabled) return;
     const listener = (e: KeyboardEvent) => {
       if (e.repeat && e.key !== 'Backspace') return; // held keys: only delete repeats
       if (isTextField(e.target) || document.querySelector('[role="dialog"][aria-modal="true"]')) return;
-      // Enter on a focused button activates that button; let it.
-      if (e.key === 'Enter' && e.target instanceof HTMLButtonElement) return;
-      if (e.key === ' ' && e.target instanceof HTMLButtonElement) return;
+      if ((e.key === 'Enter' || e.key === ' ') && ownsActivationKeys(e.target)) return;
       const command = toCommand(e);
       if (!command) return;
       e.preventDefault();

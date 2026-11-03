@@ -147,7 +147,7 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
       )}
 
       {sheet === 'settings' && (
-        <SettingsSheet title={t('settings.title')} rows={['theme', 'highlight']} onClose={() => setSheet(null)} />
+        <SettingsSheet title={t('settings.title')} rows={['theme', 'hints', 'highlight']} onClose={() => setSheet(null)} />
       )}
       {sheet === 'abandon' && (
         <Sheet title={t('menu.abandon.title')} onClose={() => setSheet(null)}>

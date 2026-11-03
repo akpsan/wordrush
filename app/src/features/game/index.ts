@@ -4,7 +4,7 @@
  */
 
 export { GameScreen, type GameScreenProps } from './GameScreen';
-export { loadSavedGame, clearSavedGame } from './persistence';
+export { loadSavedGame, clearSavedGame, type SavedSession } from './persistence';
 export { waysOutFor, playerStatus, letterChoices, type PlayerStatus } from './model/status';
 export { boardView, type CellView } from './model/board';
 export { entryView, type EntryView } from './model/entry';

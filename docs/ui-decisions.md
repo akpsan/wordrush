@@ -41,8 +41,9 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Animations that loop in the mockups | "+n squares" and the opponent's-word flash play once in the app. The mockups loop them only so they're visible on a static canvas. |
 | Key caps on desktop buttons | Only Play shows its key (Enter). The Space cap on Flip didn't fit the 360px column with the "1 of 2" counter; the help line under the buttons already says Space flips. |
 | Flipped spot while editing | **Kept.** The design reset the preview to the first spot on every key press. Now the chosen spot (its letter, start or end, and direction) is kept while the word still fits there, and falls back to the first spot otherwise. Flipping TEA down and adding M keeps TEAM going down. |
+| Enter and Space after clicking a button | **They go to the game.** A button focused by a mouse or touch click (or given focus back when a sheet closes) doesn't take Enter or Space, so Enter still plays the word, like YouTube's player. A button reached with Tab does take them, for keyboard and screen-reader users. Implemented in `app/src/platform/keyboard.ts` by recording how each element got focus. |
 | Accent colour after the game | The winner's colour (buttons, highlights). |
-| Features not built yet | Hints and Watch replay are hidden until their features exist, so no button does nothing. |
+| Watch replay | **Dropped.** The mockups only show the button, not a replay screen, so it isn't built. The button is not shown. (`over.replay` stays in the copy deck, unused.) |
 
 ## Build decisions (menu, saved games, Learn to play)
 

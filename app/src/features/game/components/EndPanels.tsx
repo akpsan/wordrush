@@ -63,7 +63,14 @@ function headline(game: GameState): { title: string; sub: string; score: string 
 }
 
 /** Results: who won, a few stats, and a rematch. */
-export function GameOverPanel({ game, onPlayAgain }: { game: GameState; onPlayAgain: () => void }) {
+export interface GameOverPanelProps {
+  readonly game: GameState;
+  /** Hints used by each player, when hints were on for this game. */
+  readonly hintsUsed: readonly [number, number] | null;
+  readonly onPlayAgain: () => void;
+}
+
+export function GameOverPanel({ game, hintsUsed, onPlayAgain }: GameOverPanelProps) {
   const { title, sub, score } = headline(game);
   const winner = game.result!.winner;
   const words = (p: Player) => game.words.filter((w) => w.player === p).length;
@@ -72,6 +79,7 @@ export function GameOverPanel({ game, onPlayAgain }: { game: GameState; onPlayAg
     [t('over.stats.squares'), squares(game, 0), squares(game, 1)],
   ];
   if (game.result!.reason === 'full-board') rows.reverse();
+  if (hintsUsed) rows.push([t('over.stats.hints'), hintsUsed[0], hintsUsed[1]]);
   return (
     <div className="panel">
       <div className="ohead">

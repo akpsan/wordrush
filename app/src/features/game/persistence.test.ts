@@ -1,6 +1,7 @@
 import { beforeEach, expect, it } from 'vitest';
 import { getLexicon } from '../../dictionary';
 import { giveUp, playScripted } from '../../engine';
+import { noHints } from './model/session';
 import { clearSavedGame, loadSavedGame, saveGame } from './persistence';
 
 const lex = getLexicon();
@@ -16,15 +17,16 @@ beforeEach(() => {
 
 it('saves a game in progress and restores it by replaying the moves', () => {
   const game = playScripted(lex, [{ word: 'team', dir: 'down' }, { word: 'stone', dir: 'across' }]);
-  saveGame(game);
+  saveGame(game, noHints(3, [1, 0]));
   const restored = loadSavedGame(lex);
-  expect(restored?.words.map((w) => w.word)).toEqual(['team', 'stone']);
-  expect(restored?.board).toEqual(game.board);
+  expect(restored?.game.words.map((w) => w.word)).toEqual(['team', 'stone']);
+  expect(restored?.game.board).toEqual(game.board);
+  expect(restored?.hints).toEqual(noHints(3, [1, 0]));
 });
 
 it('does not keep finished games', () => {
   const game = playScripted(lex, [{ word: 'team', dir: 'down' }]);
-  saveGame(giveUp(game));
+  saveGame(giveUp(game), noHints());
   expect(loadSavedGame(lex)).toBeNull();
 });
 
