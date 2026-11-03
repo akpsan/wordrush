@@ -1,0 +1,19 @@
+/* From design/handoff/design/wordrush.css (base and themes). Keep in step with the design. */
+.wr{position:relative;box-sizing:border-box;font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+.wr *,.wr *::before,.wr *::after{box-sizing:border-box}
+.wr button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;margin:0}
+.wr button:disabled{cursor:default}
+.wr p{margin:0}
+.ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* Themes */
+.wr.dark{--bg:#0D1016;--surface:#161B24;--surface2:#1F2531;--key:#2A3140;--line:#2B3241;--text:#EDF0F6;--muted:#A3ABBB;--cell:#181D27;--cellLine:#252C3A;--scrim:rgba(5,7,11,.74);
+  --a:#3D7EF5;--aInk:#FFFFFF;--aTint:#172A52;--aText:#A3C1FF;--aGlow:rgba(61,126,245,.45);
+  --b:#FFA033;--bInk:#1E1204;--bTint:#3B2711;--bText:#FFC683;--bGlow:rgba(255,160,51,.42);--hatch:rgba(255,160,51,.17)}
+.wr.light{--bg:#E8ECF2;--surface:#FFFFFF;--surface2:#F1F3F7;--key:#D6DCE6;--line:#D2D8E2;--text:#10151F;--muted:#535D70;--cell:#DDE3EC;--cellLine:#CBD3DF;--scrim:rgba(16,21,31,.56);
+  --a:#2361DC;--aInk:#FFFFFF;--aTint:#D3E0FB;--aText:#1A46A6;--aGlow:rgba(35,97,220,.3);
+  --b:#F7931E;--bInk:#2A1600;--bTint:#FCE0BE;--bText:#874400;--bGlow:rgba(247,147,30,.36);--hatch:rgba(184,96,0,.15)}
+.wr.turnA{--p:var(--a);--pInk:var(--aInk);--pTint:var(--aTint);--pText:var(--aText);--pGlow:var(--aGlow)}
+.wr.turnB{--p:var(--b);--pInk:var(--bInk);--pTint:var(--bTint);--pText:var(--bText);--pGlow:var(--bGlow)}
+
+@media (prefers-reduced-motion:reduce){.wr *,.wr *::before,.wr *::after{animation:none !important;transition:none !important}}

@@ -1,0 +1,33 @@
+/* From design/handoff/design/wordrush.css (panels). Keep in step with the design. */
+/* Panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.ph{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+.panel p{font-size:14px;line-height:1.45;color:var(--muted)}
+.panel p b{color:var(--text)}
+.panel.alert{border-color:var(--text);border-width:2px}
+.warnline{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--surface2);color:var(--text);font-weight:700;font-size:13px}
+.warnline .ico{width:18px;height:18px}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--p);display:block;animation:dot 1.2s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.keyrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.lk{display:inline-flex;align-items:center;gap:6px}
+.lk i{display:block;width:14px;height:14px;border-radius:3px}
+.lk i.kw{border:2.5px solid var(--text)}
+.lk i.kg{border:2px dotted var(--muted)}
+.otitle{font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:24px;line-height:1.08}
+.otitle.a{color:var(--aText)}.otitle.b{color:var(--bText)}
+.osub{font-size:13px;color:var(--muted)}
+.oscore{font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:20px;color:var(--text);white-space:nowrap}
+.stats{display:grid;grid-template-columns:1fr auto auto;gap:6px 22px;font-size:13px;color:var(--muted);align-items:center}
+.stats .h{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.stats .v{font-weight:800;color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.orow{display:flex;gap:10px}
+
+/* App additions: layout the design set inline in the mockup's markup. */
+.ohead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.otext{display:flex;flex-direction:column;gap:4px;min-width:0}
+.entrywrap{display:flex;flex-direction:column;gap:7px}
+.tnote.off{visibility:hidden}

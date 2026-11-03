@@ -1,0 +1,42 @@
+/* From design/handoff/design/wordrush.css (learn to play). Keep in step with the design. */
+/* Learn to play */
+.thdr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:40px;flex:none}
+.skipbtn{justify-self:start;height:40px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:var(--muted);font-weight:800;font-size:14px}
+.skipbtn:hover{background:var(--surface2);color:var(--text)}
+.tdots{display:flex;gap:6px;align-items:center}
+.tdots i{display:block;width:7px;height:7px;border-radius:50%;background:var(--line)}
+.tdots i.done{background:var(--muted)}
+.tdots i.on{width:20px;border-radius:4px;background:var(--p)}
+.tcount{justify-self:end;font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.06em}
+.coachbar{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-height:76px;justify-content:center}
+.ctag{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pText)}
+.cline{font-size:15px;font-weight:700;line-height:1.35;text-wrap:pretty}
+.cline b{font-weight:800;letter-spacing:.03em}
+.mmeters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:2px}
+.mm{display:flex;flex-direction:column;gap:4px}
+.mm .mmh{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.mm .segs{height:7px}
+.mm.a .segs i.on{background:var(--a)}.mm.b .segs i.on{background:var(--b)}
+.mm .rlbl{font-size:12px}
+.mm.zero .rlbl{animation:dropin .6s ease-out both}
+@keyframes dropin{0%{transform:translateY(-6px);opacity:0}100%{transform:none;opacity:1}}
+.cell.dim{opacity:.28}
+.cell.bump{z-index:2;outline:3px solid var(--text);outline-offset:2px;animation:shake .45s ease-in-out both}
+.cell.bump::after{content:'';position:absolute;inset:-3px;border-radius:inherit;background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--text) 26%,transparent) 0 2px,rgba(0,0,0,0) 2px 6px);z-index:3}
+.key.dim{opacity:.3}
+.key.next{background:var(--p);color:var(--pInk);box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text);animation:nextkey 1.2s ease-in-out infinite;z-index:1}
+@keyframes nextkey{50%{transform:translateY(-2px)}}
+.btn.next{animation:beckon 1.2s ease-in-out infinite}
+.btn.dim{opacity:.35}
+.fb.steer{color:var(--text);font-weight:700;padding:4px 10px;border-radius:999px;border:1.5px dashed var(--p);align-self:center}
+.fb.steer .ico{color:var(--pText)}
+.intro,.donep{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.intro .bigline{font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:26px;line-height:1.1;text-align:center}
+.intro .sub{font-size:15px;line-height:1.45;color:var(--muted);text-align:center}
+.recap{display:grid;gap:8px}
+.recap div{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--surface2);font-size:14px;font-weight:700}
+.recap .ico{color:var(--pText)}
+.cell.loop{animation:chainloop 9s ease-out infinite both}
+@keyframes chainloop{0%{transform:scale(.3);opacity:0}4%{transform:scale(1);opacity:1}86%{opacity:1}94%,100%{opacity:0;transform:scale(.9)}}
+.desk .coachbar{min-height:0}
+.desk .cline{font-size:18px}

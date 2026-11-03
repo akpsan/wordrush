@@ -1,0 +1,52 @@
+/* From design/handoff/design/wordrush.css (board). Keep in step with the design. */
+/* Board */
+.boardwrap{display:flex;justify-content:center;flex:none}
+.board{width:100%;padding:6px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.desk .board{width:min(600px,100%);padding:8px;gap:6px;border-radius:24px}
+.cell{position:relative;aspect-ratio:1/1;width:100%;border:0;padding:0;border-radius:20%;background:var(--cell);box-shadow:inset 0 0 0 1px var(--cellLine);display:grid;place-items:center;font-weight:800;font-size:20px;line-height:1;color:var(--muted);text-transform:uppercase}
+.desk .cell{font-size:30px}
+.cell .l{position:relative;z-index:1}
+.cell.a{background:var(--aTint);color:var(--aText);box-shadow:none;border-radius:36%}
+.cell.b{background-color:var(--bTint);background-image:repeating-linear-gradient(135deg,var(--hatch) 0 3px,rgba(0,0,0,0) 3px 8px);color:var(--bText);box-shadow:none;border-radius:6%}
+.cell.a.recent{background:var(--a);color:var(--aInk);box-shadow:0 3px 10px var(--aGlow)}
+.cell.b.recent{background-color:var(--b);background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.11) 0 3px,rgba(0,0,0,0) 3px 8px);color:var(--bInk);box-shadow:0 3px 10px var(--bGlow)}
+.cell.xa::before,.cell.xb::before{content:'';position:absolute;top:11%;right:11%;width:19%;height:19%;background:var(--xc);box-shadow:0 0 0 1.5px var(--surface);z-index:2}
+.cell.xa{--xc:var(--a)}.cell.xa::before{border-radius:50%}
+.cell.xb{--xc:var(--b)}.cell.xb::before{border-radius:1px}
+.cell.a.recent.xa{--xc:var(--aInk)}.cell.b.recent.xb{--xc:var(--bInk)}
+.cell.anchor::after,.cell.anchor-dim::after,.cell.anchor-on::after,.cell.flash::after,.cell.start::after,.cell.wall::after{content:'';position:absolute;inset:-3px;border-radius:inherit;pointer-events:none;z-index:3}
+.cell.anchor::after{box-shadow:0 0 0 2px var(--text);animation:anc 1.4s ease-in-out infinite}
+.cell.anchor-dim::after{box-shadow:0 0 0 1.5px var(--muted);opacity:.6}
+.cell.anchor-on::after{box-shadow:0 0 0 3px var(--text)}
+@keyframes anc{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.08)}}
+.cell.flash::after{inset:-4px;border:2.5px solid var(--fc);animation:flash 3s ease-out infinite}
+.cell.fa{--fc:var(--a)}.cell.fb{--fc:var(--b)}
+@keyframes flash{0%{opacity:0;transform:scale(1.3)}12%{opacity:1;transform:scale(1)}72%{opacity:1}100%{opacity:0}}
+.cell.route{background-image:radial-gradient(circle,var(--p) 1.6px,rgba(0,0,0,0) 2px);background-size:9px 9px;background-position:center;box-shadow:inset 0 0 0 1.5px var(--p)}
+/* ghost: ready (dashed, tinted) vs partial (dotted, faint) */
+.cell.gnew{background:color-mix(in srgb,var(--p) 15%,var(--cell));background-image:none;color:var(--pText);box-shadow:none;border:2px dashed var(--p);border-radius:22%;animation:gin .22s ease-out both,gbreathe 1.6s ease-in-out .3s infinite}
+.cell.gpart{background:var(--cell);background-image:none;color:var(--muted);box-shadow:none;border:2px dotted var(--muted);border-radius:22%;animation:gin .18s ease-out both}
+.cell.gpart.room{color:transparent}
+.cell.gring{z-index:2;outline:3px solid var(--p);outline-offset:2px}
+.cell.gring.weak{outline:2px dotted var(--muted)}
+@keyframes gin{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes gbreathe{50%{background:color-mix(in srgb,var(--p) 30%,var(--cell))}}
+.gb{position:absolute;right:-6px;bottom:-6px;width:18px;height:18px;border-radius:50%;background:var(--p);color:var(--pInk);display:grid;place-items:center;z-index:4;box-shadow:0 0 0 2px var(--surface)}
+.gb .ico{width:11px;height:11px;stroke-width:2.6}
+.desk .gb{width:24px;height:24px}.desk .gb .ico{width:14px;height:14px}
+.cell.start{box-shadow:inset 0 0 0 2px var(--p)}
+.cell.start::after{box-shadow:0 0 0 2px var(--text);animation:anc 1.4s ease-in-out infinite}
+.cell.start.sa{border-radius:36%}.cell.start.sb{border-radius:6%}
+.mk{position:absolute;left:0;right:0;bottom:15%;text-align:center;font-size:8px;font-weight:800;letter-spacing:.06em;color:var(--pText);z-index:2}
+.cell.endmark{box-shadow:none;border:2px dashed var(--b);border-radius:6%}
+.cell.endmark .mk{color:var(--bText)}
+.desk .mk{font-size:11px}
+.cell.sealed{z-index:2;outline:3px solid var(--text);outline-offset:2px;animation:shake .5s ease-in-out 2}
+.cell.wall::after{border:3px solid var(--text);background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--text) 22%,transparent) 0 2px,rgba(0,0,0,0) 2px 6px)}
+.cell.gap{box-shadow:none;border:2px dotted var(--muted);background:transparent}
+.cell.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{0%{transform:scale(.3)}100%{transform:scale(1)}}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+/* App: the mockup loops the opponent's-word flash; in play it flashes once (dev note 01). */
+.cell.flash::after{animation-iteration-count:1;animation-fill-mode:forwards}

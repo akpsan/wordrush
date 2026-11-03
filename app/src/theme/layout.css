@@ -1,0 +1,90 @@
+/*
+ * App shell. Replaces the design's fixed 390x844 phone frame with a layout that fills any screen:
+ * header and status at the top, keyboard at the bottom, and the board taking whatever is left,
+ * always square and never pushed off-screen.
+ */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+.wr {
+  touch-action: manipulation; /* no double-tap zoom */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Phone and tablet: one column, centred, at most 480px wide. */
+.wr.phone {
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: calc(8px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  padding-inline: max(16px, calc((100vw - 448px) / 2));
+}
+
+/* The board takes the space left over and stays square. */
+.wr.phone .boardwrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  container-type: size;
+  align-items: center;
+}
+.wr.phone .board {
+  width: min(100cqw, 100cqh);
+}
+.wr.phone .bottom {
+  margin-top: 0;
+}
+
+/* Short phones (e.g. 360x640, iPhone SE): tighten the controls so the board stays usable. */
+@media (max-height: 720px) {
+  .wr.phone { gap: 6px; }
+  .wr.phone .pl { padding: 7px 10px; gap: 5px; }
+  .wr.phone .key { height: 36px; }
+  .wr.phone .kb { gap: 5px; }
+  .wr.phone .entry { height: 38px; }
+  .wr.phone .slot { width: 38px; height: 38px; font-size: 20px; }
+  .wr.phone .btn { height: 42px; }
+  .wr.phone .bottom { gap: 5px; }
+}
+
+/* Desktop (>= 1080px wide, set by useIsDesktop): the design's three columns. */
+.wr.desk {
+  width: 100%;
+  min-height: 100dvh;
+  padding: 20px 32px 40px;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 360px;
+  grid-template-areas: 'hdr hdr hdr' 'side board bottom';
+  align-items: start;
+  column-gap: 44px;
+  row-gap: 24px;
+}
+.wr.desk .hdr { grid-area: hdr; }
+.wr.desk .side { grid-area: side; }
+.wr.desk .boardwrap { grid-area: board; }
+.wr.desk .bottom { grid-area: bottom; }
+.wr.desk .boardwrap {
+  container-type: inline-size;
+}
+.wr.desk .board {
+  width: min(600px, 100cqw, calc(100dvh - 140px));
+}
+
+/* Sheets stay phone-width on tablets. */
+.wr.phone .sheet {
+  left: max(0px, calc((100vw - 480px) / 2));
+  right: max(0px, calc((100vw - 480px) / 2));
+}

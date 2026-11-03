@@ -29,3 +29,17 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Adjacency | **Ignored.** Letters touching side by side don't need to form words. | Rules v4. |
 | "Already played" | **Includes both players' words.** | Rules v4 and the engine. |
 | Live feedback must not reveal the word list | **Agreed (as the designer proposed).** "Fits so far" and "no spot yet" use board geometry only. Whether a word is real is shown only in the ready state or when the player tries to play it. | Stops players probing the word list letter by letter. |
+
+## Build decisions (game screen)
+
+| Topic | Decision |
+| --- | --- |
+| "You" tag | Not shown in pass and play: both players are on the same device. It returns with online play. |
+| Results wording | Pass and play uses third-person results ("Blue boxed Orange in!", "Orange gave up"), in the same voice as the deck's "you" versions. Strings: `over.boxed.*`, `over.gaveup.*.pp` in `app/src/copy/overrides.ts`. |
+| Strings the deck doesn't list | START and END corner marks, and screen-reader labels for cells, the entry and the keyboard, are in `app/src/copy/overrides.ts`. |
+| Ways out before the first word | The player about to start sees "2 ways out" (across or down from their corner), as in the mockup. The other player shows "—" until their first word. |
+| Animations that loop in the mockups | "+n squares" and the opponent's-word flash play once in the app. The mockups loop them only so they're visible on a static canvas. |
+| Key caps on desktop buttons | Only Play shows its key (Enter). The Space cap on Flip didn't fit the 360px column with the "1 of 2" counter; the help line under the buttons already says Space flips. |
+| Flipped spot while editing | **Kept.** The design reset the preview to the first spot on every key press. Now the chosen spot (its letter, start or end, and direction) is kept while the word still fits there, and falls back to the first spot otherwise. Flipping TEA down and adding M keeps TEAM going down. |
+| Accent colour after the game | The winner's colour (buttons, highlights). |
+| Features not built yet | The "?" button (Learn to play), hints and Watch replay are hidden until their features exist, so no button does nothing. |

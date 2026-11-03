@@ -16,5 +16,6 @@ export {
   squares,
   type GameState,
 } from './game';
-export { waysOut, placementKey, type MoveContext } from './placements';
+export { placementKey, type MoveContext } from './placements';
+export { exitsOf, waysOut, boxedInExplanation, type Exit } from './exits';
 export { previewEntry, checkEntry, type Preview, type Problem, type WordCheck } from './entry';

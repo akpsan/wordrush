@@ -1,0 +1,69 @@
+/* From design/handoff/design/wordrush.css (header, status bar). Keep in step with the design. */
+/* Header */
+.hdr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:40px;flex:none}
+.hbtns{display:flex;gap:2px;justify-self:end}
+.ibtn{width:44px;height:44px;border-radius:12px;border:0;background:transparent;display:grid;place-items:center;color:var(--muted);position:relative}
+.ibtn:hover{background:var(--surface2);color:var(--text)}
+.ibtn .ico{width:20px;height:20px}
+.logo{display:flex;align-items:center;gap:8px;font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:18px;letter-spacing:.02em;color:var(--text)}
+.lg{display:inline-flex;gap:3px;align-items:center}
+.lg i{width:10px;height:10px;display:block}
+.lg i:first-child{border-radius:50%;background:var(--a)}
+.lg i:last-child{border-radius:2px;background:var(--b)}
+.desk .logo{font-size:22px}
+
+/* Status bar: players, danger meters, turn */
+.side{display:flex;flex-direction:column;gap:6px;flex:none}
+.score{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);align-items:center;gap:8px}
+.pl{position:relative;display:flex;flex-direction:column;gap:7px;padding:10px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.pl.b{align-items:flex-end;text-align:right}
+.pl.a.on{border-color:var(--a);box-shadow:inset 0 0 0 1px var(--a),0 0 18px var(--aGlow)}
+.pl.b.on{border-color:var(--b);box-shadow:inset 0 0 0 1px var(--b),0 0 18px var(--bGlow)}
+.pl.alarm{animation:alarm 1.3s ease-in-out infinite}
+@keyframes alarm{0%,100%{outline:2px solid rgba(0,0,0,0);outline-offset:2px}50%{outline:2px solid var(--text);outline-offset:3px}}
+.ptop{display:flex;align-items:center;gap:6px;min-width:0}
+.pl.b .ptop{flex-direction:row-reverse}
+.pip{width:12px;height:12px;flex:none;display:block}
+.pip.a{border-radius:50%;background:var(--a)}
+.pip.b{border-radius:2px;background:var(--b)}
+.pname{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.you{font-size:10px;letter-spacing:.03em;padding:1px 6px;border-radius:6px;background:var(--surface2);color:var(--text);font-weight:700}
+.room{display:flex;align-items:center;gap:6px;width:100%}
+.pl.b .room{flex-direction:row-reverse}
+.segs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;flex:1;height:8px}
+.segs i{display:block;border-radius:2px;background:var(--line)}
+.pl.a .segs i.on{background:var(--a)}
+.pl.b .segs i.on{background:var(--b)}
+.room.danger .segs i.on{background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.38) 0 2px,rgba(0,0,0,0) 2px 5px)}
+.room.unknown .segs i{opacity:.45}
+.room .ico{width:16px;height:16px;color:var(--text)}
+.pfoot{display:flex;align-items:baseline;justify-content:space-between;gap:6px;width:100%}
+.pl.b .pfoot{flex-direction:row-reverse}
+.rlbl{font-size:12px;font-weight:800;color:var(--text);white-space:nowrap}
+.room.open + .pfoot .rlbl{color:var(--muted)}
+.pcells{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+.delta{position:absolute;top:-9px;right:10px;font-family:'Bungee','Arial Black',sans-serif;font-size:11px;line-height:1;padding:4px 7px;border-radius:999px;background:var(--a);color:var(--aInk);animation:rise 2.6s ease-out infinite}
+.delta.db{right:auto;left:10px;background:var(--b);color:var(--bInk)}
+@keyframes rise{0%{transform:translateY(6px);opacity:0}15%,75%{transform:none;opacity:1}100%{transform:translateY(-4px);opacity:0}}
+.turn{display:flex;flex-direction:column;align-items:center;gap:2px}
+.tlbl{font-size:9px;font-weight:800;letter-spacing:.12em;color:var(--muted)}
+.tnum{font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:22px;line-height:1}
+.tarr{display:grid;place-items:center;color:var(--p)}
+.tarr .ico{width:18px;height:18px;stroke-width:3}
+.tarr.r{transform:rotate(180deg)}
+.tarr.none{opacity:0}
+.desk .score{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+.desk .pl{padding:14px 16px;gap:9px}
+.desk .pl.b{align-items:flex-start;text-align:left}
+.desk .pl.b .ptop,.desk .pl.b .room,.desk .pl.b .pfoot{flex-direction:row}
+.desk .segs{height:10px}
+.desk .rlbl{font-size:14px}
+.desk .turn{flex-direction:row;justify-content:center;gap:10px}
+.desk .tarr{transform:rotate(90deg)}.desk .tarr.r{transform:rotate(-90deg)}
+.desk .delta.db{left:auto;right:10px}
+.mini{display:inline-block;width:10px;height:10px;flex:none}
+.mini.a{border-radius:50%;background:var(--a)}
+.mini.b{border-radius:2px;background:var(--b)}
+
+/* App: the mockup loops "+n" so it's visible on a static canvas; in play it rises once. */
+.delta{animation-iteration-count:1;animation-fill-mode:forwards}

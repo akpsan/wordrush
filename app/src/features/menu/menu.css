@@ -1,0 +1,42 @@
+/* From design/handoff/design/wordrush.css (main menu). Keep in step with the design. */
+/* Main menu */
+.wr.menu.phone{gap:0;padding:8px 20px 24px}
+.mtop{display:flex;justify-content:flex-end;height:44px;flex:none}
+.mhero{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:4px}
+.mlogo{display:flex;align-items:center;gap:10px;font-family:'Bungee','Arial Black',Impact,sans-serif;font-size:40px;line-height:1;letter-spacing:.01em}
+.mlogo .lg i{width:16px;height:16px}
+.mlogo .lg{gap:5px}
+.mtag{font-size:17px;font-weight:700;color:var(--muted)}
+.mtag b{color:var(--text)}
+.mboardwrap{display:flex;justify-content:center;margin:18px 0 6px;position:relative}
+.mboard{width:286px;padding:5px;gap:3px;border-radius:16px}
+.mboard .cell{font-size:14px}
+.mbtns{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.mbtn{display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 16px;border-radius:18px;border:1px solid var(--line);background:var(--surface);text-align:left;width:100%}
+.mbtn .ico{width:24px;height:24px;flex:none}
+.mbtn .mt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.mbtn .mt b{font-size:18px;font-weight:800}
+.mbtn .mt span{font-size:13px;color:var(--muted);font-weight:600}
+.mbtn.pri{background:var(--p);border-color:var(--p);color:var(--pInk);box-shadow:0 8px 22px var(--pGlow)}
+.mbtn.pri .mt span{color:var(--pInk);opacity:.85}
+.mbtn.alt{border:2px solid var(--b)}
+.mbtn.alt .ico{color:var(--bText)}
+.mbtn.small{min-height:52px;background:transparent;border-style:dashed}
+.mbtn.small .mt b{font-size:16px}
+.mpill{flex:none;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:color-mix(in srgb,var(--pInk) 18%,transparent)}
+.mbtn:not(.pri) .mpill{background:var(--surface2);color:var(--text)}
+.mcont{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text)}
+.mcont .ico{width:14px;height:14px}
+.mfoot{display:flex;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--muted)}
+.wr.menu.desk{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);grid-template-areas:"top top" "left right";align-items:center;column-gap:64px;padding:24px 64px 48px;max-width:none}
+.wr.menu.desk .mtop{grid-area:top}
+.menuleft{grid-area:left;display:flex;flex-direction:column;gap:28px}
+.menuright{grid-area:right;display:flex;justify-content:center}
+.desk .mhero{align-items:flex-start}
+.desk .mlogo{font-size:64px}
+.desk .mtag{font-size:22px}
+.desk .mboard{width:min(560px,100%);padding:8px;gap:6px;border-radius:24px}
+.desk .mboard .cell{font-size:26px}
+.desk .mbtns{margin-top:0}
+.desk .mfoot{justify-content:flex-start}
+@media (max-width:900px){.wr.menu.desk{grid-template-columns:1fr;grid-template-areas:"top" "right" "left"}}

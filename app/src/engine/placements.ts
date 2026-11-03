@@ -177,10 +177,3 @@ export function allMoves(ctx: MoveContext, lex: Lexicon): Placement[] {
 /** True if at least one real word fits. */
 export const hasAnyMove = (ctx: MoveContext, lex: Lexicon): boolean =>
   moveGroups(ctx, lex).some((g) => g.moves.length > 0);
-
-/**
- * "Ways out": how many (letter, start-or-end, direction) combinations still allow at
- * least one real word. Reaches 0 exactly when the player is boxed in.
- */
-export const waysOut = (ctx: MoveContext, lex: Lexicon): number =>
-  moveGroups(ctx, lex).filter((g) => g.moves.length > 0).length;
