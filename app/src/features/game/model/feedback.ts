@@ -1,8 +1,10 @@
 /** The one-line feedback under the entry tiles. Rules from the design's feedback-line notes. */
 
-import { listLetters, playerName, t } from '../../../copy';
+import { listLetters, plain, t } from '../../../copy';
 import { otherPlayer, type Lexicon, type Player, type Problem } from '../../../engine';
+import type { Level } from '../../../ai';
 import type { EntryView } from './entry';
+import { aiParams, nameOf } from './match';
 import type { Session } from './session';
 import { letterChoices, waysOutFor } from './status';
 
@@ -49,14 +51,25 @@ export function feedbackFor(s: Session, entry: EntryView, lex: Lexicon): Feedbac
       break;
   }
 
-  if (firstMove) return neutral(mover === 0 ? t('first.start.blue') : t('first.start.orange'));
+  const { match } = s;
+  const opponent = otherPlayer(mover);
+  if (firstMove) {
+    if (match.mode === 'ai' && match.first === 'random' && game.turn === 1) return neutral(t('cpu.random.result.blue'));
+    return neutral(mover === 0 ? t('first.start.blue') : t('first.start.orange'));
+  }
   if (waysOutFor(game, lex, mover) === 1) return { tone: 'warn', text: t('type.danger'), pip: null };
+  if (game.lastWord[opponent] !== null && waysOutFor(game, lex, opponent) === 1) {
+    const text = match.mode === 'ai' ? t('cpu.danger.them', aiParams(match)) : t('opp.danger.them', { player: nameOf(match, opponent) });
+    return neutral(text, opponent);
+  }
   const last = game.words[game.words.length - 1];
-  if (s.lastPlay && last && last.player === otherPlayer(mover)) {
-    return neutral(
-      t('type.start.afterOpp', { opponent: playerName(last.player), WORD: last.word.toUpperCase(), letters }),
-      last.player,
-    );
+  if (s.lastPlay && last && last.player === opponent) {
+    const WORD = last.word.toUpperCase();
+    const text =
+      match.mode === 'ai'
+        ? t('cpu.played', { ...aiParams(match), WORD, letters })
+        : t('type.start.afterOpp', { opponent: nameOf(match, opponent), WORD, letters });
+    return neutral(text, last.player);
   }
   return neutral(t('type.start', { letters }));
 }
@@ -74,4 +87,58 @@ function problemText(problem: Problem, word: string, letters: string): string {
     case 'not-your-letter':
       return t('oops.notyourletter', { letters });
   }
+}
+
+/** What the entry area shows while the AI takes its turn: a line in place of the tiles, and a note under it. */
+export interface AiTurnView {
+  readonly line: string;
+  /** The animated dots while it thinks. */
+  readonly dots: boolean;
+  readonly ai: Player;
+  readonly level: Level;
+  readonly note: Feedback | null;
+}
+
+export function aiTurnView(s: Session, lex: Lexicon, phase: 'thinking' | 'playing'): AiTurnView | null {
+  const { game, match } = s;
+  if (match.mode !== 'ai') return null;
+  const ai = otherPlayer(match.human);
+  const params = aiParams(match);
+  const aiWord = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]!]!.word.toUpperCase() : '';
+  const line =
+    phase === 'playing'
+      ? t('cpu.playing', { ...params, WORD: aiWord })
+      : game.lastWord[ai] !== null && waysOutFor(game, lex, ai) === 1
+        ? t('cpu.thinking.danger', params)
+        : t('cpu.thinking', params);
+  // Under the line: the coin flip on a Random start, or the person's last word.
+  const mine = game.lastWord[match.human];
+  let note: Feedback | null = null;
+  if (mine === null && match.first === 'random') note = neutral(t('cpu.random.result.orange', params));
+  else if (mine !== null) {
+    const WORD = game.words[mine]!.word.toUpperCase();
+    const justPlayed = phase === 'thinking' && s.lastPlay?.wordIndex === mine;
+    note = neutral(
+      justPlayed ? t('wait.youPlayed', { WORD, n: s.lastPlay!.gain }) : t('wait.theyPlayed', { player: t('player.you'), WORD }),
+      match.human,
+    );
+  }
+  return { line, dots: phase === 'thinking', ai, level: match.level, note };
+}
+
+/** What screen readers hear during a vs-AI game (one polite message per step). */
+export function aiAnnouncement(s: Session, phase: 'idle' | 'thinking' | 'playing'): string {
+  const { game, match } = s;
+  if (match.mode !== 'ai' || game.result) return '';
+  const ai = otherPlayer(match.human);
+  const params = aiParams(match);
+  if (phase === 'thinking') return plain('cpu.sr.thinking', params);
+  const last = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]!]! : null;
+  if (phase === 'playing' && last) {
+    return plain('cpu.sr.played', { ...params, WORD: last.word.toUpperCase(), 'across/down': last.dir, r: last.row + 1, c: last.col + 1 });
+  }
+  if (phase === 'idle' && last && s.lastPlay && game.words[s.lastPlay.wordIndex] === last) {
+    return plain('cpu.sr.yourturn', { letters: listLetters(letterChoices(game, match.human)) });
+  }
+  return '';
 }

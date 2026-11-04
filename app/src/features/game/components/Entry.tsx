@@ -3,7 +3,7 @@ import { Icon } from '../../../ui/Icon';
 import '../styles/entry.css';
 import { RichText } from '../../../ui/RichText';
 import type { EntryView } from '../model/entry';
-import type { Feedback } from '../model/feedback';
+import type { AiTurnView, Feedback } from '../model/feedback';
 import type { HintView } from '../model/hint';
 
 const SLOTS = 5;
@@ -17,7 +17,28 @@ export interface EntryProps {
   readonly firstWordNote: boolean;
   /** The current hint, shown as a chip above the tiles. */
   readonly hint?: HintView | null;
+  /** The AI's turn: a "thinking" line replaces the tiles, and its note replaces the feedback. */
+  readonly aiTurn?: AiTurnView | null;
 }
+
+/** Spoken by the game's own live region (cpu.sr.*), so this line isn't a live region itself. */
+function AiTurnLine({ view }: { view: AiTurnView }) {
+  return (
+    <div className="typing">
+      <span className={`pip ${view.ai === 0 ? 'a' : 'b'} bot ${view.level}`} aria-hidden="true" />
+      <span>{view.line}</span>
+      {view.dots && (
+        <span className="dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+      )}
+    </div>
+  );
+}
+
+const NO_FEEDBACK: Feedback = { tone: 'neutral', text: '', pip: null };
 
 function HintChip({ hint }: { hint: HintView }) {
   // The deck's "Hint {pattern} · {n} left", with the pattern drawn as tiles.
@@ -45,7 +66,9 @@ function linkSlot(entry: EntryView): number {
   return spot.anchorAt === 'start' ? 0 : spot.word.length - 1;
 }
 
-export function Entry({ entry, feedback, problemId, firstWordNote, hint }: EntryProps) {
+export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, hint, aiTurn }: EntryProps) {
+  const feedback = aiTurn ? (aiTurn.note ?? NO_FEEDBACK) : typingFeedback;
+  const showNote = firstWordNote && !aiTurn;
   const { typed, maxLen, ready } = entry;
   const link = linkSlot(entry);
   const slots = Array.from({ length: SLOTS }, (_, i) => {
@@ -65,25 +88,29 @@ export function Entry({ entry, feedback, problemId, firstWordNote, hint }: Entry
       {hint ? (
         <HintChip hint={hint} />
       ) : (
-        <p className={firstWordNote ? 'tnote' : 'tnote off'} aria-hidden={!firstWordNote}>
+        <p className={showNote ? 'tnote' : 'tnote off'} aria-hidden={!showNote}>
           <Icon name="note" />
           <span>{t('first.note')}</span>
         </p>
       )}
-      <div
-        key={problemId ?? 'ok'}
-        className={problemId !== null ? 'entry shake' : 'entry'}
-        role="textbox"
-        aria-readonly="true"
-        aria-label={plain('entry.aria', { word: typed ? typed.toUpperCase() : plain('entry.aria.empty') })}
-      >
-        {slots.map((s, i) => (
-          <span key={i} className={s.cls}>
-            {s.ch.toUpperCase()}
-          </span>
-        ))}
-      </div>
-      <p className={fbClass} role="status">
+      {aiTurn ? (
+        <AiTurnLine view={aiTurn} />
+      ) : (
+        <div
+          key={problemId ?? 'ok'}
+          className={problemId !== null ? 'entry shake' : 'entry'}
+          role="textbox"
+          aria-readonly="true"
+          aria-label={plain('entry.aria', { word: typed ? typed.toUpperCase() : plain('entry.aria.empty') })}
+        >
+          {slots.map((s, i) => (
+            <span key={i} className={s.cls}>
+              {s.ch.toUpperCase()}
+            </span>
+          ))}
+        </div>
+      )}
+      <p className={fbClass} role={aiTurn ? undefined : 'status'}>
         {feedback.tone === 'good' && <Icon name="check" />}
         {feedback.tone === 'err' && <Icon name="info" />}
         {feedback.tone === 'warn' && <Icon name="warn" />}

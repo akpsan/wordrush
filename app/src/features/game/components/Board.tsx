@@ -8,6 +8,8 @@ export interface BoardProps {
   readonly cells: readonly CellView[];
   readonly onFlip: () => void;
   readonly onFilter: (cell: CellIndex) => void;
+  /** Any tap on the board (the AI's word appearing: finish it at once). */
+  readonly onTap?: () => void;
 }
 
 function CellContent({ cell }: { cell: CellView }) {
@@ -25,9 +27,9 @@ function CellContent({ cell }: { cell: CellView }) {
 }
 
 /** Cells you can act on (your letters, the preview) are buttons; the rest are labelled tiles. */
-export function Board({ cells, onFlip, onFilter }: BoardProps) {
+export function Board({ cells, onFlip, onFilter, onTap }: BoardProps) {
   return (
-    <section className="boardwrap" aria-label={plain('board.aria')}>
+    <section className="boardwrap" aria-label={plain('board.aria')} onClick={onTap}>
       <div className="board">
         {cells.map((cell) => {
           const style = cell.delay ? { animationDelay: `${cell.delay}ms` } : undefined;

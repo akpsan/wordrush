@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
 import { entryView } from './entry';
 import { feedbackFor } from './feedback';
+import { checkEntry } from '../../../engine';
+import type { Match } from './match';
 import { createSession, sessionReducer, type Session, type SessionAction } from './session';
 import { playerStatus } from './status';
 
@@ -108,5 +110,28 @@ describe('ending', () => {
   it('ignores typing once the game is over', () => {
     const s = run([{ type: 'giveUp' }, ...type('cat')]);
     expect(s.typed).toBe('');
+  });
+});
+
+describe('playing against the AI', () => {
+  const vsAi: Match = { mode: 'ai', level: 'medium', human: 1, first: 'ai', seed: 1 };
+  const aiFirst = () => createSession(undefined, undefined, vsAi);
+
+  it('ignores the person on the AI\'s turn, and plays the AI\'s move', () => {
+    let s = run([...type('team'), { type: 'play' }, { type: 'giveUp' }, { type: 'hint' }], aiFirst());
+    expect(s.game.words).toHaveLength(0);
+    expect(s.typed).toBe('');
+    expect(s.game.result).toBeNull();
+    const team = checkEntry(s.game, lex, 'team');
+    s = run([{ type: 'aiPlay', move: team.ok ? team.spots[0]! : (undefined as never) }], s);
+    expect(s.game.words.map((w) => w.word)).toEqual(['team']);
+    expect(s.lastPlay).toEqual({ wordIndex: 0, gain: 4 });
+    expect(s.match).toEqual(vsAi);
+  });
+
+  it('ignores an AI move on the person\'s turn', () => {
+    const s = createSession(undefined, undefined, { ...vsAi, human: 0 });
+    const team = checkEntry(s.game, lex, 'team');
+    expect(run([{ type: 'aiPlay', move: team.ok ? team.spots[0]! : (undefined as never) }], s)).toBe(s);
   });
 });

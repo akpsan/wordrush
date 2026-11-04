@@ -1,11 +1,11 @@
-import { playerName, t } from '../../../copy';
-import type { Player } from '../../../engine';
+import { t } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
 import { RichText } from '../../../ui/RichText';
 import { Sheet } from '../../../ui/Sheet';
 
 export interface GiveUpSheetProps {
-  readonly player: Player;
+  /** Who wins if you give up: Blue, Orange or the AI's name. */
+  readonly opponent: string;
   readonly onKeepPlaying: () => void;
   readonly onGiveUp: () => void;
   /** Hints left, when hints are on and some are left: offer one before giving up. */
@@ -13,8 +13,7 @@ export interface GiveUpSheetProps {
   readonly onHint: () => void;
 }
 
-export function GiveUpSheet({ player, onKeepPlaying, onGiveUp, hintsLeft, onHint }: GiveUpSheetProps) {
-  const opponent = playerName(player === 0 ? 1 : 0);
+export function GiveUpSheet({ opponent, onKeepPlaying, onGiveUp, hintsLeft, onHint }: GiveUpSheetProps) {
   return (
     <Sheet title={t('giveup.title')} onClose={onKeepPlaying}>
       <p className="stext">

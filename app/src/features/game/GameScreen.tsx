@@ -1,9 +1,9 @@
 /** The game screen: assembles the header, status bar, board and controls for one game. */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '../../copy';
-import type { Lexicon } from '../../engine';
-import { useIsDesktop } from '../../platform/media';
+import { otherPlayer, type GameResult, type GameState, type Lexicon } from '../../engine';
+import { useIsDesktop, usePrefersReducedMotion } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
 import { SettingsSheet, useResolvedTheme, useSettings } from '../settings';
@@ -16,12 +16,14 @@ import { Header } from './components/Header';
 import { Keyboard } from './components/Keyboard';
 import { StatusBar } from './components/StatusBar';
 import { boardView } from './model/board';
-import { feedbackFor } from './model/feedback';
+import { aiAnnouncement, aiTurnView, feedbackFor } from './model/feedback';
+import { FRIEND, isAi, nameOf, type Match } from './model/match';
 import { hintView } from './model/hint';
 import { hintsLeft } from './model/session';
 import type { SavedSession } from './persistence';
 import { letterChoices, playerStatus, turnStatus } from './model/status';
 import { useGame } from './useGame';
+import { AI_LETTER_MS, useAiTurn, type AiPhase } from './useAiTurn';
 
 type Overlay = 'settings' | 'giveUp' | null;
 
@@ -33,34 +35,63 @@ export interface GameScreenProps {
   readonly onMenu: () => void;
   /** Opens Learn to play from the "?" button. */
   readonly onHelp?: () => void;
+  /** Who's playing a new game (ignored when continuing a saved one). Defaults to pass and play. */
+  readonly match?: Match;
+  /** Called once when a game ends, so the app can keep records. */
+  readonly onGameOver?: (game: GameState, match: Match) => void;
+  /** Vs AI: the person's wins against this opponent, shown on the results. */
+  readonly aiWins?: number;
+  /** Vs AI: a new game against the same opponent (the app starts it; Random re-rolls). */
+  readonly onRematch?: () => void;
+  /** Vs AI: open the setup sheet to pick another opponent. */
+  readonly onChangeOpponent?: () => void;
 }
 
-export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
+export function GameScreen(props: GameScreenProps) {
+  const { lex, saved, onMenu, onHelp, onGameOver, aiWins, onRematch, onChangeOpponent } = props;
   const { settings } = useSettings();
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
-  const { session, entry, dispatch } = useGame(lex, saved ? { saved } : { hintsPerGame: settings.hints });
+  const reducedMotion = usePrefersReducedMotion();
+  const { session, entry, dispatch } = useGame(
+    lex,
+    saved ? { saved } : { hintsPerGame: settings.hints, match: props.match ?? FRIEND },
+  );
   const [overlay, setOverlay] = useState<Overlay>(null);
+  const { phase, skip } = useAiTurn(session, dispatch, reducedMotion);
 
-  const { game } = session;
+  const { game, match } = session;
   const result = game.result;
-  const stage = !result ? 'playing' : result.reason === 'boxed-in' && !session.resultsShown ? 'boxed' : 'over';
+  // While the AI's word appears, the game carries on looking like play, even if that word won.
+  const stage = !result || phase === 'playing' ? 'playing' : result.reason === 'boxed-in' && !session.resultsShown ? 'boxed' : 'over';
   const playing = stage === 'playing';
+  const aiBusy = phase !== 'idle';
+  const yourTurn = playing && !aiBusy && !isAi(match, game.toMove);
+  const lastPlayByAi = session.lastPlay !== null && isAi(match, game.words[session.lastPlay.wordIndex]!.player);
+
+  useReportGameOver(result, phase, () => onGameOver?.(game, match));
 
   const players = useMemo(
     () => [playerStatus(session, lex, 0), playerStatus(session, lex, 1)] as const,
     [session, lex],
   );
   const cells = useMemo(
-    () => boardView(session, entry, lex, { showWaysOut: settings.showWaysOut, fade: !settings.showAllLetters }),
-    [session, entry, lex, settings.showWaysOut, settings.showAllLetters],
+    () =>
+      boardView(session, entry, lex, {
+        showWaysOut: settings.showWaysOut && !aiBusy,
+        showAnchors: !aiBusy,
+        fade: !settings.showAllLetters,
+        aiReveal: lastPlayByAi ? (phase === 'playing' ? AI_LETTER_MS : 0) : undefined,
+      }),
+    [session, entry, lex, settings.showWaysOut, settings.showAllLetters, aiBusy, lastPlayByAi, phase],
   );
   const feedback = useMemo(() => feedbackFor(session, entry, lex), [session, entry, lex]);
+  const aiTurn = useMemo(() => (phase === 'idle' ? null : aiTurnView(session, lex, phase)), [session, lex, phase]);
   const hint = useMemo(() => hintView(session), [session]);
   const left = session.hints.perGame > 0 ? hintsLeft(session) : null;
   const highlight = useMemo(
-    () => new Set(playing && settings.highlightLetters ? letterChoices(game, game.toMove) : []),
-    [playing, settings.highlightLetters, game],
+    () => new Set(yourTurn && settings.highlightLetters ? letterChoices(game, game.toMove) : []),
+    [yourTurn, settings.highlightLetters, game],
   );
 
   useKeyboardCommands((c: KeyCommand) => {
@@ -76,18 +107,28 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
       case 'escape':
         return dispatch({ type: 'escape' });
     }
-  }, playing && overlay === null);
+  }, yourTurn && overlay === null);
 
   return (
     <Frame theme={theme} layout={desk ? 'desk' : 'phone'} accent={result ? result.winner : game.toMove}>
       <Header
         onMenu={() => setOverlay('settings')}
         onGiveUp={() => setOverlay('giveUp')}
-        canGiveUp={playing}
+        canGiveUp={yourTurn}
         onHelp={onHelp}
       />
-      <StatusBar players={players} turn={turnStatus(game)} />
-      <Board cells={cells} onFlip={() => dispatch({ type: 'flip' })} onFilter={(cell) => dispatch({ type: 'filter', cell })} />
+      <StatusBar players={players} turn={turnStatus(session)} thinking={phase === 'thinking'} />
+      <Board
+        cells={cells}
+        onFlip={() => dispatch({ type: 'flip' })}
+        onFilter={(cell) => dispatch({ type: 'filter', cell })}
+        onTap={phase === 'playing' ? skip : undefined}
+      />
+      {match.mode === 'ai' && (
+        <p className="sr" role="status">
+          {aiAnnouncement(session, phase)}
+        </p>
+      )}
       <section className="bottom">
         {playing && (
           <>
@@ -97,16 +138,17 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
               problemId={session.problem?.id ?? null}
               firstWordNote={game.toMove === 0 && game.lastWord[0] === null}
               hint={hint}
+              aiTurn={aiTurn}
             />
             <Keyboard
-              enabled
+              enabled={yourTurn}
               highlight={highlight}
               onLetter={(letter) => dispatch({ type: 'letter', letter })}
               onDelete={() => dispatch({ type: 'delete' })}
             />
             <Actions
               entry={entry}
-              enabled
+              enabled={yourTurn}
               onFlip={() => dispatch({ type: 'flip' })}
               onPlay={() => dispatch({ type: 'play' })}
               hintsLeft={left}
@@ -120,7 +162,11 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
           <GameOverPanel
             game={game}
             hintsUsed={session.hints.perGame > 0 ? session.hints.used : null}
-            onPlayAgain={() => dispatch({ type: 'newGame' })}
+            match={match}
+            onPlayAgain={match.mode === 'ai' && onRematch ? onRematch : () => dispatch({ type: 'newGame' })}
+            aiWins={aiWins}
+            onChangeOpponent={onChangeOpponent}
+            onMenu={onMenu}
           />
         )}
       </section>
@@ -139,7 +185,7 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
       )}
       {overlay === 'giveUp' && (
         <GiveUpSheet
-          player={game.toMove}
+          opponent={nameOf(match, otherPlayer(game.toMove))}
           onKeepPlaying={() => setOverlay(null)}
           onGiveUp={() => {
             setOverlay(null);
@@ -154,4 +200,16 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
       )}
     </Frame>
   );
+}
+
+/** Calls `report` once per finished game, after the AI's winning word (if any) has appeared. */
+function useReportGameOver(result: GameResult | null, phase: AiPhase, report: () => void) {
+  const reported = useRef<GameResult | null>(null);
+  const latest = useRef(report);
+  latest.current = report;
+  useEffect(() => {
+    if (!result || phase === 'playing' || reported.current === result) return;
+    reported.current = result;
+    latest.current();
+  }, [result, phase]);
 }

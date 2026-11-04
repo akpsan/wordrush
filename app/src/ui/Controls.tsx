@@ -23,14 +23,17 @@ export function Segmented<T extends string | number>({
   options,
   label,
   onChange,
+  wide = false,
 }: {
   value: T;
   options: readonly SegmentOption<T>[];
   label: string;
   onChange: (value: T) => void;
+  /** Full width, options sharing it equally. */
+  wide?: boolean;
 }) {
   return (
-    <div className="seg" role="group" aria-label={label}>
+    <div className={wide ? 'seg wide' : 'seg'} role="group" aria-label={label}>
       {options.map((o) => (
         <button
           key={String(o.value)}

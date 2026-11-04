@@ -53,6 +53,19 @@ for (const theme of ['dark', 'light'] as const) {
       await scan(page, 'results');
     });
 
+    test('Play vs AI: setup, the AI\'s turn, and results', async ({ page }) => {
+      await openApp(page, 'returning', { theme });
+      await page.getByRole('button', { name: /Play vs AI/ }).click();
+      await scan(page, 'setup sheet');
+      await page.getByRole('button', { name: 'Start game' }).click();
+      await keys(page, 'team\n');
+      await expect(page.locator('p.fb')).toHaveText(/^Juno played/, { timeout: 15_000 });
+      await scan(page, 'your turn after the AI');
+      await page.getByRole('button', { name: 'Give up' }).click();
+      await page.getByRole('dialog').getByRole('button', { name: 'Give up' }).click();
+      await scan(page, 'vs-AI results');
+    });
+
     test('faded board: full contrast with Show all letters, the rest passes with fading', async ({ page }) => {
       await openApp(page, 'returning', { theme, showAllLetters: true });
       await page.getByRole('button', { name: /Play a friend/ }).click();

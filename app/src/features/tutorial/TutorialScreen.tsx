@@ -18,6 +18,10 @@ export interface TutorialScreenProps {
   readonly lex: Lexicon;
   /** Finished, or skipped: the app marks the tutorial as seen. */
   readonly onExit: (to: 'menu' | 'play') => void;
+  /**
+   * A game is saved: the last button continues it. Otherwise it starts a first game vs Pip (Easy).
+   */
+  readonly hasSavedGame?: boolean;
 }
 
 function Progress({ index }: { index: number }) {
@@ -138,7 +142,7 @@ function Controls({ view, dispatch }: { view: LessonView; dispatch: (a: LessonAc
   );
 }
 
-export function TutorialScreen({ lex, onExit }: TutorialScreenProps) {
+export function TutorialScreen({ lex, onExit, hasSavedGame = false }: TutorialScreenProps) {
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
   const positions = useMemo(() => buildPositions(lex), [lex]);
@@ -206,9 +210,10 @@ export function TutorialScreen({ lex, onExit }: TutorialScreenProps) {
                 {t('learn.9.menu')}
               </button>
               <button type="button" className="btn pri" onClick={() => onExit('play')}>
-                {t('learn.9.play')}
+                {hasSavedGame ? t('menu.continue.title') : t('learn.9.play')}
               </button>
             </div>
+            {!hasSavedGame && <p className="lnote">{t('learn.9.play.note')}</p>}
           </div>
         )}
         {step.kind !== 'intro' && step.kind !== 'done' && <Controls view={view} dispatch={dispatch} />}

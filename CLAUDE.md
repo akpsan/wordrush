@@ -24,7 +24,8 @@ Two-player word chain game on a grid (Tron light cycles crossed with Shiritori).
 ## Game
 
 - One mode: players type their own words on an on-screen keyboard (Wordle-style). No suggestions, no timer, so no timeout rules (decided 2026-11-03).
-- Bots choose from all legal moves, which matches typing by a player with a big vocabulary. Real players know fewer words, which the bots don't model yet.
+- Two modes: Play a friend (pass and play) and Play vs AI (Pip/Easy, Juno/Medium, Rex/Hard). The app's AIs (`app/src/ai/`) are TypeScript ports of the simulator's bots that prefer everyday words; calibrate them with `app/scripts/calibrate-ai.ts`.
+- Simulator bots choose from all legal moves, which matches typing by a player with a big vocabulary. Real players know fewer words, which the bots don't model yet.
 
 ## App
 

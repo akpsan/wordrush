@@ -3,14 +3,29 @@ import { Icon } from '../../../ui/Icon';
 import type { PlayerStatus, TurnStatus } from '../model/status';
 import '../styles/status.css';
 
-function PlayerCard({ p }: { p: PlayerStatus }) {
+/** A player's shape (circle for Blue, square for Orange); the AI's has its face inside. */
+export function PlayerPip({ player, ai, size }: { player: 0 | 1; ai?: PlayerStatus['ai']; size?: number }) {
+  const side = player === 0 ? 'a' : 'b';
+  const style = size ? { width: size, height: size } : undefined;
+  return <span className={ai ? `pip ${side} bot ${ai.level}` : `pip ${side}`} style={style} aria-hidden="true" />;
+}
+
+function PlayerCard({ p, thinking }: { p: PlayerStatus; thinking: boolean }) {
   const side = p.player === 0 ? 'a' : 'b';
-  const classes = ['pl', side, p.active && 'on', p.alarm && 'alarm'].filter(Boolean).join(' ');
+  const classes = ['pl', side, p.active && 'on', p.alarm && 'alarm', p.ai && 'cpu', p.ai && thinking && 'thinking']
+    .filter(Boolean)
+    .join(' ');
   return (
     <div className={classes}>
       <div className="ptop">
-        <span className={`pip ${side}`} aria-hidden="true" />
+        <PlayerPip player={p.player} ai={p.ai} />
         <span className="pname">{p.name}</span>
+        {p.you && <span className="you">{t('player.you')}</span>}
+        {p.ai && (
+          <span className="you lvl" aria-hidden="true">
+            {t('cpu.card.level', { level: p.ai.levelName })}
+          </span>
+        )}
       </div>
       <div
         className={`room ${p.level}`}
@@ -41,12 +56,19 @@ function PlayerCard({ p }: { p: PlayerStatus }) {
   );
 }
 
-export function StatusBar({ players, turn }: { players: readonly [PlayerStatus, PlayerStatus]; turn: TurnStatus }) {
+export interface StatusBarProps {
+  readonly players: readonly [PlayerStatus, PlayerStatus];
+  readonly turn: TurnStatus;
+  /** The AI is thinking: its card's eyes blink. */
+  readonly thinking?: boolean;
+}
+
+export function StatusBar({ players, turn, thinking = false }: StatusBarProps) {
   const arrow = ['tarr', turn.toward === 1 && 'r', turn.toward === null && 'none'].filter(Boolean).join(' ');
   return (
     <section className="side" aria-label={plain('status.aria')}>
       <div className="score">
-        <PlayerCard p={players[0]} />
+        <PlayerCard p={players[0]} thinking={thinking} />
         <div className="turn" aria-label={turn.aria} role="status">
           <span className="tlbl">{turn.label}</span>
           <span className="tnum">{turn.value}</span>
@@ -54,7 +76,7 @@ export function StatusBar({ players, turn }: { players: readonly [PlayerStatus, 
             <Icon name="chevron" />
           </span>
         </div>
-        <PlayerCard p={players[1]} />
+        <PlayerCard p={players[1]} thinking={thinking} />
       </div>
     </section>
   );

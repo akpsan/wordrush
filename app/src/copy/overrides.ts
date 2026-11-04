@@ -11,14 +11,33 @@ const composite = {
   'settings.hints.off': 'Off',
   'learn.flip': 'Flip',
   'learn.play': 'Play',
+  'menu.cpu.whoFirst.you': 'you go first',
+  'menu.cpu.whoFirst.ai': '{ai} goes first',
+  'menu.cpu.whoFirst.random': 'random start',
+  'menu.continue.cpu.turn.you': 'your move',
+  'menu.continue.cpu.turn.ai': "{ai}'s move",
+  'cpu.setup.first.you': 'You',
+  'cpu.setup.first.ai': '{ai}',
+  'cpu.setup.first.random': 'Random',
+} as const;
+
+/** The AI opponents table (copy deck section 5) has its own shape, so its rows are listed here. */
+const opponents = {
+  'ai.easy.name': 'Pip',
+  'ai.medium.name': 'Juno',
+  'ai.hard.name': 'Rex',
+  'ai.easy.level': 'Easy',
+  'ai.medium.level': 'Medium',
+  'ai.hard.level': 'Hard',
+  'ai.easy.desc': 'Pip plays short, everyday words and sometimes forgets to leave room. Great for warming up.',
+  'ai.medium.desc': 'Juno plays solid words and always keeps a way out.',
+  'ai.hard.desc': 'Rex plans ahead and tries to box you in. Good luck!',
 } as const;
 
 /** Changes to deck wording, required by decisions in docs/ui-decisions.md. */
 const changed = {
   // Tab stays reserved for focus; Space flips.
   'desk.keys': 'Just type! **Enter** to play · **Space** to flip · **⌫** to delete',
-  // Until Play vs AI ships, Learn to play's last button starts a pass-and-play game.
-  'learn.9.play': 'Play now',
 } as const;
 
 /**
@@ -54,4 +73,4 @@ const missing = {
   'over.stats.hints': 'Hints used',
 } as const;
 
-export const overrides = { ...composite, ...changed, ...passAndPlay, ...missing };
+export const overrides = { ...composite, ...opponents, ...changed, ...passAndPlay, ...missing };

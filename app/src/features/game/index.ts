@@ -9,6 +9,7 @@ export { waysOutFor, playerStatus, letterChoices, type PlayerStatus } from './mo
 export { boardView, type CellView } from './model/board';
 export { entryView, type EntryView } from './model/entry';
 export { createSession, type Session } from './model/session';
+export { FRIEND, type Match, type AiMatch, type FirstChoice } from './model/match';
 export type { Feedback, FeedbackTone } from './model/feedback';
 export { Board } from './components/Board';
 export { Entry } from './components/Entry';

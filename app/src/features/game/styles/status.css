@@ -69,3 +69,20 @@
 .delta{animation-iteration-count:1;animation-fill-mode:forwards}
 /* With reduced motion the fade-out can't run, so "+n" would never leave; the feedback line already says what was played. */
 @media (prefers-reduced-motion:reduce){.delta{display:none}}
+
+/* Play vs AI: the "You" tag, the AI's face inside the player shape, and its level tag. */
+.you{font-size:10px;letter-spacing:.03em;padding:1px 6px;border-radius:6px;background:var(--surface2);color:var(--text);font-weight:700}
+.pip.bot{width:15px;height:15px;position:relative;color:var(--aInk)}
+.pip.b.bot{color:var(--bInk)}
+.pip.bot::before{content:'';position:absolute;top:5px;left:3.5px;width:3px;height:3px;border-radius:50%;background:currentColor;box-shadow:5px 0 0 currentColor}
+.pip.bot.easy::before{top:4px;width:3.5px;height:3.5px}
+.pip.bot.easy::after{content:'';position:absolute;left:4.5px;bottom:3px;width:5px;height:2.5px;border:1.5px solid currentColor;border-top:0;border-radius:0 0 4px 4px;box-sizing:border-box}
+.pip.bot.hard::before{top:6px;width:3.5px;height:2px;border-radius:0}
+.pip.bot.hard::after{content:'';position:absolute;left:2.5px;top:3px;width:10px;height:1.5px;background:currentColor;clip-path:polygon(0 0,45% 100%,55% 100%,100% 0,100% 100%,0 100%)}
+.pl.thinking .pip.bot::before,.typing .pip.bot::before{animation:blinkeyes 1.4s ease-in-out infinite}
+@keyframes blinkeyes{0%,40%,100%{transform:scaleY(1)}45%,55%{transform:scaleY(.15)}}
+.pl.cpu .pname{letter-spacing:.02em}
+.pl.cpu .lvl{position:absolute;top:-9px;background:var(--surface);border:1px solid var(--line);color:var(--text);font-size:10px;padding:2px 7px;z-index:1}
+.pl.a.cpu .lvl{left:10px}.pl.b.cpu .lvl{right:10px}
+.desk .pl.b.cpu .lvl{right:auto;left:10px}
+.typing .pip{display:inline-block}

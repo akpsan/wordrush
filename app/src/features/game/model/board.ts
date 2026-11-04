@@ -41,6 +41,11 @@ export interface BoardOptions {
    * (default false). Off once the game is over, and in the tutorial, whose lessons point at letters.
    */
   readonly fade?: boolean;
+  /**
+   * The AI's word appearing: only its new squares pop, this many ms apart. 0 shows them all at once
+   * (a tap skips the animation). Omit for a person's word (every letter pops, 60ms apart).
+   */
+  readonly aiReveal?: number;
 }
 
 /** How long ago a player played a word: 0 = their last word, 1 = the one before, 2 = older. */
@@ -96,9 +101,11 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   // The most recent word, flashed for the next player until they start typing.
   const lastWord = game.words[game.words.length - 1];
   const flash = new Set(lastWord && !s.typed && !over ? lastWord.cells : []);
-  const pop = new Map<CellIndex, number>(
-    s.lastPlay ? game.words[s.lastPlay.wordIndex]!.cells.map((c, k) => [c, k] as const) : [],
-  );
+  const popCells = s.lastPlay ? game.words[s.lastPlay.wordIndex]!.cells : [];
+  const revealing = opts.aiReveal !== undefined;
+  const popOrder = revealing ? popCells.filter((c) => game.board[c]!.words.length === 1) : popCells;
+  const pop = new Map<CellIndex, number>(popOrder.map((c, k) => [c, k] as const));
+  const stagger = revealing ? opts.aiReveal! : 60;
 
   // Escape-route dots when the mover is running out of room.
   const routes = new Set<CellIndex>();
@@ -174,7 +181,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
     const popAt = pop.get(index);
     if (popAt !== undefined) {
       cls.push('pop');
-      delay = popAt * 60;
+      delay = popAt * stagger;
     }
     if (showAnchors && firstMove && index === corner && !g) {
       cls.push('start', mover === 0 ? 'sa' : 'sb');

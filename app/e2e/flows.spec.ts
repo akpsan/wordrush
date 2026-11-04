@@ -20,7 +20,9 @@ test('first launch: Learn to play first, through to a real game', async ({ page 
   await expect(page.getByText('Boxed in', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Finish' }).click();
   await expect(page.getByText("You're ready!")).toBeVisible();
-  await page.getByRole('button', { name: 'Play now' }).click();
+  await expect(page.getByText('Your first game is against Pip')).toBeVisible();
+  await page.getByRole('button', { name: 'Play vs AI' }).click();
+  await expect(page.locator('.pl.cpu')).toContainText('Pip');
   await expect(page.getByText('Start in the top-left corner', { exact: false })).toBeVisible();
 });
 

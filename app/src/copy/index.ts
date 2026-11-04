@@ -29,3 +29,10 @@ export function listLetters(letters: readonly string[]): string {
 }
 
 export const playerName = (player: 0 | 1): string => (player === 0 ? t('player.blue') : t('player.orange'));
+
+export type AiLevel = 'easy' | 'medium' | 'hard';
+
+/** The AI's persona name (Pip, Juno, Rex), its difficulty, and its one-line description. */
+export const aiName = (level: AiLevel): string => t(`ai.${level}.name`);
+export const aiLevelName = (level: AiLevel): string => t(`ai.${level}.level`);
+export const aiDescription = (level: AiLevel): string => t(`ai.${level}.desc`);

@@ -73,6 +73,28 @@ const PATHS = {
   play: <path d="M7 5l12 7-12 7z" />,
   chevron: <path d="M15 6l-6 6 6 6" />,
   plus: <path d="M12 5v14M5 12h14" />,
+  trophy: (
+    <>
+      <path d="M8 21h8M12 17v4" />
+      <path d="M7 4h10v5a5 5 0 0 1-10 0z" />
+      <path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" />
+    </>
+  ),
+  bot: (
+    <>
+      <rect x="5" y="8" width="14" height="11" rx="3" />
+      <path d="M12 4v4" />
+      <circle cx="9.5" cy="13" r="1" />
+      <circle cx="14.5" cy="13" r="1" />
+    </>
+  ),
+  sliders: (
+    <>
+      <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+      <circle cx="16" cy="7" r="2" />
+      <circle cx="10" cy="17" r="2" />
+    </>
+  ),
   friends: (
     <>
       <circle cx="8" cy="9" r="3" />

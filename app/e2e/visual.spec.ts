@@ -46,6 +46,16 @@ test('older words fade, and the board dims while typing', async ({ page }) => {
   await shot(page, 'game-typing-dim');
 });
 
+test('Play vs AI: setup and results', async ({ page }) => {
+  await openApp(page);
+  await page.getByRole('button', { name: /Play vs AI/ }).click();
+  await shot(page, 'ai-setup');
+  await page.getByRole('button', { name: 'Start game' }).click();
+  await page.getByRole('button', { name: 'Give up' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Give up' }).click();
+  await shot(page, 'ai-results');
+});
+
 test('light theme game', async ({ page }) => {
   await openApp(page, 'returning', { theme: 'light' });
   await page.getByRole('button', { name: /Play a friend/ }).click();

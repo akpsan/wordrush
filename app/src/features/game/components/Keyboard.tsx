@@ -15,7 +15,10 @@ export interface KeyboardProps {
   readonly emphasis?: (key: string) => 'next' | 'dim' | undefined;
 }
 
-/** Keys don't take focus on mouse or touch, so Enter on a physical keyboard always means Play. */
+/**
+ * Keys don't take focus on mouse or touch, so Enter on a physical keyboard always means Play.
+ * When inactive (the AI's turn), keys are aria-disabled rather than disabled, so focus stays put.
+ */
 const keepFocus = (e: MouseEvent) => e.preventDefault();
 
 export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis }: KeyboardProps) {
@@ -35,9 +38,9 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis }: K
                 type="button"
                 className={(mine ? 'key anc' : 'key') + extra(letter)}
                 aria-label={mine ? plain('key.letter.aria', { L: letter.toUpperCase() }) : letter.toUpperCase()}
-                disabled={!enabled}
+                aria-disabled={!enabled}
                 onMouseDown={keepFocus}
-                onClick={() => onLetter(letter)}
+                onClick={() => enabled && onLetter(letter)}
               >
                 {letter.toUpperCase()}
               </button>
@@ -48,9 +51,9 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis }: K
               type="button"
               className={'key wide' + extra('delete')}
               aria-label={plain('key.delete.aria')}
-              disabled={!enabled}
+              aria-disabled={!enabled}
               onMouseDown={keepFocus}
-              onClick={onDelete}
+              onClick={() => enabled && onDelete()}
             >
               <Icon name="backspace" />
             </button>

@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { playerName, t } from '../../../copy';
 import { otherPlayer, squares, type GameState, type Player } from '../../../engine';
+import { aiParams, type AiMatch, type Match } from '../model/match';
 import { Icon } from '../../../ui/Icon';
 import { RichText } from '../../../ui/RichText';
 import '../styles/panels.css';
@@ -38,7 +39,8 @@ export function BoxedInPanel({ game, onContinue }: { game: GameState; onContinue
   );
 }
 
-function headline(game: GameState): { title: string; sub: string; score: string } {
+function headline(game: GameState, match: Match): { title: string; sub: string; score: string } {
+  if (match.mode === 'ai') return aiHeadline(game, match);
   const result = game.result!;
   const winner = playerName(result.winner);
   const loser = playerName(otherPlayer(result.winner));
@@ -62,16 +64,47 @@ function headline(game: GameState): { title: string; sub: string; score: string 
   }
 }
 
+/** The vs-AI results, told to the person ("You boxed Rex in!"). */
+function aiHeadline(game: GameState, match: AiMatch): { title: string; sub: string; score: string } {
+  const result = game.result!;
+  const params = aiParams(match);
+  const won = result.winner === match.human;
+  const sa = squares(game, 0);
+  const sb = squares(game, 1);
+  switch (result.reason) {
+    case 'boxed-in': {
+      const WORD = result.boxedWord !== undefined ? game.words[result.boxedWord]!.word.toUpperCase() : '';
+      const n = game.turn;
+      return won
+        ? { title: t('cpu.over.won.title', params), sub: t('cpu.over.won.sub', { WORD, n }), score: '' }
+        : { title: t('cpu.over.lost.title', params), sub: t('cpu.over.lost.sub', { WORD, n }), score: '' };
+    }
+    case 'gave-up':
+      return { title: t('cpu.over.gaveup.title'), sub: t('cpu.over.gaveup.sub', params), score: '' };
+    case 'full-board':
+      return { title: won ? t('cpu.over.full.won') : t('cpu.over.full.lost', params), sub: '', score: `${sa} – ${sb}` };
+  }
+}
+
 /** Results: who won, a few stats, and a rematch. */
 export interface GameOverPanelProps {
   readonly game: GameState;
   /** Hints used by each player, when hints were on for this game. */
   readonly hintsUsed: readonly [number, number] | null;
+  readonly match: Match;
+  /** Play again (pass and play) or Rematch (vs AI). */
   readonly onPlayAgain: () => void;
+  /** Vs AI: the person's wins against this opponent, including this game. */
+  readonly aiWins?: number;
+  /** Vs AI: open the setup sheet. */
+  readonly onChangeOpponent?: () => void;
+  /** Vs AI: back to the menu. */
+  readonly onMenu?: () => void;
 }
 
-export function GameOverPanel({ game, hintsUsed, onPlayAgain }: GameOverPanelProps) {
-  const { title, sub, score } = headline(game);
+
+export function GameOverPanel({ game, hintsUsed, match, onPlayAgain, aiWins, onChangeOpponent, onMenu }: GameOverPanelProps) {
+  const { title, sub, score } = headline(game, match);
   const winner = game.result!.winner;
   const words = (p: Player) => game.words.filter((w) => w.player === p).length;
   const rows: [string, number, number][] = [
@@ -107,12 +140,35 @@ export function GameOverPanel({ game, hintsUsed, onPlayAgain }: GameOverPanelPro
           </Fragment>
         ))}
       </div>
-      <div className="orow">
-        <button type="button" className="btn pri" onClick={onPlayAgain}>
-          <Icon name="flip" />
-          {t('over.again')}
-        </button>
-      </div>
+      {match.mode === 'ai' ? (
+        <>
+          {aiWins !== undefined && (
+            <p className="reclabel">
+              <Icon name="trophy" />
+              <span>{aiWins > 0 ? t('cpu.record', { ...aiParams(match), n: aiWins }) : t('cpu.record.none', aiParams(match))}</span>
+            </p>
+          )}
+          <div className="orow">
+            <button type="button" className="btn sec" onClick={onChangeOpponent}>
+              {t('cpu.over.change')}
+            </button>
+            <button type="button" className="btn pri" onClick={onPlayAgain}>
+              <Icon name="flip" />
+              {t('cpu.over.rematch')}
+            </button>
+          </div>
+          <button type="button" className="linkbtn" onClick={onMenu}>
+            {t('cpu.over.menu')}
+          </button>
+        </>
+      ) : (
+        <div className="orow">
+          <button type="button" className="btn pri" onClick={onPlayAgain}>
+            <Icon name="flip" />
+            {t('over.again')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,13 @@
-/** The main menu: first launch (Learn to play first) or returning (Continue first). */
+/**
+ * The main menu, which is also the mode choice: Play vs AI or Play a friend.
+ * First launch: Learn to play leads. Returning: Continue first, then the mode used last.
+ */
 
 import { useMemo, useState } from 'react';
-import { plain, playerName, t } from '../../copy';
-import type { GameState, Lexicon } from '../../engine';
+import { aiLevelName, aiName, plain, playerName, t } from '../../copy';
+import type { Lexicon } from '../../engine';
+import type { SavedSession } from '../game';
+import { DEFAULT_SETUP, SetupSheet, type AiRecords, type AiSetup } from '../setup';
 import { useIsDesktop } from '../../platform/media';
 import { Frame } from '../../ui/Frame';
 import { Icon } from '../../ui/Icon';
@@ -12,16 +17,29 @@ import { SettingsSheet, useResolvedTheme } from '../settings';
 import { heroBoard, type HeroCell } from './heroBoard';
 import './menu.css';
 
+export type PlayMode = 'ai' | 'friend';
+
 export interface MenuScreenProps {
   readonly lex: Lexicon;
   /** No game played and the tutorial not seen yet. */
   readonly firstLaunch: boolean;
   /** The game in progress, if any. */
-  readonly saved: GameState | null;
+  readonly saved: SavedSession | null;
+  /** The last Play vs AI setup, or null if never played vs AI. */
+  readonly aiSetup: AiSetup | null;
+  /** The mode played last: its button goes first. */
+  readonly lastMode: PlayMode | null;
+  readonly records: AiRecords;
+  /** Open with the setup sheet showing ("Change difficulty" on the results). */
+  readonly showSetup?: boolean;
   readonly onContinue: () => void;
-  readonly onNewGame: () => void;
+  readonly onPlayAi: (setup: AiSetup) => void;
+  readonly onPlayFriend: () => void;
   readonly onLearn: () => void;
 }
+
+/** A new game the player asked for, waiting on "start a new game?" when one is saved. */
+type Pending = { readonly mode: 'friend' } | { readonly mode: 'ai'; readonly setup: AiSetup };
 
 function HeroBoard({ cells }: { cells: readonly HeroCell[] }) {
   return (
@@ -35,7 +53,19 @@ function HeroBoard({ cells }: { cells: readonly HeroCell[] }) {
   );
 }
 
-function ContinueSummary({ game }: { game: GameState }) {
+function ContinueSummary({ saved }: { saved: SavedSession }) {
+  const { game, match } = saved;
+  if (match.mode === 'ai') {
+    const ai = aiName(match.level);
+    const aiSide = match.human === 0 ? 'b' : 'a';
+    const turn = game.toMove === match.human ? t('menu.continue.cpu.turn.you') : t('menu.continue.cpu.turn.ai', { ai });
+    return (
+      <span className="mcont">
+        <span className={`pip ${aiSide} bot ${match.level}`} aria-hidden="true" />
+        {plain('menu.continue.sub.cpu', { ai, level: aiLevelName(match.level), n: game.turn, yourMoveOrTheirs: turn })}
+      </span>
+    );
+  }
   return (
     <span className="mcont">
       <span className={game.toMove === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />
@@ -44,13 +74,29 @@ function ContinueSummary({ game }: { game: GameState }) {
   );
 }
 
-export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onLearn }: MenuScreenProps) {
+function aiSubtitle(setup: AiSetup | null): string {
+  if (!setup) return t('menu.cpu.sub.first');
+  const ai = aiName(setup.level);
+  return t('menu.cpu.sub.last', { ai, level: aiLevelName(setup.level), whoFirst: t(`menu.cpu.whoFirst.${setup.first}`, { ai }) });
+}
+
+export function MenuScreen(props: MenuScreenProps) {
+  const { lex, firstLaunch, saved, aiSetup, lastMode, records, onContinue, onLearn } = props;
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
   const cells = useMemo(() => heroBoard(lex), [lex]);
-  const [sheet, setSheet] = useState<'settings' | 'abandon' | null>(null);
+  const [sheet, setSheet] = useState<'settings' | 'setup' | 'abandon' | null>(props.showSetup ? 'setup' : null);
+  const [pending, setPending] = useState<Pending | null>(null);
 
-  const newGame = () => (saved ? setSheet('abandon') : onNewGame());
+  const go = (p: Pending) => (p.mode === 'ai' ? props.onPlayAi(p.setup) : props.onPlayFriend());
+  /** Start a new game, asking first if it would replace the saved one. */
+  const begin = (p: Pending) => {
+    if (!saved) return go(p);
+    setPending(p);
+    setSheet('abandon');
+  };
+  // Returning player: one tap with the last setup. First time: the setup sheet.
+  const playAi = () => (aiSetup ? begin({ mode: 'ai', setup: aiSetup }) : setSheet('setup'));
 
   const learn = firstLaunch ? (
     <button type="button" className="mbtn pri" onClick={onLearn}>
@@ -71,8 +117,27 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
     </button>
   );
 
-  const newGameButton = (
-    <button type="button" className={firstLaunch ? 'mbtn' : 'mbtn pri'} onClick={newGame}>
+  // The mode used last is the primary button (Play vs AI if neither, or on first launch the tutorial is).
+  const primary: PlayMode | null = firstLaunch ? null : (lastMode ?? 'ai');
+  const aiButton = (
+    <div className="mbtnrow" key="ai">
+      <button type="button" className={primary === 'ai' ? 'mbtn pri' : 'mbtn'} onClick={playAi}>
+        <Icon name="bot" />
+        <span className="mt">
+          <b>{t('menu.cpu.title')}</b>
+          <span>{aiSubtitle(aiSetup)}</span>
+        </span>
+      </button>
+      {aiSetup && (
+        <button type="button" className="mbtn sq" aria-label={plain('menu.cpu.change.aria')} onClick={() => setSheet('setup')}>
+          <Icon name="sliders" />
+          {t('menu.cpu.change')}
+        </button>
+      )}
+    </div>
+  );
+  const friendButton = (
+    <button type="button" key="friend" className={primary === 'friend' ? 'mbtn pri' : 'mbtn'} onClick={() => begin({ mode: 'friend' })}>
       <Icon name="friends" />
       <span className="mt">
         <b>{t('menu.friend.title')}</b>
@@ -80,6 +145,7 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
       </span>
     </button>
   );
+  const modes = primary === 'friend' ? [friendButton, aiButton] : [aiButton, friendButton];
 
   return (
     <Frame theme={theme} layout={desk ? 'desk' : 'phone'} accent={0} className="menu">
@@ -115,18 +181,18 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
               <Icon name="play" />
               <span className="mt">
                 <b>{t('menu.continue.title')}</b>
-                <ContinueSummary game={saved} />
+                <ContinueSummary saved={saved} />
               </span>
             </button>
           )}
           {firstLaunch ? (
             <>
               {learn}
-              {newGameButton}
+              {modes}
             </>
           ) : (
             <>
-              {newGameButton}
+              {modes}
               {learn}
             </>
           )}
@@ -142,14 +208,25 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
       {sheet === 'settings' && (
         <SettingsSheet title={t('settings.title')} rows={['theme', 'hints', 'highlight', 'showAll']} onClose={() => setSheet(null)} />
       )}
-      {sheet === 'abandon' && (
+      {sheet === 'setup' && (
+        <SetupSheet
+          initial={aiSetup ?? DEFAULT_SETUP}
+          records={records}
+          onClose={() => setSheet(null)}
+          onStart={(setup) => {
+            setSheet(null);
+            begin({ mode: 'ai', setup });
+          }}
+        />
+      )}
+      {sheet === 'abandon' && pending && (
         <Sheet title={t('menu.abandon.title')} onClose={() => setSheet(null)}>
           <p className="stext">{t('menu.abandon.body')}</p>
           <div className="orow">
             <button type="button" className="btn sec" onClick={() => setSheet(null)}>
               {t('menu.abandon.keep')}
             </button>
-            <button type="button" className="btn pri" onClick={onNewGame}>
+            <button type="button" className="btn pri" onClick={() => go(pending)}>
               {t('menu.abandon.confirm')}
             </button>
           </div>

@@ -29,3 +29,8 @@
 /* App additions: layout the design set inline in the mockup's markup. */
 .ohead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .otext{display:flex;flex-direction:column;gap:4px;min-width:0}
+
+/* Play vs AI results: the record line and the text button under the actions. */
+.reclabel{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.reclabel .ico{width:14px;height:14px}
+.panel .linkbtn{align-self:center;height:36px}

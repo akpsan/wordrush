@@ -20,3 +20,6 @@
 
 /* App: dark-theme Blue was #3D7EF5 in the design; white button text on it was 3.8:1, below
    WCAG AA's 4.5:1. #256EF4 is the same hue, slightly darker, and passes (docs/ui-decisions.md). */
+
+/* App: text for screen readers only (the AI's turn announcements). */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}

@@ -1,6 +1,7 @@
 /** The status bar: each player's ways out, squares and turn. */
 
-import { plain, playerName, t } from '../../../copy';
+import { aiLevelName, plain, t } from '../../../copy';
+import type { Level } from '../../../ai';
 import {
   moveContext,
   squares,
@@ -9,6 +10,7 @@ import {
   type Lexicon,
   type Player,
 } from '../../../engine';
+import { humanOf, isAi, nameOf } from './match';
 import type { Session } from './session';
 
 export type RoomLevel = 'unknown' | 'cornered' | 'danger' | 'tight' | 'open';
@@ -16,6 +18,10 @@ export type RoomLevel = 'unknown' | 'cornered' | 'danger' | 'tight' | 'open';
 export interface PlayerStatus {
   readonly player: Player;
   readonly name: string;
+  /** The person's card in a vs-AI game ("You" tag). */
+  readonly you: boolean;
+  /** The AI's difficulty, on the AI's card. */
+  readonly ai: { readonly level: Level; readonly levelName: string } | null;
   readonly active: boolean;
   /** Null when not measured: before the first word, or for the winner once the game is over. */
   readonly ways: number | null;
@@ -68,14 +74,21 @@ export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerSt
   const ways = measuredWays(game, lex, player);
   const label = labelOf(ways);
   const last = s.lastPlay && game.words[s.lastPlay.wordIndex];
+  const { match } = s;
+  const name = nameOf(match, player);
+  const ai = match.mode === 'ai' && isAi(match, player) ? { level: match.level, levelName: aiLevelName(match.level) } : null;
   return {
     player,
-    name: playerName(player),
+    name,
+    you: humanOf(match) === player,
+    ai,
     active: !game.result && game.toMove === player,
     ways,
     level: levelOf(ways),
     label,
-    aria: plain('ways.aria', { player: playerName(player), waysOut: label }),
+    aria: ai
+      ? plain('cpu.card.aria', { ai: name, level: ai.levelName, waysOut: label })
+      : plain('ways.aria', { player: name, waysOut: label }),
     segments: ways === null ? 0 : Math.min(ways, 4),
     warn: ways !== null && ways <= 1,
     alarm: ways === 1 && !game.result,
@@ -92,7 +105,8 @@ export interface TurnStatus {
   readonly toward: Player | null;
 }
 
-export function turnStatus(game: GameState): TurnStatus {
+export function turnStatus(s: Session): TurnStatus {
+  const { game } = s;
   if (game.result) {
     const [label, value] = t('turn.over').split(' · ');
     return { label: label ?? '', value: value ?? '', aria: plain('turn.over'), toward: null };
@@ -100,7 +114,7 @@ export function turnStatus(game: GameState): TurnStatus {
   return {
     label: t('turn.label'),
     value: String(game.turn),
-    aria: plain('turn.aria', { n: game.turn, player: playerName(game.toMove) }),
+    aria: plain('turn.aria', { n: game.turn, player: nameOf(s.match, game.toMove) }),
     toward: game.toMove,
   };
 }

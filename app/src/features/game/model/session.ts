@@ -17,6 +17,7 @@ import {
   type Problem,
 } from '../../../engine';
 import { entryView } from './entry';
+import { FRIEND, isAi, type Match } from './match';
 
 export interface Session {
   readonly game: GameState;
@@ -36,6 +37,8 @@ export interface Session {
   /** The player has seen the boxed-in moment and moved on to the results. */
   readonly resultsShown: boolean;
   readonly hints: Hints;
+  /** Who's playing. Fixed for the game. */
+  readonly match: Match;
 }
 
 /** Hints for this game. Both players get `perGame`; the setting is fixed when the game starts. */
@@ -67,9 +70,11 @@ export type SessionAction =
   | { readonly type: 'giveUp' }
   | { readonly type: 'showResults' }
   | { readonly type: 'hint' }
-  | { readonly type: 'newGame' };
+  | { readonly type: 'newGame' }
+  /** The AI's move, from ai/. Ignored unless it's the AI's turn. */
+  | { readonly type: 'aiPlay'; readonly move: Placement };
 
-export const createSession = (game: GameState = newGame(), hints: Hints = noHints()): Session => ({
+export const createSession = (game: GameState = newGame(), hints: Hints = noHints(), match: Match = FRIEND): Session => ({
   game,
   typed: '',
   preferred: null,
@@ -78,11 +83,12 @@ export const createSession = (game: GameState = newGame(), hints: Hints = noHint
   lastPlay: null,
   resultsShown: false,
   hints,
+  match,
 });
 
 /** A fresh turn: everything typed is cleared, the game's hint allowance carries on. */
 const nextTurn = (s: Session, game: GameState): Session =>
-  createSession(game, { ...s.hints, current: null });
+  createSession(game, { ...s.hints, current: null }, s.match);
 
 const editing = (s: Session, typed: string, filter = s.filter): Session => ({
   ...s,
@@ -93,7 +99,9 @@ const editing = (s: Session, typed: string, filter = s.filter): Session => ({
 
 export function sessionReducer(lex: Lexicon, hintWords?: ReadonlySet<string>) {
   return function reduce(s: Session, action: SessionAction): Session {
-    const over = s.game.result !== null;
+    // On the AI's turn the person can't act: their input is ignored, not queued.
+    const aiTurn = isAi(s.match, s.game.toMove);
+    const over = s.game.result !== null || (aiTurn && action.type !== 'aiPlay' && action.type !== 'showResults');
     switch (action.type) {
       case 'letter': {
         if (over || !/^[a-z]$/.test(action.letter)) return s;
@@ -122,25 +130,26 @@ export function sessionReducer(lex: Lexicon, hintWords?: ReadonlySet<string>) {
       case 'hint':
         return over ? s : revealHint(s, lex, hintWords);
       case 'newGame':
-        return createSession(newGame(s.game.rules), noHints(s.hints.perGame));
+        return createSession(newGame(s.game.rules), noHints(s.hints.perGame), s.match);
+      case 'aiPlay':
+        return s.game.result || !aiTurn ? s : played(s, lex, action.move);
     }
   };
 }
 
 function attemptPlay(s: Session, lex: Lexicon): Session {
   const view = entryView(s, lex);
-  if (view.ready && view.current) {
-    const spot = view.current;
-    const gain = gainOf(s.game, spot.word.length, spot.row, spot.col, spot.dir);
-    const game = play(s.game, lex, spot);
-    return {
-      ...nextTurn(s, game),
-      lastPlay: { wordIndex: game.words.length - 1, gain },
-    };
-  }
+  if (view.ready && view.current) return played(s, lex, view.current);
   const check = checkEntry(s.game, lex, s.typed, s.filter);
   if (check.ok) return s; // ready but no spot selected: can't happen, nothing to do
   return { ...s, problem: { kind: check.problem, id: (s.problem?.id ?? 0) + 1 } };
+}
+
+/** A word goes down: the next turn starts, remembering the play for the pop and "+n". */
+function played(s: Session, lex: Lexicon, spot: Placement): Session {
+  const gain = gainOf(s.game, spot.word.length, spot.row, spot.col, spot.dir);
+  const game = play(s.game, lex, spot);
+  return { ...nextTurn(s, game), lastPlay: { wordIndex: game.words.length - 1, gain } };
 }
 
 /** Show a hint, or one more letter of the current hint. Each use counts against the player's allowance. */

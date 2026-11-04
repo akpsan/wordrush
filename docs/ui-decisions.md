@@ -54,8 +54,7 @@ New exports are merged by hand, never copied over: Claude Design starts from its
 | Saved game | Only the move list is saved. Continue replays it through the engine, so a damaged or out-of-date save is discarded rather than loading an illegal board. Finished games aren't saved. |
 | First-launch menu | Shown until the player has finished or skipped Learn to play, or started a game. |
 | Back to the menu from a game | A "Back to menu" button in the in-game menu sheet. The game stays saved for Continue. |
-| "Play now" at the end of Learn to play | Continues the saved game if there is one, otherwise starts a new game. The new deck says "Play vs AI"; `overrides.ts` keeps "Play now" until Play vs AI ships. |
-| Menu after the Play vs AI design | The menu already uses the new design's pass-and-play wording: **Play a friend** ("2 players, 1 device: take turns"), and Continue reads "vs a friend · Turn 13 · Blue's move". The "More ways to play coming soon" footer is dropped. Play vs AI itself isn't built yet. |
+| Last button of Learn to play | **Play vs AI** starts an Easy game against Pip with you going first, and saves that as the remembered setup (as the design says). If a game is saved, the button reads **Continue** and resumes it instead, so finishing the tutorial never throws a game away. |
 | Menu hero board | Built through the engine. The mockup's CUB and ARC became SUB and GAS, because CUB isn't in the word list. |
 | Tutorial copy the deck doesn't list | "Type **CAT**" (step 7 before typing) and "Tap **Flip** to try the next spot." (a scripted word on another spot, outside step 4). |
 | Tutorial keyboard after the bump | Inactive until "Got it", as in the mockup. |
@@ -83,3 +82,24 @@ The design's "fade by age + focus while typing" (dev note `devFade` in `canvas.j
 | Empty squares | Lose their outline while fading is on, so a faded tile never looks empty. |
 | Full contrast | When "Show all letters" is on (Settings, default off, in both the menu and in-game sheets), at the boxed-in moment and on the game-over board. The tutorial never fades: its lessons point at specific letters. |
 | Motion | The typing dim fades over 0.2s; instant under reduced motion. |
+
+## Build decisions (Play vs AI)
+
+Built from the "vs AI" dev notes in `canvas.json` and section 5 of the copy deck. Where the two differ, the copy deck wins (it names the AI Pip, Juno or Rex; some dev notes still say "the computer").
+
+| Topic | Decision |
+| --- | --- |
+| How each AI plays | **Easy (Pip):** short everyday words; about 1 move in 4 it plays one without checking its room. **Medium (Juno):** the simulator's "defensive" bot, keeping the most room for itself. **Hard (Rex):** the simulator's "lookahead" bot (its room minus yours, one reply ahead), plus a check of every move for an immediate box-in. Code: `app/src/ai/choose.ts`. |
+| Words the AI plays | **Everyday words** (the hint list), falling back to the full list only when no everyday word fits. An AI that plays QAID or XYST feels unfair and teaches nothing; the fallback means it never loses to a gap in its own vocabulary. |
+| Strength | Calibrated with `app/scripts/calibrate-ai.ts`; the order Easy < Medium < Hard holds clearly (`docs/findings.md`). |
+| Thinking time | The design's minimums (Easy 0.8s, Medium 1.0s, Hard 1.4s, ±150ms). The search runs in a Web Worker, so the screen keeps animating. Hard stops looking after 2.5s and plays its best move so far. |
+| Give up on the AI's turn | **Not available**, as in pass and play: only on your own turn. The design allows it during the AI's turn, but that turn lasts 1–2 seconds and allowing it would mean racing the AI's move. |
+| Keys during the AI's turn | Ignored, not queued. On-screen keys and Play are `aria-disabled` (not `disabled`), so focus stays where it was. |
+| Random start | Resolved when the game starts. Shown as the first line: "You're Blue this time. You go first!" on your first turn, or "You're Orange this time. Juno goes first." under the thinking line. |
+| Your first word after the AI's | Still "End your word in the bottom-right corner": the first-word rule matters more than repeating the AI's word. |
+| "Box them in!" | When the opponent is down to 1 way out, your turn's line says so (`cpu.danger.them`; `opp.danger.them` in pass and play). Your own danger line comes first. |
+| Change difficulty | Opens the setup sheet over the menu, prefilled. Starting from it asks before replacing a saved game, like any new game. |
+| Rematch | Same opponent and the same first-player choice; Random flips again. |
+| Records | Wins, losses and games per opponent, on this device (`features/setup/setup.ts`). Only wins are shown ("Wins vs Rex: 4", or "No wins vs Rex yet"). Giving up counts as a loss. |
+| Saved game | One slot for both modes. A new game of either mode replaces it (after asking). Saves are version 2 and record who's playing; version 1 saves load as pass and play. |
+| Screen readers | One polite message per step (`cpu.sr.thinking`, `cpu.sr.played`, `cpu.sr.yourturn`), from a single live region. The AI's face is decorative; its card reads "Juno, Medium: 3 ways out". |

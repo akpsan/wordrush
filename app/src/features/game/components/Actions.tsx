@@ -24,8 +24,9 @@ export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint }: A
         <button
           type="button"
           className="btn sec icon"
-          onClick={onHint}
-          disabled={!enabled || hintsLeft === 0}
+          onClick={() => enabled && onHint()}
+          disabled={hintsLeft === 0}
+          aria-disabled={!enabled}
           aria-label={hintsLeft === 0 ? plain('hint.none.aria') : plain('hint.button.aria', { n: hintsLeft })}
         >
           <Icon name="bulb" />
@@ -42,13 +43,12 @@ export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint }: A
         <span>{t('btn.flip')}</span>
         <span className="cnt">{n ? t('btn.flip.count', { i, n }) : '–'}</span>
       </button>
-      {/* Stays tappable when not ready (aria-disabled), so tapping it explains why. */}
+      {/* Stays tappable when not ready (aria-disabled), so tapping it explains why. On the AI's turn it's inactive but keeps focus. */}
       <button
         type="button"
         className={entry.ready ? 'btn pri' : 'btn pri soft'}
-        onClick={onPlay}
-        disabled={!enabled}
-        aria-disabled={!entry.ready}
+        onClick={() => enabled && onPlay()}
+        aria-disabled={!enabled || !entry.ready}
       >
         <span>{entry.ready ? t('btn.play.ready', { WORD: word }) : t('btn.play')}</span>
         <span className="kbd">Enter</span>

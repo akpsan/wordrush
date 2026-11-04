@@ -44,3 +44,4 @@
 /* App: the design's .btn grows to share a row (flex:1); in these vertical panels it must keep its height. */
 .intro .btn,.donep .orow{flex:none}
 .mm .segs{flex:none}
+.lnote{text-align:center;font-size:13px;line-height:1.4;color:var(--muted)}

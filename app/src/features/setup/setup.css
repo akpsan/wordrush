@@ -1,0 +1,18 @@
+/* Play vs AI setup sheet. From design/handoff/design/wordrush.css ("Play the computer"). */
+.sgroup{display:flex;flex-direction:column;gap:8px}
+.slabel{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lvls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lvlcard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:84px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface2);font-weight:800;font-size:15px}
+.lvlcard .pn{font-size:16px;font-weight:800}
+.lvlcard .pl2{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-top:-4px}
+.lvlcard .bars{display:flex;gap:3px;align-items:flex-end;height:14px}
+.lvlcard .bars i{display:block;width:5px;border-radius:2px;background:var(--line)}
+.lvlcard .bars i:nth-child(1){height:6px}.lvlcard .bars i:nth-child(2){height:10px}.lvlcard .bars i:nth-child(3){height:14px}
+.lvlcard .bars i.on{background:currentColor}
+.lvlcard.on{background:var(--p);border-color:var(--p);color:var(--pInk);box-shadow:0 6px 16px var(--pGlow)}
+.lvldesc{font-size:14px;line-height:1.45;color:var(--text);min-height:40px}
+.seg.wide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.shelp{font-size:13px;line-height:1.4;color:var(--muted)}
+.sheet .reclabel{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.sheet .reclabel .ico{width:14px;height:14px}
+.sheet>.btn{flex:none;width:100%}

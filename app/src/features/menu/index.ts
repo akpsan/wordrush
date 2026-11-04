@@ -1,1 +1,1 @@
-export { MenuScreen, type MenuScreenProps } from './MenuScreen';
+export { MenuScreen, type MenuScreenProps, type PlayMode } from './MenuScreen';

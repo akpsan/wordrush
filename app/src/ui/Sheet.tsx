@@ -12,7 +12,8 @@ export interface SheetProps {
   readonly children: ReactNode;
 }
 
-const FOCUSABLE = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE =
+  'button:not([disabled]):not([tabindex="-1"]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export function Sheet({ title, onClose, children }: SheetProps) {
   const ref = useRef<HTMLDivElement>(null);

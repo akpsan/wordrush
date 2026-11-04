@@ -49,3 +49,10 @@
 /* App: contrast (WCAG AA). The design faded this subtitle and lightened the pill behind white text. */
 .mbtn.pri .mt span{opacity:1}
 .mbtn.pri .mpill{background:color-mix(in srgb,#000 24%,transparent)}
+
+/* Play vs AI row: the main button and the square Change button next to it. */
+.mbtnrow{display:flex;gap:8px}
+.mbtnrow .mbtn{flex:1}
+.mbtn.sq{flex:0 0 64px;justify-content:center;padding:0;flex-direction:column;gap:2px;font-size:11px;font-weight:800;color:var(--muted)}
+.mbtn.sq .ico{width:20px;height:20px;color:var(--text)}
+.mcont .pip.bot{width:13px;height:13px}
