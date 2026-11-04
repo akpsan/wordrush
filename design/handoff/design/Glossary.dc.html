@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Bungee&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
 <style>body{margin:0}</style>
 </helmet>
-<div class="wr light turnA" style="width: 980px; height: 1240px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 22px; background: #F4F6F9">
+<div class="wr light turnA" style="width: 980px; height: 1320px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; gap: 22px; background: #F4F6F9">
 <div style="display: flex; flex-direction: column; gap: 6px">
 <h1 style="margin: 0; font-family: 'Bungee', 'Arial Black', sans-serif; font-size: 32px; font-weight: 400">Player words</h1>
 <p style="margin: 0; font-size: 16px; color: var(--muted)">The words we use with players, everywhere: menu, game, tutorial, messages and buttons. Pick from this list, and keep the words in the last column out of anything a player reads.</p>
@@ -42,7 +42,7 @@
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":980,"height":1240}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":980,"height":1320}}'>
 class Component extends DCLogic {
   renderVals() {
     return {
@@ -62,6 +62,7 @@ class Component extends DCLogic {
         { say: 'Hint', means: 'Shows one letter of a word that fits.', ex: 'Stuck? Try a hint.', not: 'reveal, assist' },
         { say: 'Give up', means: 'End the game early. Your opponent wins.', ex: 'Give up this game?', not: 'resign, forfeit' },
         { say: 'Your opponent', means: 'The other player. Use their name (Blue or Orange) when it’s clearer.', ex: 'Your opponent starts in the opposite corner.', not: 'player B, the enemy' },
+        { say: 'Pip, Juno, Rex', means: 'Your AI opponent, by name (Easy, Medium, Hard). The mode is “Play vs AI”.', ex: 'Juno played TOFU.', not: 'the computer, CPU, bot' },
       ],
     };
   }

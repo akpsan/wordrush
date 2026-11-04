@@ -6,7 +6,7 @@ test.describe('physical keyboard', () => {
 
   test.beforeEach(async ({ page }) => {
     await openApp(page);
-    await page.getByRole('button', { name: /New game/ }).click();
+    await page.getByRole('button', { name: /Play a friend/ }).click();
   });
 
   const turn = (page: import('@playwright/test').Page) => page.locator('.tnum');

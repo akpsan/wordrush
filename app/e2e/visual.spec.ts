@@ -4,7 +4,7 @@
  * After an intended visual change, review the new screenshots, then: npm run e2e -- --update-snapshots=all
  */
 import { expect, test } from '@playwright/test';
-import { BOX_IN_GAME, keys, openApp } from './helpers';
+import { BOX_IN_GAME, FADE_GAME, keys, openApp } from './helpers';
 
 const shot = async (page: import('@playwright/test').Page, name: string) => {
   await page.waitForTimeout(150);
@@ -18,7 +18,7 @@ test('menu', async ({ page }) => {
 
 test('game states', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await shot(page, 'game-first-move');
   await keys(page, 'team\nstone\nma');
   await shot(page, 'game-partial');
@@ -30,16 +30,25 @@ test('game states', async ({ page }) => {
 
 test('boxed in and results', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, BOX_IN_GAME);
   await shot(page, 'boxed-in');
   await page.getByRole('button', { name: 'See results' }).click();
   await shot(page, 'results');
 });
 
+test('older words fade, and the board dims while typing', async ({ page }) => {
+  await openApp(page);
+  await page.getByRole('button', { name: /Play a friend/ }).click();
+  await keys(page, FADE_GAME);
+  await shot(page, 'game-faded');
+  await keys(page, 'g');
+  await shot(page, 'game-typing-dim');
+});
+
 test('light theme game', async ({ page }) => {
   await openApp(page, 'returning', { theme: 'light' });
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, 'team\nstone\nma');
   await shot(page, 'game-light');
 });

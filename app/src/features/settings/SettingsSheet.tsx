@@ -1,6 +1,6 @@
 /**
  * Settings as a sheet. Screens choose which rows to show: the menu shows the theme,
- * the in-game sheet shows "Show ways out". A feature adds its own row here when it ships.
+ * the in-game sheet shows "Show ways out". "Show all letters" is in both. A feature adds its own row here when it ships.
  */
 
 import type { ReactNode } from 'react';
@@ -10,7 +10,7 @@ import { Sheet } from '../../ui/Sheet';
 import { useSettings } from './context';
 import type { HintsPerGame, ThemeSetting } from './settings';
 
-export type SettingsRow = 'theme' | 'hints' | 'highlight' | 'waysOut';
+export type SettingsRow = 'theme' | 'hints' | 'highlight' | 'waysOut' | 'showAll';
 
 export interface SettingsSheetProps {
   readonly title: string;
@@ -79,6 +79,15 @@ export function SettingsSheet({ title, rows, onClose, extra }: SettingsSheetProp
             on={settings.showWaysOut}
             label={t('gsettings.waysout.label')}
             onChange={(showWaysOut) => update({ showWaysOut })}
+          />
+        </Row>
+      )}
+      {rows.includes('showAll') && (
+        <Row label={t('settings.showall.label')} help={t('settings.showall.help')}>
+          <Toggle
+            on={settings.showAllLetters}
+            label={plain('settings.showall.aria', { 'on/off': settings.showAllLetters ? 'on' : 'off' })}
+            onChange={(showAllLetters) => update({ showAllLetters })}
           />
         </Row>
       )}

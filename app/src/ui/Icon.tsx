@@ -73,6 +73,13 @@ const PATHS = {
   play: <path d="M7 5l12 7-12 7z" />,
   chevron: <path d="M15 6l-6 6 6 6" />,
   plus: <path d="M12 5v14M5 12h14" />,
+  friends: (
+    <>
+      <circle cx="8" cy="9" r="3" />
+      <circle cx="16" cy="9" r="3" />
+      <path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" />
+    </>
+  ),
   book: (
     <>
       <path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" />

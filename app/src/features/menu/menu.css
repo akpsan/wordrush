@@ -27,7 +27,6 @@
 .mbtn:not(.pri) .mpill{background:var(--surface2);color:var(--text)}
 .mcont{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text)}
 .mcont .ico{width:14px;height:14px}
-.mfoot{display:flex;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--muted)}
 .wr.menu.desk{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);grid-template-areas:"top top" "left right";align-items:center;column-gap:64px;padding:24px 64px 48px;max-width:none}
 .wr.menu.desk .mtop{grid-area:top}
 .menuleft{grid-area:left;display:flex;flex-direction:column;gap:28px}
@@ -38,7 +37,6 @@
 .desk .mboard{width:min(560px,100%);padding:8px;gap:6px;border-radius:24px}
 .desk .mboard .cell{font-size:26px}
 .desk .mbtns{margin-top:0}
-.desk .mfoot{justify-content:flex-start}
 @media (max-width:900px){.wr.menu.desk{grid-template-columns:1fr;grid-template-areas:"top" "right" "left"}}
 
 /* App: the mockup set these inline. The menu fills the screen like the game does. */

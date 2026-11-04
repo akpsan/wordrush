@@ -14,6 +14,13 @@
 .cell.xa{--xc:var(--a)}.cell.xa::before{border-radius:50%}
 .cell.xb{--xc:var(--b)}.cell.xb::before{border-radius:1px}
 .cell.a.recent.xa{--xc:var(--aInk)}.cell.b.recent.xb{--xc:var(--bInk)}
+/* Fading (docs/ui-decisions.md): older letters recede, tiles keep fill, shape and stripes. */
+.cell.a,.cell.b{transition:opacity .2s}
+.cell.prev .l{opacity:.72}
+.cell.old .l{opacity:.45}
+.cell.old.xa::before,.cell.old.xb::before,.cell.prev.xa::before,.cell.prev.xb::before{opacity:.35}
+.cell.fdim{opacity:.4}
+.cell.bare{box-shadow:none}
 .cell.anchor::after,.cell.anchor-dim::after,.cell.anchor-on::after,.cell.flash::after,.cell.start::after,.cell.wall::after{content:'';position:absolute;inset:-3px;border-radius:inherit;pointer-events:none;z-index:3}
 .cell.anchor::after{box-shadow:0 0 0 2px var(--text);animation:anc 1.4s ease-in-out infinite}
 .cell.anchor-dim::after{box-shadow:0 0 0 1.5px var(--muted);opacity:.6}

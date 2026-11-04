@@ -15,6 +15,8 @@ The handoff's dev notes use older words (Rotate, Place, Resign, cornered, cells)
 
 The handoff zip also contained 34 state files that weren't on the design canvas: leftovers from earlier rounds (timeouts, passing, suggestion cards, the old tutorial). They were removed from `design/handoff/`. Every remaining file is current. The one known mismatch: the interactive `Tutorial.dc.html` mockup still uses OPEN in step 7 (see below).
 
+New exports are merged by hand, never copied over: Claude Design starts from its own copy, so each export brings back the old tutorial rows (OPEN, JAIL/POPE) and the "Decisions still open" section of `HANDOFF.md`. The 2026-11-04 export (Play vs AI screens and board clarity) was merged this way.
+
 ## Decisions
 
 | Question | Decision | Why |
@@ -52,7 +54,8 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Saved game | Only the move list is saved. Continue replays it through the engine, so a damaged or out-of-date save is discarded rather than loading an illegal board. Finished games aren't saved. |
 | First-launch menu | Shown until the player has finished or skipped Learn to play, or started a game. |
 | Back to the menu from a game | A "Back to menu" button in the in-game menu sheet. The game stays saved for Continue. |
-| "Play now" at the end of Learn to play | Continues the saved game if there is one, otherwise starts a new game. |
+| "Play now" at the end of Learn to play | Continues the saved game if there is one, otherwise starts a new game. The new deck says "Play vs AI"; `overrides.ts` keeps "Play now" until Play vs AI ships. |
+| Menu after the Play vs AI design | The menu already uses the new design's pass-and-play wording: **Play a friend** ("2 players, 1 device: take turns"), and Continue reads "vs a friend · Turn 13 · Blue's move". The "More ways to play coming soon" footer is dropped. Play vs AI itself isn't built yet. |
 | Menu hero board | Built through the engine. The mockup's CUB and ARC became SUB and GAS, because CUB isn't in the word list. |
 | Tutorial copy the deck doesn't list | "Type **CAT**" (step 7 before typing) and "Tap **Flip** to try the next spot." (a scripted word on another spot, outside step 4). |
 | Tutorial keyboard after the bump | Inactive until "Got it", as in the mockup. |
@@ -67,3 +70,16 @@ The handoff zip also contained 34 state files that weren't on the design canvas:
 | Contrast on the main menu button | The subtitle is no longer faded, and the "New? Start here" pill darkens the blue behind it instead of lightening it (WCAG AA). |
 | "+n squares" under reduced motion | Hidden: it can't fade out without animation, so it would stay forever. The feedback line already says what was played. |
 | Fonts | Bundled with the app (Fontsource), instead of loaded from Google Fonts: no third-party requests, works offline, stable screenshots. |
+
+## Build decisions (board clarity)
+
+The design's "fade by age + focus while typing" (dev note `devFade` in `canvas.json`), built in `app/src/features/game/model/board.ts`.
+
+| Topic | Decision |
+| --- | --- |
+| Fading at rest | Each player's last word at full strength, the word before at 72% letter opacity, older words at **45%** (the design says 30%). Tiles keep their fill, shape, stripes and link dot. Age counts later words by the same player; a shared link letter takes the younger age. |
+| Why 45%, not 30% | 30% letters were hard to read and far below WCAG text contrast. 45% still recedes clearly. Faded letters remain below AA, which is accepted: the setting below restores full contrast, and screen readers announce every letter regardless. |
+| While typing | Every taken square outside **both** players' last words and the preview dims to 40%. The dev note dims the opponent's last word too, but the mockup keeps it bright; we follow the mockup, since you're placing your word against their latest move. |
+| Empty squares | Lose their outline while fading is on, so a faded tile never looks empty. |
+| Full contrast | When "Show all letters" is on (Settings, default off, in both the menu and in-game sheets), at the boxed-in moment and on the game-over board. The tutorial never fades: its lessons point at specific letters. |
+| Motion | The typing dim fades over 0.2s; instant under reduced motion. |

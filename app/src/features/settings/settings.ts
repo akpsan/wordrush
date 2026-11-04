@@ -11,6 +11,8 @@ export interface Settings {
   readonly highlightLetters: boolean;
   /** Dots on the remaining exits when a player is down to 1 or 2 ways out. */
   readonly showWaysOut: boolean;
+  /** Keep every letter at full strength (older words fade when off). */
+  readonly showAllLetters: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -18,6 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   hints: 0,
   highlightLetters: true,
   showWaysOut: true,
+  showAllLetters: false,
 };
 
 /** Accept only known fields with valid values, so old or edited saves can't break the app. */
@@ -28,5 +31,6 @@ export function sanitize(raw: unknown): Settings {
     hints: r.hints === 0 || r.hints === 1 || r.hints === 3 ? r.hints : DEFAULT_SETTINGS.hints,
     highlightLetters: typeof r.highlightLetters === 'boolean' ? r.highlightLetters : DEFAULT_SETTINGS.highlightLetters,
     showWaysOut: typeof r.showWaysOut === 'boolean' ? r.showWaysOut : DEFAULT_SETTINGS.showWaysOut,
+    showAllLetters: typeof r.showAllLetters === 'boolean' ? r.showAllLetters : DEFAULT_SETTINGS.showAllLetters,
   };
 }

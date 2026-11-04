@@ -8,7 +8,6 @@ import { Frame } from '../../ui/Frame';
 import { Icon } from '../../ui/Icon';
 import { RichText } from '../../ui/RichText';
 import { Sheet } from '../../ui/Sheet';
-import { waysOutFor } from '../game';
 import { SettingsSheet, useResolvedTheme } from '../settings';
 import { heroBoard, type HeroCell } from './heroBoard';
 import './menu.css';
@@ -36,14 +35,11 @@ function HeroBoard({ cells }: { cells: readonly HeroCell[] }) {
   );
 }
 
-function ContinueSummary({ game, lex }: { game: GameState; lex: Lexicon }) {
-  const ways = waysOutFor(game, lex, game.toMove);
-  const waysLabel = ways === 1 ? t('ways.one') : ways === 0 ? t('ways.none') : t('ways.many', { n: ways });
+function ContinueSummary({ game }: { game: GameState }) {
   return (
     <span className="mcont">
       <span className={game.toMove === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />
-      {ways <= 1 && <Icon name="warn" />}
-      {plain('menu.continue.sub', { n: game.turn, player: playerName(game.toMove), waysOut: waysLabel })}
+      {plain('menu.continue.sub.friend', { n: game.turn, player: playerName(game.toMove) })}
     </span>
   );
 }
@@ -77,10 +73,10 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
 
   const newGameButton = (
     <button type="button" className={firstLaunch ? 'mbtn' : 'mbtn pri'} onClick={newGame}>
-      <Icon name="plus" />
+      <Icon name="friends" />
       <span className="mt">
-        <b>{t('menu.new.title')}</b>
-        <span>{t('menu.new.sub')}</span>
+        <b>{t('menu.friend.title')}</b>
+        <span>{t('menu.friend.sub')}</span>
       </span>
     </button>
   );
@@ -119,7 +115,7 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
               <Icon name="play" />
               <span className="mt">
                 <b>{t('menu.continue.title')}</b>
-                <ContinueSummary game={saved} lex={lex} />
+                <ContinueSummary game={saved} />
               </span>
             </button>
           )}
@@ -135,9 +131,6 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
             </>
           )}
         </div>
-        <p className="mfoot">
-          <span>{t('menu.footer')}</span>
-        </p>
       </div>
 
       {desk && (
@@ -147,7 +140,7 @@ export function MenuScreen({ lex, firstLaunch, saved, onContinue, onNewGame, onL
       )}
 
       {sheet === 'settings' && (
-        <SettingsSheet title={t('settings.title')} rows={['theme', 'hints', 'highlight']} onClose={() => setSheet(null)} />
+        <SettingsSheet title={t('settings.title')} rows={['theme', 'hints', 'highlight', 'showAll']} onClose={() => setSheet(null)} />
       )}
       {sheet === 'abandon' && (
         <Sheet title={t('menu.abandon.title')} onClose={() => setSheet(null)}>

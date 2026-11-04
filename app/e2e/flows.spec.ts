@@ -26,7 +26,7 @@ test('first launch: Learn to play first, through to a real game', async ({ page 
 
 test('a full game: Blue boxes Orange in, then the results', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, BOX_IN_GAME);
   await expect(page.getByRole('alert')).toContainText('DOGS is boxed in');
   await page.getByRole('button', { name: 'See results' }).click();
@@ -37,7 +37,7 @@ test('a full game: Blue boxes Orange in, then the results', async ({ page }) => 
 
 test('a game in progress survives a reload and continues', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, 'team\nstone\n');
   await page.reload();
   const cont = page.getByRole('button', { name: /Continue/ });
@@ -49,7 +49,7 @@ test('a game in progress survives a reload and continues', async ({ page }) => {
 
 test('giving up asks first, then the opponent wins', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, 'team\n');
   await page.getByRole('button', { name: 'Give up' }).click();
   await page.getByRole('button', { name: 'Keep playing' }).click();
@@ -61,7 +61,7 @@ test('giving up asks first, then the opponent wins', async ({ page }) => {
 
 test('a word that does not work explains why, and nothing is played', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, 'tqx\n');
   await expect(page.getByRole('status').filter({ hasText: "isn't a word we know" })).toBeVisible();
   await expect(page.locator('.tnum')).toHaveText('1');
@@ -69,7 +69,7 @@ test('a word that does not work explains why, and nothing is played', async ({ p
 
 test('hints: reveal a letter, offered when giving up, counted in the results', async ({ page }) => {
   await openApp(page, 'returning', { hints: 3 });
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   await keys(page, 'team\nstone\n');
   await page.getByRole('button', { name: 'Get a hint, 3 left' }).click();
   await expect(page.locator('.hintchip')).toContainText('2 left');
@@ -81,7 +81,7 @@ test('hints: reveal a letter, offered when giving up, counted in the results', a
 
 test('on-screen keys type and play', async ({ page }) => {
   await openApp(page);
-  await page.getByRole('button', { name: /New game/ }).click();
+  await page.getByRole('button', { name: /Play a friend/ }).click();
   for (const letter of 'TEAM') await page.getByRole('button', { name: letter, exact: true }).click();
   await page.getByRole('button', { name: 'Play TEAM' }).click();
   await expect(page.locator('.tnum')).toHaveText('2');

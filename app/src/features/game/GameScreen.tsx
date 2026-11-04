@@ -52,8 +52,8 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
     [session, lex],
   );
   const cells = useMemo(
-    () => boardView(session, entry, lex, { showWaysOut: settings.showWaysOut }),
-    [session, entry, lex, settings.showWaysOut],
+    () => boardView(session, entry, lex, { showWaysOut: settings.showWaysOut, fade: !settings.showAllLetters }),
+    [session, entry, lex, settings.showWaysOut, settings.showAllLetters],
   );
   const feedback = useMemo(() => feedbackFor(session, entry, lex), [session, entry, lex]);
   const hint = useMemo(() => hintView(session), [session]);
@@ -128,7 +128,7 @@ export function GameScreen({ lex, saved, onMenu, onHelp }: GameScreenProps) {
       {overlay === 'settings' && (
         <SettingsSheet
           title={t('gsettings.title')}
-          rows={['highlight', 'waysOut']}
+          rows={['highlight', 'waysOut', 'showAll']}
           onClose={() => setOverlay(null)}
           extra={
             <button type="button" className="btn sec" onClick={onMenu}>

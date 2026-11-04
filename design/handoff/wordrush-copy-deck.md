@@ -23,12 +23,21 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | menu.learn.sub | Menu · first launch | Under the tutorial button | A quick game with tips. Under 2 minutes! |
 | menu.learn.pill.first | Menu · first launch | Tag on the tutorial button | New? Start here |
 | menu.learn.pill.returning | Menu · returning | Tag on the small tutorial row | 2 min |
-| menu.new.title | Menu | Start a game | New game |
-| menu.new.sub | Menu | What New game does today | 2 players, 1 device: take turns |
+| menu.cpu.title | Menu | Play vs AI (one tap with last settings, or opens setup the first time) | Play vs AI |
+| menu.cpu.sub.first | Menu · first launch | Under the button, no settings saved yet | Pick from 3 opponents, easy to hard |
+| menu.cpu.sub.last | Menu · returning | Last settings, shown so one tap is enough | {ai} · {level} · {whoFirst} |
+| menu.cpu.sub.last.example | Menu · returning | Example | Juno · Medium · you go first |
+| menu.cpu.whoFirst.you / ai / random | Menu · returning | Values for {whoFirst} | you go first · {ai} goes first · random start |
+| menu.cpu.change | Menu · returning | Square button next to Play the computer | Change |
+| menu.cpu.change.aria | Menu · returning | Screen readers | Change AI opponent |
+| menu.friend.title | Menu | Pass and play | Play a friend |
+| menu.friend.sub | Menu | What Play a friend means | 2 players, 1 device: take turns |
 | menu.continue.title | Menu · returning | Resume a saved game | Continue |
-| menu.continue.sub | Menu · returning | Saved game summary | Turn {n} · {player}'s move · {waysOut} |
-| menu.continue.sub.example | Menu · returning | Example of the above | Turn 13 · Blue's move · 1 way out! |
-| menu.footer | Menu | Leaves room for future modes | More ways to play coming soon |
+| menu.continue.sub.friend | Menu · returning | Saved pass-and-play game | vs a friend · Turn {n} · {player}'s move |
+| menu.continue.sub.cpu | Menu · returning | Saved vs-AI game | vs {ai} ({level}) · Turn {n} · {yourMoveOrTheirs} |
+| menu.continue.sub.cpu.example | Menu · returning | Example | vs Juno (Medium) · Turn 9 · your move |
+| menu.continue.cpu.turn.you / ai | Menu · returning | Values for {yourMoveOrTheirs} | your move · {ai}'s move |
+| ~~menu.footer~~ | Menu | Dropped: both modes are on the menu now | (removed) |
 | menu.abandon.title | Menu *(not in mockups)* | Confirm when starting a new game over a saved one | Start a new game? |
 | menu.abandon.body | Menu *(not in mockups)* | Explains what happens | Your game in progress will end. |
 | menu.abandon.keep | Menu *(not in mockups)* | Cancel | Keep playing |
@@ -48,6 +57,9 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | settings.highlight.label | Settings sheet | Row label | Highlight your letters |
 | settings.highlight.help | Settings sheet | Row help | Marks your letters on the keyboard. |
 | settings.highlight.aria | Settings sheet | Toggle label | Highlight your letters: {on/off} |
+| settings.showall.label | Settings sheet | Row label (default off) | Show all letters |
+| settings.showall.help | Settings sheet | Row help | Older words fade so your last word stands out. Turn this on to keep every letter at full strength. |
+| settings.showall.aria | Settings sheet | Toggle label | Show all letters: {on/off} |
 | settings.done | Settings sheet | Close | Done |
 
 ---
@@ -134,7 +146,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | ID | Screen | Purpose | Final text |
 |---|---|---|---|
 | giveup.title | Give-up sheet | Title | Give up this game? |
-| giveup.body | Give-up sheet | Reassure, no pressure | Orange wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over! |
+| giveup.body | Give-up sheet | Reassure, no pressure. {opponent} = Blue, Orange or the AI's name | {opponent} wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over! |
 | giveup.hint.title | Give-up sheet | Hint offer (only when hints are on) | Stuck? Try a hint |
 | giveup.hint.body | Give-up sheet | Hint offer detail | Shows one letter of a word that fits. You have {n} left. |
 | giveup.hint.button | Give-up sheet | Use a hint | Get a hint |
@@ -148,6 +160,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | gsettings.title | Game settings sheet | Title | Game settings |
 | gsettings.hints.* | Game settings sheet | Same as menu settings | (see settings.hints.*) |
 | gsettings.highlight.* | Game settings sheet | Same as menu settings | (see settings.highlight.*) |
+| gsettings.showall.* | Game settings sheet | Same as menu settings | (see settings.showall.*) |
 | gsettings.waysout.label | Game settings sheet | Row label | Show ways out |
 | gsettings.waysout.help | Game settings sheet | Row help | When you're running out of room, dots show where you can still go. |
 | gsettings.done | Game settings sheet | Close | Done |
@@ -243,7 +256,8 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | learn.9.recap.3 | Step 9 | Recap | Every letter blocks the way, even yours |
 | learn.9.recap.4 | Step 9 | Recap | Get boxed in and you lose |
 | learn.9.menu | Step 9 | Button | Back to menu |
-| learn.9.play | Step 9 | Button | Play now |
+| learn.9.play | Step 9 | Button, starts a game vs Pip (Easy), you go first | Play vs AI |
+| learn.9.play.note | Step 9 | Under the buttons | Your first game is against Pip, the easy one. You can pick a tougher opponent anytime. |
 
 ### Skip
 
@@ -253,6 +267,81 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | learn.skip.body | Skip sheet | Reassure | No problem! You can come back to it anytime from **Learn to play** on the menu. |
 | learn.skip.keep | Skip sheet | Cancel | Keep learning |
 | learn.skip.confirm | Skip sheet | Confirm | Skip |
+
+---
+
+## 5. Play vs AI (new)
+
+Rows used only when one player is the AI. Everything else reuses sections 2 and 4: wherever a string says {opponent} or {player}, use the AI's name. `{ai}` is the persona name, `{level}` its difficulty. Never use he/she/it for the AI: repeat the name.
+
+### AI opponents
+
+| ID | Name | Level | Purpose | Final text (description in setup) |
+|---|---|---|---|---|
+| ai.easy | Pip | Easy | Persona | Pip plays short, everyday words and sometimes forgets to leave room. Great for warming up. |
+| ai.medium | Juno | Medium | Persona | Juno plays solid words and always keeps a way out. |
+| ai.hard | Rex | Hard | Persona | Rex plans ahead and tries to box you in. Good luck! |
+
+### Setup sheet
+
+| ID | Screen | Purpose | Final text |
+|---|---|---|---|
+| cpu.setup.title | Setup sheet | Title | Play vs AI |
+| cpu.setup.level.label | Setup sheet | Section label | Pick your opponent |
+| cpu.setup.card | Setup sheet | Each opponent card | {ai} · {level} (e.g. Juno · Medium) |
+| cpu.setup.card.aria | Setup sheet | Screen readers | {ai}, {level} |
+| cpu.record | Setup sheet + results | Light record for that opponent | Wins vs {ai}: {n} |
+| cpu.record.none | Setup sheet + results | No wins yet | No wins vs {ai} yet |
+| cpu.setup.first.label | Setup sheet | Section label | Who goes first? |
+| cpu.setup.first.you / ai / random | Setup sheet | Options | You · {ai} · Random |
+| cpu.setup.first.you.help | Setup sheet | You selected | You'll be Blue. Blue always goes first, and Blue's first word is 4 letters max. |
+| cpu.setup.first.ai.help | Setup sheet | AI selected | You'll be Orange. Blue always goes first, and Blue's first word is 4 letters max. |
+| cpu.setup.first.random.help | Setup sheet | Random selected | We'll flip a coin. Blue always goes first, and Blue's first word is 4 letters max. |
+| cpu.setup.hints.label | Setup sheet | Row label | Hints |
+| cpu.setup.hints.help | Setup sheet | Row help | Same as your settings. Changing it here changes it there too. |
+| cpu.setup.start | Setup sheet | Start | Start game |
+| cpu.random.result.blue | Game, first line *(not in mockups)* | After a Random start | You're Blue this time. You go first! |
+| cpu.random.result.orange | Game, first line *(not in mockups)* | After a Random start | You're Orange this time. {ai} goes first. |
+
+### Game screen
+
+| ID | Screen | Purpose | Final text |
+|---|---|---|---|
+| cpu.card.name | Status bar | The AI's player card | {ai} |
+| cpu.card.level | Status bar | Small tag on the AI's card | {level} |
+| cpu.card.aria | Status bar | Screen readers | {ai}, {level}: {waysOut} |
+| cpu.thinking | AI's turn | Replaces the entry tiles | {ai} is thinking |
+| cpu.thinking.danger | AI's turn | When it's down to 1 way out | {ai} is down to 1 way out |
+| cpu.playing | AI's turn | While its letters appear | {ai} plays {WORD} |
+| cpu.played | Your turn | Feedback line after its move | {ai} played {WORD}. Start or end with **{letters}** |
+| cpu.danger.them | Your turn | The AI left itself 1 way out | {ai}'s down to **1 way out.** Box {ai} in! |
+| opp.danger.them | Your turn (pass and play) | Same, against a friend | {player}'s down to **1 way out.** Box them in! |
+| cpu.sr.thinking | Screen readers | Live region, AI's turn starts | {ai} is thinking. |
+| cpu.sr.played | Screen readers | Live region, after its word lands | {ai} played {WORD}, going {across/down} from row {r}, column {c}. |
+| cpu.sr.yourturn | Screen readers | Live region, your turn | Your turn. Start or end with {letters}. |
+| cpu.giveup.body | Give-up sheet | Uses giveup.body with {opponent} | {ai} wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over! |
+
+### End of game
+
+| ID | Screen | Purpose | Final text |
+|---|---|---|---|
+| cpu.over.won.title | Results · you won | Brief celebration | You boxed {ai} in! |
+| cpu.over.won.sub | Results · you won | Detail | {WORD} ran out of room on turn {n}. Nice one! |
+| cpu.over.lost.title | Results · you lost | Kind headline | {ai} boxed you in |
+| cpu.over.lost.sub | Results · you lost | Nudge | {WORD} ran out of room on turn {n}. Rematch? |
+| cpu.over.gaveup.title | Results · you gave up | Headline | You gave up |
+| cpu.over.gaveup.sub | Results · you gave up | Nudge | {ai} takes this one. Rematch? |
+| cpu.over.full.won | Results · full board *(not in mockups)* | You had more squares | You win on squares! |
+| cpu.over.full.lost | Results · full board *(not in mockups)* | The AI had more, or won the tie | {ai} wins on squares |
+| cpu.over.rematch | Results | Same opponent, same first-player choice | Rematch |
+| cpu.over.change | Results | Opens the setup sheet | Change difficulty |
+| cpu.over.menu | Results | Text button | Back to menu |
+
+### Glossary addition
+
+| Say | What it means | Example | Instead of |
+|---|---|---|---|
+| Pip, Juno, Rex | Your AI opponent, by name. The menu mode is "Play vs AI". | Juno played TOFU. | the computer, CPU, bot |
 
 ---
 
@@ -277,6 +366,7 @@ Use these words everywhere a player reads. The last column lists words to keep o
 | Hint | Shows one letter of a word that fits. | Stuck? Try a hint. | reveal, assist |
 | Give up | End the game early. Your opponent wins. | Give up this game? | resign, forfeit |
 | Your opponent | The other player. Use their name (Blue or Orange) when it's clearer. | Your opponent starts in the opposite corner. | player B, the enemy |
+| Pip, Juno, Rex | Your AI opponent, by name (Easy, Medium, Hard). The menu mode is "Play vs AI". | Juno played TOFU. | the computer, CPU, bot |
 
 **Say these early and often:** words need at least 3 letters, and your letter has to be the first or last letter of the new word.
 

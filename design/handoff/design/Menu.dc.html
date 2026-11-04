@@ -29,21 +29,48 @@
 
 <div class="mbtns">
 <sc-if value="{{returning}}" hint-placeholder-val="{{ false }}">
-<button class="mbtn alt"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg><span class="mt"><b>Continue</b><span class="mcont"><span class="mini a" aria-hidden="true"></span>Turn 13 · Blue's move · <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg>1 way out!</span></span></button>
-<button class="mbtn pri"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span class="mt"><b>New game</b><span>2 players, 1 device: take turns</span></span></button>
+<button class="mbtn alt"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg><span class="mt"><b>Continue</b><span class="mcont"><span class="pip b bot medium" aria-hidden="true" style="width: 13px; height: 13px"></span>vs Juno (Medium) · Turn 9 · your move</span></span></button>
+<div class="mbtnrow">
+<button class="mbtn pri" onClick="{{openSetup}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"></rect><path d="M12 4v4"></path><circle cx="9.5" cy="13" r="1"></circle><circle cx="14.5" cy="13" r="1"></circle></svg><span class="mt"><b>Play vs AI</b><span>Juno · Medium · you go first</span></span></button>
+<button class="mbtn sq" onClick="{{openSetup}}" aria-label="Change AI opponent"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>Change</button>
+</div>
+<button class="mbtn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="3"></circle><circle cx="16" cy="9" r="3"></circle><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0"></path></svg><span class="mt"><b>Play a friend</b><span>2 players, 1 device: take turns</span></span></button>
 <button class="mbtn small"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"></path><path d="M8 7h8M8 11h6"></path></svg><span class="mt"><b>Learn to play</b></span><span class="mpill">2 min</span></button>
 </sc-if>
 <sc-if value="{{firstLaunch}}" hint-placeholder-val="{{ true }}">
 <button class="mbtn pri"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"></path><path d="M8 7h8M8 11h6"></path></svg><span class="mt"><b>Learn to play</b><span>A quick game with tips. Under 2 minutes!</span></span><span class="mpill">New? Start here</span></button>
-<button class="mbtn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span class="mt"><b>New game</b><span>2 players, 1 device: take turns</span></span></button>
+<button class="mbtn" onClick="{{openSetup}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"></rect><path d="M12 4v4"></path><circle cx="9.5" cy="13" r="1"></circle><circle cx="14.5" cy="13" r="1"></circle></svg><span class="mt"><b>Play vs AI</b><span>Pick from 3 opponents, easy to hard</span></span></button>
+<button class="mbtn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="3"></circle><circle cx="16" cy="9" r="3"></circle><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0"></path></svg><span class="mt"><b>Play a friend</b><span>2 players, 1 device: take turns</span></span></button>
 </sc-if>
 </div>
-<p class="mfoot"><span>More ways to play coming soon</span></p>
 </div>
 
 <sc-if value="{{desk}}" hint-placeholder-val="{{ false }}">
 <div class="menuright" aria-hidden="true">
 <div class="board mboard"><sc-for list="{{cells}}" as="cell" hint-placeholder-count="64"><div class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms"><span class="l">{{cell.l}}</span></div></sc-for></div>
+</div>
+</sc-if>
+
+<sc-if value="{{showSetup}}" hint-placeholder-val="{{ false }}">
+<div class="scrim" onClick="{{closeSetup}}"></div>
+<div class="sheet" role="dialog" aria-label="Play vs AI">
+<span class="grab" aria-hidden="true"></span>
+<span class="stitle">Play vs AI</span>
+<div class="sgroup">
+<span class="slabel">Pick your opponent</span>
+<div class="lvls" role="radiogroup" aria-label="Pick your opponent">
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="3"><button class="{{lv.cls}}" role="radio" aria-checked="{{lv.checked}}" aria-label="{{lv.aria}}" onClick="{{lv.pick}}"><span class="{{lv.face}}" aria-hidden="true"></span><span class="pn">{{lv.persona}}</span><span class="pl2"><span class="bars" aria-hidden="true" style="display: inline-flex; vertical-align: -1px; margin-right: 4px"><i class="on"></i><i class="{{lv.b2}}"></i><i class="{{lv.b3}}"></i></span>{{lv.name}}</span></button></sc-for>
+</div>
+<p class="lvldesc">{{lvlDesc}}</p>
+<p class="reclabel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"></path></svg><span>{{lvlRec}}</span></p>
+</div>
+<div class="sgroup">
+<span class="slabel">Who goes first?</span>
+<div class="seg wide" role="radiogroup" aria-label="Who goes first"><sc-for list="{{firsts}}" as="f" hint-placeholder-count="3"><button class="{{f.cls}}" role="radio" aria-checked="{{f.checked}}" onClick="{{f.pick}}">{{f.name}}</button></sc-for></div>
+<p class="shelp">{{firstHelp}} Blue always goes first, and Blue's first word is 4 letters max.</p>
+</div>
+<div class="setrow" style="padding-bottom: 0"><div class="st"><b>Hints</b><span>Same as your settings. Changing it here changes it there too.</span></div><div class="seg" role="group" aria-label="Hints per game"><button class="on" aria-pressed="true">Off</button><button class="">1</button><button class="">3</button></div></div>
+<button class="btn pri" onClick="{{closeSetup}}">Start game</button>
 </div>
 </sc-if>
 
@@ -55,12 +82,13 @@
 <div class="setrow"><div class="st"><b>Theme</b><span>Matches your device unless you pick one.</span></div><div class="seg" role="group" aria-label="Theme"><button class="on" aria-pressed="true">Auto</button><button class="">Light</button><button class="">Dark</button></div></div>
 <div class="setrow"><div class="st"><b>Hints per game</b><span>A hint shows one letter of a word that fits. You both get the same number.</span></div><div class="seg" role="group" aria-label="Hints per game"><button class="on" aria-pressed="true">Off</button><button class="">1</button><button class="">3</button></div></div>
 <div class="setrow"><div class="st"><b>Highlight your letters</b><span>Marks your letters on the keyboard.</span></div><button class="tog on" aria-label="Highlight your letters: on" aria-pressed="true"></button></div>
+<div class="setrow"><div class="st"><b>Show all letters</b><span>Older words fade so your last word stands out. Turn this on to keep every letter at full strength.</span></div><button class="tog" aria-label="Show all letters: off" aria-pressed="false"></button></div>
 <button class="btn sec" onClick="{{closeSettings}}">Done</button>
 </div>
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["first","returning","settings"],"default":"first"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["first","returning","settings","setup","setupEasy","setupHard"],"default":"first"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
     const self = this;
@@ -84,11 +112,24 @@ class Component extends DCLogic {
       return { cls: cls.join(' '), l: g.l, delay: g.n != null ? g.n * 280 : 0 };
     });
     const showSettings = st.settings != null ? st.settings : variant === 'settings';
+    const showSetup = st.setup != null ? st.setup : variant.indexOf('setup') === 0;
+    const lvl = st.lvl || (variant === 'setupEasy' ? 'Easy' : variant === 'setupHard' ? 'Hard' : 'Medium');
+    const first = st.first || 'You';
+    const set = (o) => self.setState(Object.assign({ k: variant, setup: showSetup, lvl, first }, o));
+    const PERSONA = { Easy: 'Pip', Medium: 'Juno', Hard: 'Rex' };
+    const DESC = { Easy: 'Pip plays short, everyday words and sometimes forgets to leave room. Great for warming up.', Medium: 'Juno plays solid words and always keeps a way out.', Hard: 'Rex plans ahead and tries to box you in. Good luck!' };
+    const REC = { Easy: 'Wins vs Pip: 6', Medium: 'Wins vs Juno: 2', Hard: 'No wins vs Rex yet' };
+    const levels = ['Easy', 'Medium', 'Hard'].map((n, i) => ({ name: n, persona: PERSONA[n], aria: PERSONA[n] + ', ' + n, face: 'pip b bot ' + n.toLowerCase(), cls: 'lvlcard' + (n === lvl ? ' on' : ''), checked: n === lvl ? 'true' : 'false', b2: i >= 1 ? 'on' : '', b3: i >= 2 ? 'on' : '', pick: () => set({ lvl: n }) }));
+    const firsts = ['You', 'AI', 'Random'].map((n) => ({ name: n === 'AI' ? PERSONA[lvl] : n, cls: n === first ? 'on' : '', checked: n === first ? 'true' : 'false', pick: () => set({ first: n }) }));
+    const FH = { You: "You'll be Blue.", AI: "You'll be Orange.", Random: "We'll flip a coin." };
     return {
+      showSetup, levels, firsts, lvlDesc: DESC[lvl], lvlRec: REC[lvl], firstHelp: FH[first],
+      openSetup: () => set({ setup: true }),
+      closeSetup: () => set({ setup: false }),
       rootCls: 'wr menu ' + theme + ' ' + layout + ' turnA',
       phone: layout === 'phone', desk: layout === 'desk',
       cells,
-      returning: variant !== 'first', firstLaunch: variant === 'first',
+      returning: variant !== 'first' && variant.indexOf('setup') !== 0 || variant === 'setupHard', firstLaunch: variant === 'first' || variant === 'setup' || variant === 'setupEasy',
       showSettings,
       openSettings: () => self.setState({ k: variant, settings: true }),
       closeSettings: () => self.setState({ k: variant, settings: false }),

@@ -36,3 +36,6 @@ export async function keys(page: Page, text: string) {
  * A space after a word flips it to the scripted spot before playing.
  */
 export const BOX_IN_GAME = 'team\nstar \nmaple\ndogs \nplant\n';
+
+/** The tutorial's chain as a real game (TEAM, DOG, MAP, BIG, TOP): TEAM is two Blue words old. Orange to move. */
+export const FADE_GAME = 'team\ndog \nmap \nbig\ntop\n';

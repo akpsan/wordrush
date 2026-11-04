@@ -36,7 +36,35 @@ export interface BoardOptions {
   readonly showWaysOut: boolean;
   /** Pulse the mover's letters (default true). The tutorial turns it off while you watch. */
   readonly showAnchors?: boolean;
+  /**
+   * Fade older words so the latest ones stand out, and dim the rest of the board while typing
+   * (default false). Off once the game is over, and in the tutorial, whose lessons point at letters.
+   */
+  readonly fade?: boolean;
 }
+
+/** How long ago a player played a word: 0 = their last word, 1 = the one before, 2 = older. */
+export type WordAge = 0 | 1 | 2;
+
+/**
+ * The age of every played word, counted in later words by the same player. A letter shared by
+ * two words (a link letter) shows the younger age: see cellAge.
+ */
+export function wordAges(words: readonly { readonly player: Player }[]): WordAge[] {
+  const later = [0, 0];
+  const ages: WordAge[] = new Array(words.length);
+  for (let i = words.length - 1; i >= 0; i--) {
+    const p = words[i]!.player;
+    ages[i] = Math.min(later[p]!, 2) as WordAge;
+    later[p]!++;
+  }
+  return ages;
+}
+
+const cellAge = (ages: readonly WordAge[], wordsUsingCell: readonly number[]): WordAge =>
+  Math.min(...wordsUsingCell.map((w) => ages[w]!)) as WordAge;
+
+const AGE_CLASS = ['', 'prev', 'old'] as const;
 
 const ownerClass = (p: Player) => (p === 0 ? 'a' : 'b');
 
@@ -92,6 +120,11 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
       ? boxedInExplanation(exitsOf(moveContext(game, loser), lex), [...sealed])
       : { inTheWay: new Set<CellIndex>(), tooSmall: new Set<CellIndex>() };
 
+  // Fading: older words recede at rest; while typing, everything but both last words and the preview dims.
+  const fade = (opts.fade ?? false) && !over;
+  const ages = fade ? wordAges(game.words) : [];
+  const typing = fade && s.typed.length > 0;
+
   const corner = mover === 0 ? 0 : n * n - 1;
 
   return game.board.map((cell, index): CellView => {
@@ -106,6 +139,11 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
       cls.push(ownerClass(cell.owner));
       if (!fullBoardEnd && recent[cell.owner].has(index)) cls.push('recent');
       if (cell.words.length > 1) cls.push(cell.owner === 0 ? 'xa' : 'xb');
+      if (fade) {
+        const age = cellAge(ages, cell.words);
+        if (age > 0) cls.push(AGE_CLASS[age]);
+        if (typing && age > 0 && !ghost.has(index)) cls.push('fdim');
+      }
     }
 
     const g = ghost.get(index);
@@ -146,6 +184,9 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
       cls.push('endmark');
       mark = t('board.end');
     }
+
+    // With fading on, plain empty squares lose their outline, so a faded tile never reads as empty.
+    if (fade && cls.length === 1) cls.push('bare');
 
     return { index, letter, className: cls.join(' '), linkBadge, mark, delay, tap, label: cellLabel(index, n, letter, cell?.owner, !!g) };
   });

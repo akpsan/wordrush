@@ -17,9 +17,8 @@ const composite = {
 const changed = {
   // Tab stays reserved for focus; Space flips.
   'desk.keys': 'Just type! **Enter** to play · **Space** to flip · **⌫** to delete',
-  // The deck names Orange; on one shared device either player can give up.
-  'giveup.body':
-    "{opponent} wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over!",
+  // Until Play vs AI ships, Learn to play's last button starts a pass-and-play game.
+  'learn.9.play': 'Play now',
 } as const;
 
 /**

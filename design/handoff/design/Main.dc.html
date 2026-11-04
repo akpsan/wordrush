@@ -25,7 +25,7 @@
 <section class="{{sideCls}}" aria-label="Turn and danger levels">
 <div class="score">
 <div class="{{plA.cls}}">
-<div class="ptop"><span class="pip a" aria-hidden="true"></span><span class="pname">Blue</span><sc-if value="{{plA.you}}" hint-placeholder-val="{{ true }}"><span class="you">You</span></sc-if></div>
+<div class="ptop"><span class="{{plA.pip}}" aria-hidden="true"></span><span class="pname">{{plA.name}}</span><sc-if value="{{plA.you}}" hint-placeholder-val="{{ true }}"><span class="you">You</span></sc-if><sc-if value="{{plA.hasLvl}}" hint-placeholder-val="{{ false }}"><span class="you lvl">{{plA.lvl}}</span></sc-if></div>
 <div class="{{roomA.cls}}" role="meter" aria-label="{{roomA.aria}}"><span class="segs"><sc-for list="{{roomA.segs}}" as="sg" hint-placeholder-count="4"><i class="{{sg}}"></i></sc-for></span><sc-if value="{{roomA.warn}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg></sc-if></div>
 <div class="pfoot"><span class="rlbl">{{roomA.lbl}}</span><span class="pcells">{{sa}} squares</span></div>
 <sc-if value="{{dA}}" hint-placeholder-val="{{ false }}"><span class="{{dCls}}">{{dTxt}}</span></sc-if>
@@ -35,7 +35,7 @@
 <span class="{{tarrCls}}" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg></span>
 </div>
 <div class="{{plB.cls}}">
-<div class="ptop"><span class="pip b" aria-hidden="true"></span><span class="pname">Orange</span><sc-if value="{{plB.you}}" hint-placeholder-val="{{ false }}"><span class="you">You</span></sc-if></div>
+<div class="ptop"><span class="{{plB.pip}}" aria-hidden="true"></span><span class="pname">{{plB.name}}</span><sc-if value="{{plB.you}}" hint-placeholder-val="{{ false }}"><span class="you">You</span></sc-if><sc-if value="{{plB.hasLvl}}" hint-placeholder-val="{{ false }}"><span class="you lvl">{{plB.lvl}}</span></sc-if></div>
 <div class="{{roomB.cls}}" role="meter" aria-label="{{roomB.aria}}"><span class="segs"><sc-for list="{{roomB.segs}}" as="sg" hint-placeholder-count="4"><i class="{{sg}}"></i></sc-for></span><sc-if value="{{roomB.warn}}" hint-placeholder-val="{{ false }}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4"></path><path d="M12 17.2h.01"></path></svg></sc-if></div>
 <div class="pfoot"><span class="rlbl">{{roomB.lbl}}</span><span class="pcells">{{sb}} squares</span></div>
 <sc-if value="{{dB}}" hint-placeholder-val="{{ false }}"><span class="{{dCls}}">{{dTxt}}</span></sc-if>
@@ -44,7 +44,7 @@
 </section>
 
 <section class="{{bwCls}}" aria-label="Board">
-<div class="board">
+<div class="{{boardCls}}">
 <sc-for list="{{cells}}" as="cell" hint-placeholder-count="64">
 <button class="{{cell.cls}}" style="animation-delay: {{cell.delay}}ms" onClick="{{cell.tap}}" aria-label="{{cell.label}}"><span class="l">{{cell.l}}</span><sc-if value="{{cell.hasMark}}" hint-placeholder-val="{{ false }}"><span class="mk">{{cell.mark}}</span></sc-if><sc-if value="{{cell.ga}}" hint-placeholder-val="{{ false }}"><span class="gb"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span></sc-if></button>
 </sc-for>
@@ -54,9 +54,10 @@
 <section class="bottom">
 <sc-if value="{{showKb}}" hint-placeholder-val="{{ true }}">
 <div class="{{entryWrapCls}}" style="display: flex; flex-direction: column; gap: 7px">
+<sc-if value="{{holdShow}}" hint-placeholder-val="{{ false }}"><p class="holdchip">{{holdTxt}}</p></sc-if>
 <sc-if value="{{tnote.show}}" hint-placeholder-val="{{ false }}"><p class="tnote"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.8h.01"></path></svg><span>{{tnote.text}}</span></p></sc-if>
 <sc-if value="{{hint.show}}" hint-placeholder-val="{{ false }}"><p class="hintchip"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg><span>Hint</span><span class="htiles"><sc-for list="{{hint.tiles}}" as="ht" hint-placeholder-count="3"><i class="{{ht.cls}}">{{ht.l}}</i></sc-for></span><span>{{hint.left}}</span></p></sc-if>
-<sc-if value="{{waiting}}" hint-placeholder-val="{{ false }}"><div class="typing"><span class="{{waitPip}}" aria-hidden="true"></span><span>{{waitTxt}}</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div></sc-if>
+<sc-if value="{{waiting}}" hint-placeholder-val="{{ false }}"><div class="typing" role="status" aria-live="polite"><span class="{{waitPip}}" aria-hidden="true"></span><span>{{waitTxt}}</span><sc-if value="{{waitDots}}" hint-placeholder-val="{{ true }}"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></sc-if></div></sc-if>
 <sc-if value="{{notWaiting}}" hint-placeholder-val="{{ true }}">
 <div class="{{entryCls}}" role="textbox" aria-label="{{entryAria}}">
 <sc-for list="{{slots}}" as="sl" hint-placeholder-count="5"><span class="{{sl.cls}}">{{sl.l}}</span></sc-for>
@@ -98,7 +99,14 @@
 <span>{{over.r1}}</span><span class="v">{{over.r1a}}</span><span class="v">{{over.r1b}}</span>
 <span>{{over.r2}}</span><span class="v">{{over.r2a}}</span><span class="v">{{over.r2b}}</span>
 </div>
+<sc-if value="{{over.hasRec}}" hint-placeholder-val="{{ false }}"><p class="reclabel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"></path></svg><span>{{over.rec}}</span></p></sc-if>
+<sc-if value="{{over.cpu}}" hint-placeholder-val="{{ false }}">
+<div class="orow"><button class="btn sec">Change difficulty</button><button class="btn pri" onClick="{{reset}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 20v-4h-4"></path></svg>Rematch</button></div>
+<button class="linkbtn" style="align-self: center; height: 36px">Back to menu</button>
+</sc-if>
+<sc-if value="{{over.notCpu}}" hint-placeholder-val="{{ true }}">
 <div class="orow"><button class="btn sec"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg>Watch replay</button><button class="btn pri" onClick="{{reset}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 20v-4h-4"></path></svg>Play again</button></div>
+</sc-if>
 </div>
 </sc-if>
 </section>
@@ -109,7 +117,7 @@
 <div class="sheet" role="dialog" aria-label="Give up">
 <span class="grab" aria-hidden="true"></span>
 <span class="stitle">Give up this game?</span>
-<p class="stext">Orange wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over!</p>
+<p class="stext">{{giveupTxt}}</p>
 <sc-if value="{{hintsOn}}" hint-placeholder-val="{{ true }}">
 <div class="optcard"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg><div class="ot"><b>Stuck? Try a hint</b><span>{{hintOffer}}</span></div><button class="btn pri sm" onClick="{{useHint}}">Get a hint</button></div>
 </sc-if>
@@ -123,6 +131,7 @@
 <span class="stitle">Game settings</span>
 <div class="setrow"><div class="st"><b>Hints per game</b><span>A hint shows one letter of a word that fits. You both get the same number.</span></div><div class="seg" role="group" aria-label="Hints per game"><button class="">Off</button><button class="">1</button><button class="on" aria-pressed="true">3</button></div></div>
 <div class="setrow"><div class="st"><b>Highlight your letters</b><span>Marks your letters on the keyboard.</span></div><button class="tog on" aria-label="Highlight your letters: on" aria-pressed="true"></button></div>
+<div class="setrow"><div class="st"><b>Show all letters</b><span>Older words fade so your last word stands out. Turn this on to keep every letter at full strength.</span></div><button class="tog" aria-label="Show all letters: off" aria-pressed="false"></button></div>
 <div class="setrow"><div class="st"><b>Show ways out</b><span>When you're running out of room, dots show where you can still go.</span></div><button class="tog on" aria-label="Show ways out: on" aria-pressed="true"></button></div>
 <button class="btn sec" onClick="{{closeSheets}}">Done</button>
 </div>
@@ -138,7 +147,7 @@
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["idle","typePart","typeNoFit","ready","rotated","anchor","errWord","errPlayed","errFit","waiting","dangerYou","dangerThem","cornered","resign","hint","settings","firstA","firstB","over","full","tut1","tut2","tut3","tut4","tut5"],"default":"idle"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["idle","typePart","typeNoFit","ready","rotated","anchor","errWord","errPlayed","errFit","waiting","dangerYou","dangerThem","cornered","resign","hint","settings","firstA","firstB","over","full","tut1","tut2","tut3","tut4","tut5","cpuTurn","cpuThink","cpuPlay","cpuAfter","cpuDangerYou","cpuDangerThem","cpuWin","cpuLose","cpuGaveUp","busy","busyType"],"default":"idle"},"clarity":{"editor":"enum","options":["fadeFocus","none","fade","trail","trailFocus","stripes","nearby","noLetters"],"default":"fadeFocus"},"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"layout":{"editor":"enum","options":["phone","desk"],"default":"phone"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   componentDidUpdate(pp) {
     if (pp.scene !== this.props.scene || pp.layout !== this.props.layout) {
@@ -163,8 +172,22 @@ class Component extends DCLogic {
     const DICT = {};
     ('CART STONE TIGER SEVEN STAR BUS RAT TOFU TOE FIG ROSE GUM FUR MOP SODA COAT OPT OPTS TREE TREES TOP TAR TEA SEA SAT SET SIT ART ARC ARM ARMS RAG RAM RAN RAP RAW RAY RUB RUG RUN RUT ROT ROW ROD ROE SOAR STAB STEM STEP STOP SPOT SPIT SNAP SNOW SLOT SLOW SOFA SOAP SOUP SAND TANK TAPE TAME TOAD TOLD TOOL TOYS ARMY ATOM AREA ANT ANY APE ASH ASK ATE AXE OAR JAR CAR BAR EAR FAR WAR TSAR STIR SPUR BLUR CHAR SCAR OUR FIR POTS PITS GETS HATS RATS CATS DOGS LOGS BUGS TOPS MAPS CUPS ODDS ENDS CAB CAT COW CODE COIN CRAB CROW CUBE JUMP LUNG QUIZ JOB MOON STEAM STEER STORE SNORE SCORE SHORE SPORE TRAP TRIP TROT TRAY TART TASK TEAR SEAT RATE RACE RAFT RAIN RANT RASP READ REAL RICE RIDE RIPE ROAD ROAM ROAR ROBE ROCK ROLE ROOF ROOM ROOT RUBY RUDE RUIN RULE RUSH RUST SALT SAIL SAME SEAL SEED SHIP SHOP SIGN SILK SING SINK SOFT SOIL SONG SORT STAY TALE TALL TEAM TENT THIN TIDE TIME TINY TIRE TOMB TONE TOUR TOWN TUBE TUNA AFAR AJAR ALSO AUNT AWAY ACT ADD AGE AID AIM AIR ALE APT ARE ORE OAT ERA USE SUN TIN SPA SKY TWO OWL LIP GAS CAN COB HAT MAT PAT SAD').split(' ').forEach((x) => { DICT[x] = true; });
 
-    const s = { words: T7, turn: 'A', turnNo: 7, flash: -1, typed: '', pi: 0, filter: null, err: null, panel: 'kb', youB: false, tut: 0, endPreview: false, full: null, sealed: false, over: null, sheet: null, hintsOn: false, hintShown: false, delta: null };
+    const s = { words: T7, turn: 'A', turnNo: 7, flash: -1, typed: '', pi: 0, filter: null, err: null, panel: 'kb', youB: false, tut: 0, endPreview: false, full: null, sealed: false, over: null, sheet: null, hintsOn: false, hintShown: false, delta: null, cpu: null, cpuPhase: null, pop: null, rec: '' };
+    const RATH = W('RAT', 4, 3, 'h', 'A'), TOFU = W('TOFU', 0, 5, 'v', 'B');
+    const PERSONA = { Easy: 'Pip', Medium: 'Juno', Hard: 'Rex' };
+    const CPU = (side, lvl) => { s.cpu = { side, lvl, name: PERSONA[lvl] }; s.youB = side === 'A'; };
     switch (name) {
+      case 'busy': s.words = T13.slice(0, 10); s.turnNo = 11; s.flash = 9; break;
+      case 'busyType': s.words = T13.slice(0, 10); s.turnNo = 11; s.typed = 'ROSE'; break;
+      case 'cpuTurn': CPU('B', 'Medium'); s.flash = 5; break;
+      case 'cpuThink': CPU('B', 'Medium'); s.words = T7.concat([RATH]); s.turn = 'B'; s.turnNo = 8; s.flash = 6; s.panel = 'wait'; s.cpuPhase = 'think'; s.delta = { p: 'A', txt: '+2' }; break;
+      case 'cpuPlay': CPU('B', 'Medium'); s.words = T7.concat([RATH, TOFU]); s.turn = 'B'; s.turnNo = 8; s.flash = 6; s.pop = 7; s.panel = 'wait'; s.cpuPhase = 'play'; break;
+      case 'cpuAfter': CPU('B', 'Medium'); s.words = T7.concat([RATH, TOFU]); s.turnNo = 9; s.flash = 7; break;
+      case 'cpuDangerYou': CPU('B', 'Hard'); s.words = T13; s.turnNo = 13; s.flash = 11; break;
+      case 'cpuDangerThem': CPU('A', 'Hard'); s.words = T13; s.turnNo = 13; s.panel = 'wait'; s.cpuPhase = 'think'; s.flash = 11; break;
+      case 'cpuWin': CPU('A', 'Hard'); s.words = T15; s.turn = null; s.turnNo = 15; s.panel = 'over'; s.sealed = true; s.over = 'cornered'; s.rec = 'Wins vs Rex: 4'; break;
+      case 'cpuLose': CPU('B', 'Medium'); s.words = T15; s.turn = null; s.turnNo = 15; s.panel = 'over'; s.sealed = true; s.over = 'cornered'; s.rec = 'Wins vs Juno: 2'; break;
+      case 'cpuGaveUp': CPU('B', 'Hard'); s.words = T13; s.turn = null; s.turnNo = 13; s.panel = 'over'; s.over = 'resigned'; s.rec = 'Wins vs Rex: 3'; break;
       case 'idle': s.flash = 5; break;
       case 'typePart': s.typed = 'RA'; break;
       case 'typeNoFit': s.typed = 'OP'; break;
@@ -189,7 +212,7 @@ class Component extends DCLogic {
         if (name.indexOf('tut') === 0) { s.tut = Number(name.slice(3)) || 1; if (s.tut === 3 || s.tut === 4) s.typed = 'CAT'; }
     }
 
-    let words = s.words, turn = s.turn, panel = s.panel, flash = s.flash, turnNo = s.turnNo, pop = -1, delta = s.delta;
+    let words = s.words, turn = s.turn, panel = s.panel, flash = s.flash, turnNo = s.turnNo, pop = s.pop != null ? s.pop : -1, delta = s.delta;
     let typed = st.typed != null ? st.typed : s.typed;
     let pi = st.pi != null ? st.pi : s.pi;
     let filter = st.filter !== undefined ? st.filter : s.filter;
@@ -208,7 +231,8 @@ class Component extends DCLogic {
     }
 
     const pname = (p) => (p === 'A' ? 'Blue' : 'Orange');
-    const youName = (p) => (((p === 'B') === !!s.youB) ? 'You' : pname(p));
+    const Name = (p) => (s.cpu && s.cpu.side === p ? s.cpu.name : pname(p));
+    const youName = (p) => (((p === 'B') === !!s.youB) ? 'You' : Name(p));
     const inb = (r, c) => r >= 0 && r < 8 && c >= 0 && c < 8;
     const cellsOf = (w) => { const out = []; for (let k = 0; k < w.w.length; k++) { const r = w.d === 'h' ? w.r : w.r + k; const c = w.d === 'h' ? w.c + k : w.c; out.push(r * 8 + c); } return out; };
     const buildGrid = (ws) => {
@@ -327,6 +351,17 @@ class Component extends DCLogic {
     if (flash >= 0 && words[flash]) { flashP = words[flash].p; cellsOf(words[flash]).forEach((x) => { flashSet[x] = true; }); }
     const popSet = {}; if (pop >= 0) cellsOf(words[pop]).forEach((x, k) => { popSet[x] = k + 1; });
 
+    // board clarity explorations
+    // Default: fade by age at rest + focus while typing. Game-over and boxed-in boards stay at full contrast.
+    const clar = (panel === 'over' || panel === 'cornered' || s.full) ? 'none' : (props.clarity || 'fadeFocus');
+    const rankOf = {}; ['A', 'B'].forEach((p) => { let r = 0; for (let i = words.length - 1; i >= 0; i--) if (words[i].p === p) rankOf[i] = r++; });
+    const ageOf = (idx) => { const g = grid[idx]; if (!g.o || s.full) return ''; const rk = Math.min.apply(null, g.ws.map((wi) => rankOf[wi])); return rk === 0 ? '' : rk === 1 ? 'prev' : 'old'; };
+    const nearSet = {};
+    if (clar === 'nearby' && turn && recent[turn] >= 0) cellsOf(words[recent[turn]]).forEach((x) => { const r0 = Math.floor(x / 8), c0 = x % 8; for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) if (inb(r0 + dr, c0 + dc)) nearSet[(r0 + dr) * 8 + c0 + dc] = true; });
+    const trailOn = clar.indexOf('trail') === 0;
+    const focusOn = /Focus/.test(clar) && L > 0;
+    const focusSet = {}; Object.keys(ghost).forEach((x) => { focusSet[x] = true; }); anchors.forEach((x) => { focusSet[x] = true; });
+    const revealSet = {}; if (clar === 'noLetters' && words[4]) cellsOf(words[4]).forEach((x) => { revealSet[x] = true; });
     const cellsOut = grid.map((g, idx) => {
       const cls = ['cell']; let l = g.l; let ga = false, mark = '', delay = 0;
       const r = Math.floor(idx / 8), c = idx % 8;
@@ -339,13 +374,24 @@ class Component extends DCLogic {
       } else if (anchorSet[idx]) {
         cls.push(filter === idx ? 'anchor-on' : cur ? 'anchor-dim' : 'anchor');
       } else if (sealRes && sealRes.walls[idx]) cls.push('wall');
-      else if (flashSet[idx] && !sealSet[idx] && !L) cls.push('flash', flashP === 'A' ? 'fa' : 'fb');
+      else if (flashSet[idx] && !sealSet[idx] && !L && s.cpuPhase !== 'play') cls.push('flash', flashP === 'A' ? 'fa' : 'fb');
       if (!gh && routeSet[idx]) cls.push('route');
       if (sealSet[idx]) cls.push('sealed');
       if (sealRes && sealRes.gaps[idx] && !g.o) cls.push('gap');
-      if (popSet[idx]) { cls.push('pop'); delay = (popSet[idx] - 1) * 60; }
+      if (popSet[idx]) { cls.push('pop'); delay = (popSet[idx] - 1) * (s.cpuPhase === 'play' ? 180 : 60); if (s.cpuPhase === 'play') cls.push('flash', words[pop].p === 'A' ? 'fa' : 'fb'); }
       if (firstMove && myTurn && idx === corner && !gh) { cls.push('start', turn === 'A' ? 'sa' : 'sb'); mark = turn === 'A' ? 'START' : 'END'; }
       if (s.endPreview && !st.pw && idx === 63 && !g.o && turn === 'A' && !gh) { cls.push('endmark'); mark = 'END'; }
+      if (clar !== 'none' && g.o) {
+        const age = ageOf(idx);
+        if (age) {
+          cls.push(age);
+          if (nearSet[idx]) cls.push('near');
+          if (clar === 'noLetters' && !revealSet[idx]) cls.push('blank');
+          if (revealSet[idx]) cls.push('reveal');
+          if (trailOn) { const r0 = Math.floor(idx / 8), c0 = idx % 8; [[-1, 0, 'jt'], [1, 0, 'jb'], [0, -1, 'jl'], [0, 1, 'jr']].forEach((d) => { const rr = r0 + d[0], cc = c0 + d[1]; if (inb(rr, cc)) { const n = rr * 8 + cc; if (grid[n].o === g.o && ageOf(n)) cls.push(d[2]); } }); }
+        }
+      }
+      if (focusOn && g.o && !focusSet[idx]) cls.push('fdim');
       const owner = gh ? 'preview' : g.o ? pname(g.o) : 'empty';
       const label = 'Row ' + (r + 1) + ', column ' + (c + 1) + (l ? ', ' + l : '') + ', ' + owner;
       const tap = gh ? rotate : anchorSet[idx] ? () => toggleFilter(idx) : () => {};
@@ -367,6 +413,7 @@ class Component extends DCLogic {
     }
 
     // feedback line
+    const oppRoomN = turn === 'A' ? rB.n : turn === 'B' ? rA.n : null;
     const usesMine = L > 0 && (ancLetters.indexOf(typed[0]) >= 0 || ancLetters.indexOf(typed[L - 1]) >= 0);
     const ERR = {
       short: { pre: 'Words need at least', word: '3 letters', post: '' },
@@ -384,7 +431,8 @@ class Component extends DCLogic {
     else if (mode === 'nofit') fb = firstMove ? { pre: 'Keep going', word: '', post: '' } : { pre: 'No spot yet. Start or end with', word: ancList, post: '' };
     else if (firstMove) fb = turn === 'A' ? { pre: 'Start in the', word: 'top-left corner', post: '' } : { pre: 'End your word in the', word: 'bottom-right corner', post: '' };
     else if (activeRoom && activeRoom.n === 1) fb = { tone: 'warn', pre: "You're down to", word: '1 way out.', post: 'Follow the dots!' };
-    else if (flash >= 0 && words[flash]) fb = { pip: words[flash].p, pre: pname(words[flash].p) + ' played ' + words[flash].w + '. Start or end with', word: ancList, post: '' };
+    else if (oppRoomN === 1 && activeRoom && activeRoom.n > 1) fb = { tone: 'good', pre: Name(turn === 'A' ? 'B' : 'A') + "'s down to", word: '1 way out.', post: s.cpu ? 'Box ' + s.cpu.name + ' in!' : 'Box them in!' };
+    else if (flash >= 0 && words[flash]) fb = { pip: words[flash].p, pre: Name(words[flash].p) + ' played ' + words[flash].w + '. Start or end with', word: ancList, post: '' };
     else fb = { pre: 'Start or end with', word: ancList, post: '' };
     const fbOut = { cls: 'fb' + (fb.tone ? ' ' + fb.tone : ''), good: fb.tone === 'good', err: fb.tone === 'err', warn: fb.tone === 'warn', pipA: fb.pip === 'A', pipB: fb.pip === 'B', pre: fb.pre, word: fb.word, post: fb.post };
 
@@ -408,7 +456,24 @@ class Component extends DCLogic {
 
     const waitOther = turn || 'B';
     const oRoom = waitOther === 'A' ? rA : rB;
-    const waitTxt = (oRoom && oRoom.n === 1 ? pname(waitOther) + ' is down to 1 way out' : pname(waitOther) + ' is thinking');
+    let waitTxt = (oRoom && oRoom.n === 1 ? pname(waitOther) + ' is down to 1 way out' : pname(waitOther) + ' is thinking');
+    const cpuWaiting = !!s.cpu && s.cpu.side === waitOther;
+    if (cpuWaiting) waitTxt = s.cpuPhase === 'play' ? s.cpu.name + ' plays ' + (words[pop] ? words[pop].w : '') : (oRoom && oRoom.n === 1 ? s.cpu.name + ' is down to 1 way out' : s.cpu.name + ' is thinking');
+    const youLost = !!loser && !!s.cpu && loser !== s.cpu.side;
+    if (s.cpu && (overKind === 'cornered' || overKind === 'resigned')) {
+      const winSide = overKind === 'resigned' || youLost ? s.cpu.side : (s.cpu.side === 'A' ? 'B' : 'A');
+      const wd = sealedW ? sealedW.w : '';
+      const base = { cls: 'otitle ' + (winSide === 'A' ? 'a' : 'b'), score: '', r1: 'Words played', r1a: wA, r1b: wB, r2: 'Squares', r2a: sa, r2b: sb };
+      if (overKind === 'resigned') over = Object.assign(base, { title: 'You gave up', sub: s.cpu.name + ' takes this one. Rematch?' });
+      else if (youLost) over = Object.assign(base, { title: s.cpu.name + ' boxed you in', sub: wd + ' ran out of room on turn ' + turnNo + '. Rematch?' });
+      else over = Object.assign(base, { title: 'You boxed ' + s.cpu.name + ' in!', sub: wd + ' ran out of room on turn ' + turnNo + '. Nice one!' });
+    }
+    over.cpu = !!s.cpu; over.notCpu = !s.cpu; over.hasRec = !!s.rec; over.rec = s.rec;
+    const card = (p) => {
+      const isCpu = !!s.cpu && s.cpu.side === p;
+      const you = s.cpu ? !isCpu : ((p === 'B') === !!s.youB);
+      return { name: isCpu ? s.cpu.name : pname(p), you, hasLvl: isCpu, lvl: isCpu ? s.cpu.lvl : '', pip: 'pip ' + (p === 'A' ? 'a' : 'b') + (isCpu ? ' bot ' + s.cpu.lvl.toLowerCase() : '') };
+    };
 
     const COACH = {
       1: { top: 500, title: 'Build off your last word', text: 'Your new word starts or ends on one of your glowing letters. Your first word starts in this corner.' },
@@ -424,10 +489,14 @@ class Component extends DCLogic {
     const isOver = panel === 'over';
     const showKb = panel === 'kb' || panel === 'wait';
     return {
-      rootCls: 'wr ' + theme + ' ' + layout + ' ' + (turn === 'B' ? 'turnB' : 'turnA'),
+      rootCls: 'wr ' + theme + ' ' + layout + ' ' + (turn === 'B' ? 'turnB' : 'turnA') + (clar !== 'none' ? ' cl' : '') + (clar === 'stripes' ? ' qs' : ''),
+      boardCls: 'board' + (clar.indexOf('trail') === 0 ? ' trail' : ''),
+      holdShow: clar === 'noLetters', holdTxt: 'Holding: STAR · Blue, turn 5',
       sideCls: 'side' + (tut === 5 ? ' spot' : ''),
-      plA: { cls: 'pl a' + (turn === 'A' ? ' on' : '') + (rA.n === 1 && !isOver ? ' alarm' : ''), you: !s.youB },
-      plB: { cls: 'pl b' + (turn === 'B' ? ' on' : '') + (rB.n === 1 && !isOver ? ' alarm' : ''), you: !!s.youB },
+      plA: Object.assign(card('A'), { cls: 'pl a' + (turn === 'A' ? ' on' : '') + (rA.n === 1 && !isOver ? ' alarm' : '') + (s.cpu && s.cpu.side === 'A' ? ' cpu' : '') + (cpuWaiting && waitOther === 'A' && s.cpuPhase === 'think' ? ' thinking' : '') }),
+      plB: Object.assign(card('B'), { cls: 'pl b' + (turn === 'B' ? ' on' : '') + (rB.n === 1 && !isOver ? ' alarm' : '') + (s.cpu && s.cpu.side === 'B' ? ' cpu' : '') + (cpuWaiting && waitOther === 'B' && s.cpuPhase === 'think' ? ' thinking' : '') }),
+      waitDots: s.cpuPhase !== 'play',
+      giveupTxt: (s.cpu ? s.cpu.name : pname(s.youB ? 'A' : 'B')) + " wins if you give up. No rush, there's no timer. And there's definitely a word that fits, or the game would already be over!",
       roomA: rA, roomB: rB, sa, sb,
       dA: !!delta && delta.p === 'A', dB: !!delta && delta.p === 'B', dCls: 'delta' + (delta && delta.p === 'B' ? ' db' : ''), dTxt,
       turnLbl: isOver ? 'GAME' : 'TURN', turnNum: isOver ? 'END' : String(turnNo),
@@ -436,7 +505,7 @@ class Component extends DCLogic {
       bwCls: 'boardwrap' + (tut === 1 ? ' spot' : ''),
       cells: cellsOut,
       showKb, waiting: panel === 'wait', notWaiting: panel !== 'wait',
-      waitPip: 'mini ' + (waitOther === 'A' ? 'a' : 'b'), waitTxt,
+      waitPip: cpuWaiting ? 'pip ' + (waitOther === 'A' ? 'a' : 'b') + ' bot ' + s.cpu.lvl.toLowerCase() : 'mini ' + (waitOther === 'A' ? 'a' : 'b'), waitTxt,
       entryWrapCls: tut === 2 ? 'spot' : '',
       entryCls: 'entry' + (err ? ' shake' : ''), entryAria: 'Your word: ' + (typed || 'empty'),
       slots, fb: fbOut, tnote, hint,

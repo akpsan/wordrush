@@ -8,7 +8,8 @@ This folder is the complete WordRush design: every screen as HTML, the shared st
 |---|---|
 | `design/Main.dc.html` | The game screen. Its `<script>` block holds working logic you can port: the placement engine (`fits`), the "ways out" count (`exitsOn`), the feedback-line rules, the error checks and the sample games. |
 | `design/Tutorial.dc.html` | Learn to play: a 9-step scripted tutorial on the real board and keyboard. |
-| `design/Menu.dc.html` | Main menu: first launch, returning player, settings. |
+| `design/Menu.dc.html` | Main menu (Play vs AI, Play a friend, Continue, Learn to play), settings, and the Play vs AI setup sheet. |
+| `design/vc-*.dc.html`, `menu-4…6-*` | Play vs AI: setup, the AI's turn (thinking → word appearing → your turn), danger, results, desktop. The AI personas are Pip (Easy), Juno (Medium) and Rex (Hard). |
 | `design/wordrush.css` | Design tokens and styles: light/dark themes, player colours, cell states, keyboard, sheets. Port the CSS variables as your theme. |
 | `design/Legend.dc.html` | Every cell state and the danger meter, with the non-colour cue for each. |
 | `design/Glossary.dc.html` | Player-facing words (also in the copy deck). |
@@ -31,7 +32,7 @@ The `.dc.html` files are a design-tool format: markup in `<x-dc>`, `{{holes}}` f
 
 ## Rules in brief
 
-- 8×8 board, 2 players (Blue goes first, Orange second), pass and play on one device. No timer.
+- 8×8 board, 2 players (Blue goes first, Orange second). Two modes: Play a friend (pass and play on one device) and Play vs AI (the AI plays real words under the same rules and can be boxed in). No timer.
 - Words are 3–5 letters, read left to right or top to bottom, and each word can only be played once.
 - Blue's first word starts in the top-left corner and is 4 letters max. Orange's first word ends in the bottom-right corner.
 - Every later word must start or end on a letter of your own last word. That shared letter belongs to both words.
@@ -51,11 +52,15 @@ The `.dc.html` files are a design-tool format: markup in `<x-dc>`, `{{holes}}` f
   - When the word isn't ready, Play stays tappable (`aria-disabled`, not `disabled`), so tapping it explains why.
   - The explanation comes with a shake and one of the "oops" messages from the copy deck.
 
+## Board clarity (decided)
+
+Older words fade by age at rest (each player's last word full strength, the word before ~70%, older ~30%), and while typing everything except your last word and the preview dims. Game-over, boxed-in and replay boards stay at full contrast, and a "Show all letters" setting turns fading off. Details: the green `devFade` note in `canvas.json`. In `Main.dc.html` this is the `clarity` prop (default `fadeFocus`).
+
 ## Decisions
 
-The open questions from the design notes are decided in `docs/ui-decisions.md` at the repo root, which takes precedence over the dev notes in `canvas.json`. In short: the "ways out" meter counts real words; tutorial step 7 uses CAT instead of OPEN (the copy deck is updated, the `Tutorial.dc.html` mockup still shows OPEN); hints default to Off.
+The open questions from the design notes are decided in `docs/ui-decisions.md` at the repo root, which takes precedence over the dev notes in `canvas.json`. In short: the "ways out" meter counts real words; tutorial step 7 uses CAT instead of OPEN and step 8 uses DOGS and PLANT (the copy deck is updated, the `Tutorial.dc.html` mockup still shows the old words); hints default to Off; older letters fade to 45%, not 30%.
 
-The 34 leftover state files from earlier design rounds (timeouts, passing, suggestion cards) were removed; `design/index.html` lists only the current screens.
+The leftover state files from earlier design rounds (timeouts, passing, suggestion cards) were removed; `design/index.html` lists only the current screens.
 
 ## Suggested build order
 
@@ -68,4 +73,5 @@ The 34 leftover state files from earlier design rounds (timeouts, passing, sugge
 2. Game screen, with every state on the canvas.
 3. Menu and settings, with a saved game for Continue.
 4. Learn to play, driven by the same engine with a scripted step list.
-5. Desktop layout (≥1080px, three columns) and the keyboard shortcuts.
+5. Play vs AI: move picker per difficulty, the AI's turn timing and animation, setup sheet, records per opponent (see the "vs AI" dev notes in canvas.json).
+6. Desktop layout (≥1080px, three columns) and the keyboard shortcuts.
