@@ -71,6 +71,11 @@ const missing = {
   'learn.flip.generic': 'Tap **Flip** to try the next spot.',
   'learn.recap.aria': 'The rules',
   'over.stats.hints': 'Hints used',
+  // Word impact: shown once a word is ready (docs/ui-decisions.md).
+  'impact.both': 'After **{WORD}**: you {you} ways out ({dYou}), {opp} {them} ({dThem})',
+  'impact.you': 'After **{WORD}**: you {you} ways out ({dYou})',
+  'impact.boxes': '**{WORD}** boxes {opp} in!',
+  'impact.same': 'same',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

@@ -59,3 +59,4 @@
 .cnt{white-space:nowrap}
 .entrywrap{display:flex;flex-direction:column;gap:7px}
 .tnote.off{visibility:hidden}
+.tnote.impact{color:var(--text);font-weight:600}.tnote.impact b{font-weight:800}.tnote.impact .ico{color:var(--pText)}.tnote.impact.warn .ico{color:var(--bText)}

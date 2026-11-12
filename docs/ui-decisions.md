@@ -144,3 +144,15 @@ The product owner chose a honeycomb board as the game's direction. Rules and sim
 | Menu hero board | Follows the Board setting. The hex position is two Easy AIs' first ten words, replayed through the engine. |
 | Learn to play | Still teaches on the square board. Porting it is on the product backlog. |
 | First-word note | Shows the board's own limit ({n} in the copy deck): 4 letters on the square, 3 on the hexagon. |
+
+## Build decisions (word impact, 2026-11-12)
+
+From the owner's playtest: it was hard to tell whether a word helps or hurts. First item of the product loop.
+
+| Topic | Decision |
+| --- | --- |
+| What it shows | Once a word is ready (a real word in a legal spot), the note row above the tiles says what playing it would do: "After **ATE**: you 6 ways out (−1), Orange 10 (same)", or "**PLANT** boxes Orange in!". Before the opponent's first word, only your own count. |
+| Where | The note row, which is always rendered (it holds the first-word note), so nothing on screen moves. A hint chip, when hints are on, keeps the row. |
+| Doesn't reveal the word list | It appears only in the ready state, which already confirms the word. |
+| How | `features/game/model/impact.ts` plays the word on a copy through the engine and counts ways out (`waysOut`) for both players. Your own count at 1 or less gets the warning icon. |
+| Not in the tutorial | The tutorial's lessons control that row themselves. |
