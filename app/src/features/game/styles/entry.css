@@ -60,3 +60,6 @@
 .entrywrap{display:flex;flex-direction:column;gap:7px}
 .tnote.off{visibility:hidden}
 .tnote.impact{color:var(--text);font-weight:600}.tnote.impact b{font-weight:800}.tnote.impact .ico{color:var(--pText)}.tnote.impact.warn .ico{color:var(--bText)}
+/* A word that leaves you no words to play: the note row and the Play button warn. */
+.tnote.impact.err{color:var(--text);font-weight:800}.tnote.impact.err .ico{color:var(--text)}
+.btn.pri.losing{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px var(--text);background-image:repeating-linear-gradient(135deg,color-mix(in srgb,var(--text) 10%,transparent) 0 4px,transparent 4px 10px)}

@@ -1,8 +1,9 @@
-/** The status bar: each player's ways out, squares and turn. */
+/** The status bar: each player's words to play (1, 2 or 3+), squares and turn. */
 
 import { aiLevelName, plain, t } from '../../../copy';
 import type { Level } from '../../../ai';
 import {
+  legalMoves,
   moveContext,
   squares,
   waysOut,
@@ -23,7 +24,7 @@ export interface PlayerStatus {
   /** The AI's difficulty, on the AI's card. */
   readonly ai: { readonly level: Level; readonly levelName: string } | null;
   readonly active: boolean;
-  /** Null when not measured: before the first word, or for the winner once the game is over. */
+  /** Words to play, 0 to 3 (3 = "3+"). Null when not measured: before the first word, or for the winner once the game is over. */
   readonly ways: number | null;
   readonly level: RoomLevel;
   readonly label: string;
@@ -48,12 +49,17 @@ export function waysOutFor(game: GameState, lex: Lexicon, player: Player): numbe
   return waysOut(moveContext(game, player), lex);
 }
 
+/** Words a player could play now, counted up to 3 (3 means "3+"). 0 = boxed in. */
+export function wordsFor(game: GameState, lex: Lexicon, player: Player): number {
+  return Math.min(legalMoves(game, lex, player).length, 3);
+}
+
 function measuredWays(game: GameState, lex: Lexicon, player: Player): number | null {
   const { result } = game;
   if (!result) {
     // Before a player's first word, only the player about to start has anything to measure.
     const started = game.lastWord[player] !== null;
-    return started || game.toMove === player ? waysOutFor(game, lex, player) : null;
+    return started || game.toMove === player ? wordsFor(game, lex, player) : null;
   }
   // Once it's over, only the boxed-in player's meter means anything.
   return result.reason === 'boxed-in' && result.winner !== player ? 0 : null;
@@ -66,7 +72,7 @@ function labelOf(n: number | null): string {
   if (n === null) return t('ways.unknown');
   if (n === 0) return t('ways.none');
   if (n === 1) return t('ways.one');
-  return t('ways.many', { n });
+  return t('ways.many', { n: n >= 3 ? '3+' : n });
 }
 
 export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerStatus {
@@ -89,7 +95,7 @@ export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerSt
     aria: ai
       ? plain('cpu.card.aria', { ai: name, level: ai.levelName, waysOut: label })
       : plain('ways.aria', { player: name, waysOut: label }),
-    segments: ways === null ? 0 : Math.min(ways, 4),
+    segments: ways === null ? 0 : ways >= 3 ? 4 : ways,
     warn: ways !== null && ways <= 1,
     alarm: ways === 1 && !game.result,
     squares: squares(game, player),

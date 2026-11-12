@@ -83,8 +83,9 @@ export function GameScreen(props: GameScreenProps) {
         showAnchors: !aiBusy,
         fade: !settings.showAllLetters,
         aiReveal: lastPlayByAi ? (phase === 'playing' ? AI_LETTER_MS : 0) : undefined,
+        heat: settings.showHeatmap && yourTurn,
       }),
-    [session, entry, lex, settings.showWaysOut, settings.showAllLetters, aiBusy, lastPlayByAi, phase],
+    [session, entry, lex, settings.showWaysOut, settings.showAllLetters, settings.showHeatmap, yourTurn, aiBusy, lastPlayByAi, phase],
   );
   const feedback = useMemo(() => feedbackFor(session, entry, lex), [session, entry, lex]);
   const aiTurn = useMemo(() => (phase === 'idle' ? null : aiTurnView(session, lex, phase)), [session, lex, phase]);
@@ -158,6 +159,7 @@ export function GameScreen(props: GameScreenProps) {
               onPlay={() => dispatch({ type: 'play' })}
               hintsLeft={left}
               onHint={() => dispatch({ type: 'hint' })}
+              losing={impact?.tone === 'err'}
             />
             <KeyHelp />
           </>
@@ -179,7 +181,7 @@ export function GameScreen(props: GameScreenProps) {
       {overlay === 'settings' && (
         <SettingsSheet
           title={t('gsettings.title')}
-          rows={['highlight', 'waysOut', 'showAll']}
+          rows={['highlight', 'heatmap', 'waysOut', 'showAll']}
           onClose={() => setOverlay(null)}
           extra={
             <button type="button" className="btn sec" onClick={onMenu}>
