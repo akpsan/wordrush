@@ -6,6 +6,8 @@ A two-player word game on a shared 8 × 8 grid. Each player grows a chain of wor
 
 The repo holds the game's rules, the simulation lab used to design them, the UI design, and the web app.
 
+**Read:** [How 87,300 simulated games shaped WordRush's rules](docs/blog/how-simulations-shaped-wordrush.md), the story of the method and what it changed.
+
 ## Where things are
 
 ```
@@ -13,6 +15,7 @@ wordrush/
 ├── docs/
 │   ├── rules.md              Current rules (v4), plus earlier versions and dry runs as history
 │   ├── findings.md           What the simulations showed, and the decisions they led to
+│   ├── blog/                 Write-ups: how simulated games shaped the rules
 │   ├── ui-decisions.md       UI and UX decisions; takes precedence over the design's dev notes
 │   ├── app-architecture.md   How the web app is layered, and the rules for keeping it modular
 │   └── decisions/            Design decision records
