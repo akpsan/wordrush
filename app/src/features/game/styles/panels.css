@@ -37,3 +37,4 @@
 
 /* App: on narrow phones (360px) keep two-button rows like "Change difficulty · Rematch" on one line. */
 @media (max-width:374px){.orow .btn{font-size:14px;padding:0 8px;white-space:nowrap}}
+.olinks{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}

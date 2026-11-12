@@ -115,3 +115,14 @@ From an automated screenshot pass at 360×640, 390×844, 820×1180, 1280×640, 1
 | Board letters when the board is squeezed | Scale with the board (at most 20px), so tiles never spill out of a small board. |
 | Tutorial's last screen on short phones | The recap list is tighter so the finished board keeps its room. |
 | Narrow phones (under 375px wide) | The "New? Start here" pill wraps to two lines instead of squeezing the button title, and two-button rows (Change difficulty · Rematch) stay on one line. |
+
+## Build decisions (experience improvements, 2026-11-12)
+
+The product owner gave creative freedom here: the design is a direction, not a spec.
+
+| Topic | Decision |
+| --- | --- |
+| Rings on letters you can build from | Drawn **inside** the tile. Outside rings touched their neighbours' in a word and read as one heavy block. |
+| Results: Share result | A link under the results shares "{title} · WordRush" and the site link: the system share sheet on touch devices, the clipboard elsewhere ("Copied!"). No board or words, so nothing is spoiled. Code: `platform/share.ts`. Strings `over.share*` in overrides. |
+| Results: Back to menu in pass and play | Added next to Share result. Before, pass and play's results only offered Play again; the menu was behind the hamburger. |
+| Installable app | Web app manifest, icons (the logo's blue dot and orange square on the dark background) and theme colour, so the game can be added to a phone's home screen and opens full screen. No offline service worker yet. |

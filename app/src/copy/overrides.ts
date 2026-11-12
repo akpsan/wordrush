@@ -71,6 +71,11 @@ const missing = {
   'learn.flip.generic': 'Tap **Flip** to try the next spot.',
   'learn.recap.aria': 'The rules',
   'over.stats.hints': 'Hints used',
+  // Results: share the outcome (no board, no words: nothing to spoil).
+  'over.share': 'Share result',
+  'over.share.copied': 'Copied!',
+  'over.share.failed': "Couldn't share",
+  'over.share.text': '{title} · WordRush',
 } as const;
 
 export const overrides = { ...composite, ...opponents, ...changed, ...passAndPlay, ...missing };
