@@ -59,3 +59,6 @@
 
 /* App: on narrow phones the "New? Start here" pill squeezed the button's title onto two lines. Let the pill wrap instead. */
 @media (max-width:374px){.mbtn .mpill{max-width:76px;white-space:normal;text-align:center;line-height:1.25}}
+
+/* App: tablets in portrait (phone layout, lots of height): a bigger hero board instead of empty space. */
+@media (min-width:600px) and (min-height:900px){.wr.menu.phone .mboard{width:420px;padding:7px;gap:5px;border-radius:20px}.wr.menu.phone .mboard .cell{font-size:22px}}

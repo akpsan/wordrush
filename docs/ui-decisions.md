@@ -126,3 +126,6 @@ The product owner gave creative freedom here: the design is a direction, not a s
 | Results: Share result | A link under the results shares "{title} · WordRush" and the site link: the system share sheet on touch devices, the clipboard elsewhere ("Copied!"). No board or words, so nothing is spoiled. Code: `platform/share.ts`. Strings `over.share*` in overrides. |
 | Results: Back to menu in pass and play | Added next to Share result. Before, pass and play's results only offered Play again; the menu was behind the hamburger. |
 | Installable app | Web app manifest, icons (the logo's blue dot and orange square on the dark background) and theme colour, so the game can be added to a phone's home screen and opens full screen. No offline service worker yet. |
+| Offline play | A hand-written service worker (`app/public/sw.js`, registered by `platform/offline.ts` in production builds only). Pages are network-first, so a new deploy shows at once; everything else (hashed scripts, styles, fonts, the word list) is cache-first. After one visit, the whole game works offline. |
+| Browser bar colour | Follows the theme (`platform/themeColor.ts`): the dark or light background, so the bar blends in. |
+| Tablet menu | On tall portrait screens (at least 600×900, phone layout) the hero board is 420px instead of 286px, instead of leaving empty space. |
