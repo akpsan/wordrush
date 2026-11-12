@@ -71,6 +71,11 @@ const missing = {
   'learn.flip.generic': 'Tap **Flip** to try the next spot.',
   'learn.recap.aria': 'The rules',
   'over.stats.hints': 'Hints used',
+  // Hex mode (docs/ui-decisions.md).
+  'settings.board.label': 'Board',
+  'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',
+  'settings.board.hex': 'Hexagon',
+  'settings.board.square': 'Square',
   // Results: share the outcome (no board, no words: nothing to spoil).
   'over.share': 'Share result',
   'over.share.copied': 'Copied!',

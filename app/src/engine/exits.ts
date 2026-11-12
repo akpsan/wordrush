@@ -28,9 +28,9 @@ export function exitsOf(ctx: MoveContext, lex: Lexicon): Exit[] {
   for (const anchor of ctx.anchors) {
     // On a first move the anchor is an empty corner, and the word may use it.
     const anchorEmpty = !ctx.board[anchor.cell];
-    for (const dir of ['across', 'down'] as const) {
+    for (const dir of ctx.geo.dirs) {
       for (const mode of anchor.modes) {
-        const path = ray(ctx.size, anchor.cell, dir, mode === 'start' ? 1 : -1, ctx.maxLen).slice(anchorEmpty ? 0 : 1);
+        const path = ray(ctx.geo, anchor.cell, dir, mode === 'start' ? 1 : -1, ctx.maxLen).slice(anchorEmpty ? 0 : 1);
         const cells: CellIndex[] = [];
         let blocker: CellIndex | null = null;
         for (const cell of path) {

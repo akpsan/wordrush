@@ -1,7 +1,8 @@
 /** Public API of the WordRush engine. Import from here, never from internal files. */
 
 export type * from './types';
-export { STANDARD_RULES, type Rules } from './rules';
+export { STANDARD_RULES, HEX_RULES, rulesFor, type Rules } from './rules';
+export { geometryOf, DELTA, type Geometry, type Shape } from './geometry';
 export { createLexicon, parseWordList, type Lexicon } from './lexicon';
 export { toIndex, toRowCol, cellsFor } from './board';
 export {

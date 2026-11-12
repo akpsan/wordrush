@@ -6,7 +6,7 @@
  * What matters is room: how many moves each side would have.
  */
 
-import { cellsFor, legalMoves, squares, type GameState, type Lexicon, type Placement, type Player } from '../engine';
+import { cellsFor, geometryOf, legalMoves, squares, type GameState, type Lexicon, type Placement, type Player } from '../engine';
 
 export const WIN = 1_000_000;
 
@@ -57,6 +57,6 @@ export function evaluateMyTurn(state: GameState, lex: Lexicon, me: Player, w: We
 
 /** New squares a move claims. */
 export function gain(state: GameState, p: Placement): number {
-  const cells = cellsFor(state.rules.size, p.row, p.col, p.dir, p.word.length) ?? [];
+  const cells = cellsFor(geometryOf(state.rules), p.row, p.col, p.dir, p.word.length) ?? [];
   return cells.filter((c) => !state.board[c]).length;
 }

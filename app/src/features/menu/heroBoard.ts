@@ -4,7 +4,7 @@
  * (The mockup used CUB and ARC; CUB isn't in the word list, so SUB and GAS take their place.)
  */
 
-import { playScripted, type Lexicon, type ScriptedMove } from '../../engine';
+import { HEX_RULES, newGame, play, playScripted, type Dir, type GameState, type Lexicon, type ScriptedMove, type Shape } from '../../engine';
 
 const MOVES: readonly ScriptedMove[] = [
   { word: 'team', dir: 'across' },
@@ -17,6 +17,25 @@ const MOVES: readonly ScriptedMove[] = [
   { word: 'gas', dir: 'across', at: 'end' },
 ];
 
+/** The hex board's position: two Easy AIs' first ten words (seed 42), replayed through the engine. */
+const HEX_MOVES: readonly { word: string; row: number; col: number; dir: Dir }[] = [
+  { word: 'gas', row: 0, col: 5, dir: 'down' },
+  { word: 'yard', row: 7, col: 8, dir: 'downLeft' },
+  { word: 'spot', row: 2, col: 5, dir: 'across' },
+  { word: 'stay', row: 7, col: 5, dir: 'across' },
+  { word: 'pest', row: 2, col: 6, dir: 'downLeft' },
+  { word: 'lips', row: 7, col: 2, dir: 'across' },
+  { word: 'pads', row: 2, col: 6, dir: 'down' },
+  { word: 'ins', row: 7, col: 3, dir: 'down' },
+  { word: 'dam', row: 4, col: 6, dir: 'across' },
+  { word: 'idea', row: 7, col: 3, dir: 'downLeft' },
+];
+
+function heroGame(lex: Lexicon, shape: Shape): GameState {
+  if (shape === 'square') return playScripted(lex, MOVES);
+  return HEX_MOVES.reduce((g, m) => play(g, lex, { ...m, anchor: 0, anchorAt: 'start' }), newGame(HEX_RULES));
+}
+
 export interface HeroCell {
   readonly letter: string;
   readonly className: string;
@@ -25,15 +44,16 @@ export interface HeroCell {
 }
 
 /** Letters appear in the order they were played; each player's last word is highlighted. */
-export function heroBoard(lex: Lexicon): HeroCell[] {
-  const game = playScripted(lex, MOVES);
+export function heroBoard(lex: Lexicon, shape: Shape = 'square'): { cells: HeroCell[]; game: GameState } {
+  const game = heroGame(lex, shape);
   const order = new Map<number, number>();
   game.words.forEach((w) => w.cells.forEach((c) => order.has(c) || order.set(c, order.size)));
   const recent = new Set(game.lastWord.flatMap((i) => (i === null ? [] : game.words[i]!.cells)));
-  return game.board.map((cell, index) => {
+  const cells = game.board.map((cell, index): HeroCell => {
     if (!cell) return { letter: '', className: 'cell', delay: 0 };
     const cls = ['cell', cell.owner === 0 ? 'a' : 'b', 'loop'];
     if (recent.has(index)) cls.push('recent');
     return { letter: cell.letter, className: cls.join(' '), delay: (order.get(index) ?? 0) * 280 };
   });
+  return { cells, game };
 }

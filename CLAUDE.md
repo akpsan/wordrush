@@ -23,3 +23,9 @@ Simulator commands, conventions and simulation decisions: `sim/CLAUDE.md`.
 ## Current rules
 
 Rules v4 in `docs/rules.md`, which is `CURRENT` (= `V9`) in `engine/rules.py`: no revive, no crossing, no timer, **a cornered player loses**, A's first word at most 4 letters, and any word in `data/dictionaries/playable-3to5.txt` counts (hints use `hints-3to5.txt`). If the board fills (never seen in simulation), more cells wins and B wins a tie. Older presets (V1–V8) and the experiments that used them are kept for reproducibility; don't redefine them.
+
+**Hex mode** (default board in the app since 2026-11-12): the same rules on a 91-cell hexagon (radius 5) with a third line direction (down-left), and A's first word at most 3 letters. Simulator preset `HEX`; app `HEX_RULES`; rules in `docs/rules.md` (Hex mode). Board shape is a rule field (`board`/`shape`) handled by `geometry.py` / `geometry.ts`.
+
+## Product loop
+
+Run `/product-loop` (`.claude/skills/product-loop/`) when the owner asks for a product cycle. The backlog and decisions live in the WordRush product doc linked from the skill.

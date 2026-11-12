@@ -14,7 +14,8 @@ export interface EntryProps {
   /** Changes on every failed play, to replay the shake. Null when there's no problem. */
   readonly problemId: number | null;
   /** Show "First word: 4 letters max, starting in the corner" (Blue's first turn). */
-  readonly firstWordNote: boolean;
+  /** Blue's first-word length limit, while the first-word note shows; null hides it. */
+  readonly firstWordNote: number | null;
   /** The current hint, shown as a chip above the tiles. */
   readonly hint?: HintView | null;
   /** The AI's turn: a "thinking" line replaces the tiles, and its note replaces the feedback. */
@@ -68,7 +69,7 @@ function linkSlot(entry: EntryView): number {
 
 export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, hint, aiTurn }: EntryProps) {
   const feedback = aiTurn ? (aiTurn.note ?? NO_FEEDBACK) : typingFeedback;
-  const showNote = firstWordNote && !aiTurn;
+  const showNote = firstWordNote !== null && !aiTurn;
   const { typed, maxLen, ready } = entry;
   const link = linkSlot(entry);
   const slots = Array.from({ length: SLOTS }, (_, i) => {
@@ -90,7 +91,7 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
       ) : (
         <p className={showNote ? 'tnote' : 'tnote off'} aria-hidden={!showNote}>
           <Icon name="note" />
-          <span>{t('first.note')}</span>
+          <span>{t('first.note', { n: firstWordNote ?? '' })}</span>
         </p>
       )}
       {aiTurn ? (

@@ -77,6 +77,9 @@ def check_invariants(s):
             users[cell] += 1
     assert users == s.users
     for i in range(n2):
+        if s.letters[i] == "#":  # off the board (hex)
+            assert s.users[i] == 0 and s.owner[i] == -1
+            continue
         assert bool(s.letters[i]) == (s.users[i] > 0) == (s.owner[i] >= 0)
     assert s.cells_owned == [s.owner.count(0), s.owner.count(1)]
     assert set(s.on_board) == {p.word for p in s.placements.values()}
@@ -87,7 +90,7 @@ def test_random_play_invariants_all_presets():
     lex = get_lexicon("everyday-3to5")
     rng = random.Random(7)
     for name, rules in PRESETS.items():
-        for n in (6, 8):
+        for n in ((5, 7) if rules.board == "hex" else (6, 8)):
             for _ in range(15):
                 s = new_game(rules.with_(n=n), lex)
                 while not s.over:
@@ -156,3 +159,19 @@ def test_current_rules_full_board_tie_goes_to_b():
     _finish(s, "full")
     assert s.winner == 1
     assert CURRENT.b_bonus == 0 and CURRENT.stuck == "lose" and CURRENT.a_first_max_len == 4
+
+
+def test_hex_geometry_and_opening():
+    from wordrush_sim.engine.geometry import geometry
+    from wordrush_sim.engine.rules import HEX1
+
+    g = geometry("hex", 9)
+    assert g.cells == 61 and g.a_corner == 4 and g.b_corner == 8 * 9 + 4
+    assert not g.valid[0] and not g.valid[80]
+    lex = get_lexicon("everyday-3to5")
+    s = new_game(HEX1, lex)
+    first = legal_moves(s)
+    assert {m.dir for m in first} == {0, 1, 2}  # across, down, down-left
+    assert all(m.start == g.a_corner and len(m.word) <= 4 for m in first)
+    s = apply(s, first[0])
+    assert all(m.start + (len(m.word) - 1) * (1, 9, 8)[m.dir] == g.b_corner for m in legal_moves(s))

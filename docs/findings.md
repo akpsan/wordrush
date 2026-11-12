@@ -202,6 +202,26 @@ From [cornered.md](../sim/reports/cornered.md): 1,000 games per row. Under "corn
 - **B's +0.5 never mattered.** All 9,000 games ended by cornering, and none filled the board.
 - **Skill matters more.** Balanced beats greedy 78% to 22%, against 69% to 31% when stuck players pass. It beats random 84% of the time. The search bot is no better than balanced under this rule (47% to 53%).
 
+## Hex mode
+
+From [hex.md](../sim/reports/hex.md): 300 games per row, Rules v4 with the board shape changed. On a hexagon, words run across, down-right or down-left.
+
+| Variant | Cells | Words per player (balanced) | A wins: balanced mirror | A wins: aggressive mirror | Random beats balanced |
+| --- | --- | --- | --- | --- | --- |
+| Square 8 × 8 (Rules v4) | 64 | 6.0 | 50% | 55% | 23% |
+| Hex, radius 4 | 61 | 5.5 | **85%** | 49% | 10% |
+| Hex, radius 4, A's first word 3 letters | 61 | 6.2 | 48% | **29%** | 8% |
+| Hex, radius 5 | 91 | 8.2 | 48% | **31%** | 21% |
+| **Hex, radius 5, A's first word 3 letters (adopted)** | 91 | 8.4 | **52%** | **44%** | 17% |
+| Hex, radius 5, no first-word limit | 91 | 7.2 | 66% | 67% | 14% |
+
+- **Radius 5 with a 3-letter first word is the only variant fair for both bot styles.** It was adopted as hex mode (`HEX`).
+- **Small hexagons swing hard on the opening.** The third direction gives every player more ways out, so who closes off whom early decides more games.
+- **Games run longer:** about 8 words per player instead of 6, still a few minutes.
+- **Skill still matters, and weaker players still win some games:** random play beats the balanced bot 17% of the time (23% on the square).
+- **The lookahead bot was left out** of the full run because it is slow on bigger boards. In a 40-game trial on radius 4 it split about evenly.
+- The app's engine replays 160 simulated hex games with identical decisions (`sim/scripts/export_hex_conformance.py`).
+
 ## Still to test
 
 - **A rule-agnostic MCTS bot,** to confirm the "cornered loses" results with a stronger player that wasn't hand-tuned for the rule.

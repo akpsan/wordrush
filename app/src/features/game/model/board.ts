@@ -12,6 +12,8 @@ import {
   type CellIndex,
   type Lexicon,
   type Player,
+  cellsFor,
+  geometryOf,
 } from '../../../engine';
 import type { EntryView } from './entry';
 import type { Session } from './session';
@@ -92,10 +94,9 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   const ghost = new Map<CellIndex, { letter: string; k: number; link: boolean }>();
   if (entry.current) {
     const c = entry.current;
-    for (let k = 0; k < c.word.length; k++) {
-      const cell = c.dir === 'across' ? c.row * n + c.col + k : (c.row + k) * n + c.col;
+    (cellsFor(geometryOf(game.rules), c.row, c.col, c.dir, c.word.length) ?? []).forEach((cell, k) => {
       ghost.set(cell, { letter: c.word[k]!, k, link: cell === c.anchor });
-    }
+    });
   }
 
   // The most recent word, flashed for the next player until they start typing.
@@ -132,7 +133,8 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   const ages = fade ? wordAges(game.words) : [];
   const typing = fade && s.typed.length > 0;
 
-  const corner = mover === 0 ? 0 : n * n - 1;
+  const geo = geometryOf(game.rules);
+  const corner = mover === 0 ? geo.blueCorner : geo.orangeCorner;
 
   return game.board.map((cell, index): CellView => {
     const cls = ['cell'];
@@ -187,7 +189,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
       cls.push('start', mover === 0 ? 'sa' : 'sb');
       mark = mover === 0 ? t('board.start') : t('board.end');
     }
-    if (showAnchors && firstMove && mover === 0 && index === n * n - 1 && !cell && !g) {
+    if (showAnchors && firstMove && mover === 0 && index === geo.orangeCorner && !cell && !g) {
       cls.push('endmark');
       mark = t('board.end');
     }

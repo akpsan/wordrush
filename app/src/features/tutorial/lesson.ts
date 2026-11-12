@@ -4,7 +4,7 @@
  */
 
 import { t, type CopyId } from '../../copy';
-import { moveContext, playScripted, toIndex, waysOut, type CellIndex, type GameState, type Lexicon } from '../../engine';
+import { cellsFor, DELTA, geometryOf, moveContext, playScripted, toIndex, waysOut, type Dir, type CellIndex, type GameState, type Lexicon } from '../../engine';
 import {
   boardView,
   createSession,
@@ -210,14 +210,13 @@ function spotlight(
   popped: number | null,
   typing: boolean,
 ): Set<CellIndex> {
-  const n = game.rules.size;
   const lit = new Set<CellIndex>();
   const addWord = (i: number | null | undefined) => {
     if (i !== null && i !== undefined) game.words[i]?.cells.forEach((c) => lit.add(c));
   };
   if (entry.current) {
     const c = entry.current;
-    for (let k = 0; k < c.word.length; k++) lit.add(c.dir === 'across' ? toIndex(n, c.row, c.col + k) : toIndex(n, c.row + k, c.col));
+    cellsFor(geometryOf(game.rules), c.row, c.col, c.dir, c.word.length)?.forEach((cell) => lit.add(cell));
   }
   if (typing && !game.result) addWord(game.lastWord[game.toMove]);
   if (typing && game.lastWord[0] === null) lit.add(0);
@@ -243,11 +242,11 @@ function looping(cells: readonly CellView[], game: GameState): CellView[] {
 }
 
 /** Step 7: draw the attempted word where it tries to go, bumping into the letter in its way. */
-function withAttempt(cells: readonly CellView[], game: GameState, attempt: { row: number; col: number; dir: string }, typed: string): CellView[] {
+function withAttempt(cells: readonly CellView[], game: GameState, attempt: { row: number; col: number; dir: Dir }, typed: string): CellView[] {
   const n = game.rules.size;
   const out = cells.slice();
   for (let k = 0; k < typed.length; k++) {
-    const cell = attempt.dir === 'across' ? toIndex(n, attempt.row, attempt.col + k) : toIndex(n, attempt.row + k, attempt.col);
+    const cell = toIndex(n, attempt.row + k * DELTA[attempt.dir][0], attempt.col + k * DELTA[attempt.dir][1]);
     const existing = game.board[cell];
     const base = { ...out[cell]!, className: out[cell]!.className.replace(' dim', '') };
     const isLink = k === typed.length - 1 && existing?.letter === typed[k];

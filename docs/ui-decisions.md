@@ -129,3 +129,18 @@ The product owner gave creative freedom here: the design is a direction, not a s
 | Offline play | A hand-written service worker (`app/public/sw.js`, registered by `platform/offline.ts` in production builds only). Pages are network-first, so a new deploy shows at once; everything else (hashed scripts, styles, fonts, the word list) is cache-first. After one visit, the whole game works offline. |
 | Browser bar colour | Follows the theme (`platform/themeColor.ts`): the dark or light background, so the bar blends in. |
 | Tablet menu | On tall portrait screens (at least 600×900, phone layout) the hero board is 420px instead of 286px, instead of leaving empty space. |
+
+## Build decisions (hex mode, 2026-11-12)
+
+The product owner chose a honeycomb board as the game's direction. Rules and simulation evidence: [rules.md](rules.md) (Hex mode) and [findings.md](findings.md) (Hex mode).
+
+| Topic | Decision |
+| --- | --- |
+| Where the shape lives | One rule field, `shape` (`'square'` or `'hex'`), in the simulator (`engine/geometry.py`) and the app (`engine/geometry.ts`). Cells keep their row × column index; a hexagon of radius R sits in a (2R + 1) × (2R + 1) array in axial coordinates, and the corners outside it are off the board. Square presets are unchanged, so the conformance replay still passes. |
+| Line directions | Across, down (down-right on screen) and down-left. Every word reads left to right or downwards, the same rule as the square board with one more line. |
+| Corners | Blue starts in the hexagon's top-left corner, Orange ends in its bottom-right one, as on the square. A player starts with 3 ways out instead of 2. |
+| Drawing the board | A hexagon "slot" per cell, with the usual tiles (Blue round, Orange square and striped) centred on it. Tiles keep every existing state (rings, previews, fading) without hex-specific versions. Positions are percentages from `features/game/components/hexLayout.ts`, shared with the menu's hero board. |
+| Choosing the board | Settings → Board: **Hexagon** (default) or Square. It applies to new games; a game in progress keeps its shape, and saves record it (saves without a shape are square). The AI worker receives the shape with the move list. |
+| Menu hero board | Follows the Board setting. The hex position is two Easy AIs' first ten words, replayed through the engine. |
+| Learn to play | Still teaches on the square board. Porting it is on the product backlog. |
+| First-word note | Shows the board's own limit ({n} in the copy deck): 4 letters on the square, 3 on the hexagon. |

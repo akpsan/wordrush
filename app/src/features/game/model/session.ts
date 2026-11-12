@@ -15,6 +15,9 @@ import {
   type Lexicon,
   type Placement,
   type Problem,
+  cellsFor,
+  geometryOf,
+  type Dir,
 } from '../../../engine';
 import { entryView } from './entry';
 import { FRIEND, isAi, type Match } from './match';
@@ -57,7 +60,7 @@ export const hintsLeft = (s: Session): number => s.hints.perGame - s.hints.used[
 export interface SpotChoice {
   readonly anchor: CellIndex;
   readonly anchorAt: 'start' | 'end';
-  readonly dir: 'across' | 'down';
+  readonly dir: Dir;
 }
 
 export type SessionAction =
@@ -168,12 +171,7 @@ function revealHint(s: Session, lex: Lexicon, hintWords?: ReadonlySet<string>): 
 }
 
 /** New squares a word would claim (every cell except an existing link letter). */
-function gainOf(game: GameState, length: number, row: number, col: number, dir: 'across' | 'down'): number {
-  const n = game.rules.size;
-  let gain = 0;
-  for (let k = 0; k < length; k++) {
-    const cell = dir === 'across' ? row * n + col + k : (row + k) * n + col;
-    if (!game.board[cell]) gain++;
-  }
-  return gain;
+function gainOf(game: GameState, length: number, row: number, col: number, dir: Dir): number {
+  const cells = cellsFor(geometryOf(game.rules), row, col, dir, length) ?? [];
+  return cells.filter((cell) => !game.board[cell]).length;
 }

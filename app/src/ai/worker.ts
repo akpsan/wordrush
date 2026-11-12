@@ -13,12 +13,12 @@ const familiar = getHintWords();
 const BUDGET_MS = 2500;
 
 self.onmessage = (e: MessageEvent<WorkerRequest>) => {
-  const { id, level, moves, seed } = e.data;
+  const { id, level, moves, seed, shape } = e.data;
   let move = null;
   try {
     const start = performance.now();
     const outOfTime = () => performance.now() - start > BUDGET_MS;
-    move = chooseMove(level, replay(moves, lex), { lex, familiar, rng: createRng(seed), outOfTime });
+    move = chooseMove(level, replay(moves, lex, shape), { lex, familiar, rng: createRng(seed), outOfTime });
   } catch {
     move = null;
   }

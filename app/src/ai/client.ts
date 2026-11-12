@@ -29,9 +29,9 @@ function getWorker(): Worker | null {
   return worker;
 }
 
-function chooseHere({ level, moves, seed }: AiRequest): Placement | null {
+function chooseHere({ level, moves, seed, shape }: AiRequest): Placement | null {
   const lex = getLexicon();
-  return chooseMove(level, replay(moves, lex), { lex, familiar: getHintWords(), rng: createRng(seed) });
+  return chooseMove(level, replay(moves, lex, shape), { lex, familiar: getHintWords(), rng: createRng(seed) });
 }
 
 export function askAi(request: AiRequest): Promise<Placement | null> {

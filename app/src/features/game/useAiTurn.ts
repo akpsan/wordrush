@@ -39,7 +39,7 @@ export function useAiTurn(session: Session, dispatch: Dispatch<SessionAction>, r
     const seed = match.seed + game.turn;
     const jitter = (createRng(seed)() * 2 - 1) * JITTER_MS;
     const minimum = reducedMotion ? REDUCED_THINK_MS : MIN_THINK_MS[match.level] + jitter;
-    Promise.all([askAi({ level: match.level, moves: toRecords(game), seed }), wait(minimum)]).then(([move]) => {
+    Promise.all([askAi({ level: match.level, moves: toRecords(game), seed, shape: game.rules.shape }), wait(minimum)]).then(([move]) => {
       if (cancelled || !move) return;
       dispatch({ type: 'aiPlay', move });
       setPhase('playing');
