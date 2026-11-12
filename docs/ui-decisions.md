@@ -103,3 +103,26 @@ Built from the "vs AI" dev notes in `canvas.json` and section 5 of the copy deck
 | Records | Wins, losses and games per opponent, on this device (`features/setup/setup.ts`). Only wins are shown ("Wins vs Rex: 4", or "No wins vs Rex yet"). Giving up counts as a loss. |
 | Saved game | One slot for both modes. A new game of either mode replaces it (after asking). Saves are version 2 and record who's playing; version 1 saves load as pass and play. |
 | Screen readers | One polite message per step (`cpu.sr.thinking`, `cpu.sr.played`, `cpu.sr.yourturn`), from a single live region. The AI's face is decorative; its card reads "Juno, Medium: 3 ways out". |
+
+## Build decisions (small and short screens)
+
+From an automated screenshot pass at 360×640, 390×844, 820×1180, 1280×640, 1366×657 and 1440×900 (2026-11-12).
+
+| Topic | Decision |
+| --- | --- |
+| Desktop layout on laptops | **From 600px high** (was 700px). Common laptop windows (1366×768 or 1280×720 screens) are about 640–660px high inside the browser and got the narrow phone column. The board already scales with the window height. |
+| Desktop sheets on short screens | Sit 160px down on tall screens, rise to 24px from the top on short ones, and scroll if still too tall, so Start game is never below the fold. |
+| Board letters when the board is squeezed | Scale with the board (at most 20px), so tiles never spill out of a small board. |
+| Tutorial's last screen on short phones | The recap list is tighter so the finished board keeps its room. |
+| Narrow phones (under 375px wide) | The "New? Start here" pill wraps to two lines instead of squeezing the button title, and two-button rows (Change difficulty · Rematch) stay on one line. |
+
+## Build decisions (experience improvements, 2026-11-12)
+
+The product owner gave creative freedom here: the design is a direction, not a spec.
+
+| Topic | Decision |
+| --- | --- |
+| Rings on letters you can build from | Drawn **inside** the tile. Outside rings touched their neighbours' in a word and read as one heavy block. |
+| Results: Share result | A link under the results shares "{title} · WordRush" and the site link: the system share sheet on touch devices, the clipboard elsewhere ("Copied!"). No board or words, so nothing is spoiled. Code: `platform/share.ts`. Strings `over.share*` in overrides. |
+| Results: Back to menu in pass and play | Added next to Share result. Before, pass and play's results only offered Play again; the menu was behind the hamburger. |
+| Installable app | Web app manifest, icons (the logo's blue dot and orange square on the dark background) and theme colour, so the game can be added to a phone's home screen and opens full screen. No offline service worker yet. |

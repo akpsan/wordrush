@@ -45,3 +45,6 @@
 .intro .btn,.donep .orow{flex:none}
 .mm .segs{flex:none}
 .lnote{text-align:center;font-size:13px;line-height:1.4;color:var(--muted)}
+
+/* App: on short phones the recap panel took the board's room; tighten it so the finished board stays visible. */
+@media (max-height:720px){.wr.phone .recap{gap:6px}.wr.phone .recap div{padding:7px 10px;font-size:13px}.wr.phone .donep{gap:8px}}

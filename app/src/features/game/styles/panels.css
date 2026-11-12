@@ -34,3 +34,7 @@
 .reclabel{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
 .reclabel .ico{width:14px;height:14px}
 .panel .linkbtn{align-self:center;height:36px}
+
+/* App: on narrow phones (360px) keep two-button rows like "Change difficulty · Rematch" on one line. */
+@media (max-width:374px){.orow .btn{font-size:14px;padding:0 8px;white-space:nowrap}}
+.olinks{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}

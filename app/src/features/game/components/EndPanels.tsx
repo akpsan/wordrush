@@ -1,9 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { playerName, t } from '../../../copy';
 import { otherPlayer, squares, type GameState, type Player } from '../../../engine';
 import { aiParams, type AiMatch, type Match } from '../model/match';
 import { Icon } from '../../../ui/Icon';
 import { RichText } from '../../../ui/RichText';
+import { shareText, type ShareOutcome } from '../../../platform/share';
 import '../styles/panels.css';
 
 /** The moment a player is boxed in, before the results. */
@@ -157,9 +158,6 @@ export function GameOverPanel({ game, hintsUsed, match, onPlayAgain, aiWins, onC
               {t('cpu.over.rematch')}
             </button>
           </div>
-          <button type="button" className="linkbtn" onClick={onMenu}>
-            {t('cpu.over.menu')}
-          </button>
         </>
       ) : (
         <div className="orow">
@@ -168,6 +166,34 @@ export function GameOverPanel({ game, hintsUsed, match, onPlayAgain, aiWins, onC
             {t('over.again')}
           </button>
         </div>
+      )}
+      <EndLinks title={title} onMenu={onMenu} />
+    </div>
+  );
+}
+
+/** Share the result, and go back to the menu. */
+function EndLinks({ title, onMenu }: { title: string; onMenu?: () => void }) {
+  const [outcome, setOutcome] = useState<ShareOutcome | null>(null);
+  useEffect(() => {
+    if (outcome !== 'copied' && outcome !== 'failed') return;
+    const id = setTimeout(() => setOutcome(null), 2000);
+    return () => clearTimeout(id);
+  }, [outcome]);
+  const share = async () => {
+    const text = t('over.share.text', { title: title.replace(/\*\*/g, '') });
+    setOutcome(await shareText(text, location.origin));
+  };
+  const label = outcome === 'copied' ? t('over.share.copied') : outcome === 'failed' ? t('over.share.failed') : t('over.share');
+  return (
+    <div className="olinks">
+      <button type="button" className="linkbtn" onClick={share} aria-live="polite">
+        {label}
+      </button>
+      {onMenu && (
+        <button type="button" className="linkbtn" onClick={onMenu}>
+          {t('cpu.over.menu')}
+        </button>
       )}
     </div>
   );
