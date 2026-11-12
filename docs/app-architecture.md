@@ -60,3 +60,4 @@ app/src/
 - `npm test`: unit and conformance tests
 - `npm run typecheck` and `npm run lint`
 - `npm run copy`: regenerate `src/copy/deck.ts` after the copy deck changes
+- `npm run deploy`: build and publish to Cloudflare (a Worker serving the static `dist/`, configured in `wrangler.jsonc`). The live site is https://wordrush.wordrush-app.workers.dev

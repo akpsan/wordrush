@@ -1,0 +1,10 @@
+// Hosting on Cloudflare (static assets: no server code). Deploy with: npm run deploy
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wordrush",
+  "compatibility_date": "2026-11-03",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

@@ -1,6 +1,8 @@
 # WordRush
 
-A two-player word game on a shared 8 × 8 grid. Each player grows a chain of words from their own last word, every letter on the board blocks new words, and **the player who gets boxed in first loses**.
+A two-player word game on a shared 8 × 8 grid. Each player grows a chain of words from their own last word, every letter on the board blocks new words, and **the player who gets boxed in first loses**. Play a friend on one device, or play against an AI (Pip, Juno or Rex, easy to hard).
+
+**Play it:** https://wordrush.wordrush-app.workers.dev
 
 The repo holds the game's rules, the simulation lab used to design them, the UI design, and the web app.
 
@@ -36,6 +38,7 @@ uv run wordrush-sim run experiments/cornered.py    # run an experiment, writes r
 npm install
 npm test            # engine tests, including 1,350 replayed simulator games
 npm run dev         # local dev server
+npm run deploy      # build and publish to Cloudflare (needs `npx wrangler login` once)
 ```
 
 **Design screens:** serve `design/handoff/design/` over HTTP (`python3 -m http.server`) and open it in a browser.
