@@ -2,7 +2,7 @@
 
 import { useMemo, useReducer, useState } from 'react';
 import { plain, t } from '../../copy';
-import type { Lexicon } from '../../engine';
+import { STANDARD_RULES, type Lexicon } from '../../engine';
 import { useIsDesktop } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
@@ -99,7 +99,7 @@ function Controls({ view, dispatch }: { view: LessonView; dispatch: (a: LessonAc
           entry={entry}
           feedback={view.feedback}
           problemId={view.bumped ? 1 : null}
-          firstWordNote={view.note !== null}
+          firstWordNote={view.note !== null ? STANDARD_RULES.firstWordMaxLen : null}
         />
       )}
       <Keyboard

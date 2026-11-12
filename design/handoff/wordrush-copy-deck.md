@@ -91,7 +91,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 
 | ID | Screen | Purpose | Final text |
 |---|---|---|---|
-| first.note | First move (Blue) | Small note above the entry tiles | First word: 4 letters max, starting in the corner |
+| first.note | First move (Blue) | Small note above the entry tiles | First word: {n} letters max, starting in the corner |
 | first.start.blue | First move (Blue) | Before typing | Start in the **top-left corner** |
 | first.start.orange | First move (Orange) | Before typing | End your word in the **bottom-right corner** |
 | first.keepgoing | First move | Typing, nothing fits yet | Keep going |
@@ -294,9 +294,9 @@ Rows used only when one player is the AI. Everything else reuses sections 2 and 
 | cpu.record.none | Setup sheet + results | No wins yet | No wins vs {ai} yet |
 | cpu.setup.first.label | Setup sheet | Section label | Who goes first? |
 | cpu.setup.first.you / ai / random | Setup sheet | Options | You · {ai} · Random |
-| cpu.setup.first.you.help | Setup sheet | You selected | You'll be Blue. Blue always goes first, and Blue's first word is 4 letters max. |
-| cpu.setup.first.ai.help | Setup sheet | AI selected | You'll be Orange. Blue always goes first, and Blue's first word is 4 letters max. |
-| cpu.setup.first.random.help | Setup sheet | Random selected | We'll flip a coin. Blue always goes first, and Blue's first word is 4 letters max. |
+| cpu.setup.first.you.help | Setup sheet | You selected | You'll be Blue. Blue always goes first, and Blue's first word is {n} letters max. |
+| cpu.setup.first.ai.help | Setup sheet | AI selected | You'll be Orange. Blue always goes first, and Blue's first word is {n} letters max. |
+| cpu.setup.first.random.help | Setup sheet | Random selected | We'll flip a coin. Blue always goes first, and Blue's first word is {n} letters max. |
 | cpu.setup.hints.label | Setup sheet | Row label | Hints |
 | cpu.setup.hints.help | Setup sheet | Row help | Same as your settings. Changing it here changes it there too. |
 | cpu.setup.start | Setup sheet | Start | Start game |

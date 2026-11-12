@@ -141,5 +141,6 @@ The product owner chose a honeycomb board as the game's direction. Rules and sim
 | Corners | Blue starts in the hexagon's top-left corner, Orange ends in its bottom-right one, as on the square. A player starts with 3 ways out instead of 2. |
 | Drawing the board | A hexagon "slot" per cell, with the usual tiles (Blue round, Orange square and striped) centred on it. Tiles keep every existing state (rings, previews, fading) without hex-specific versions. Positions are percentages from `features/game/components/hexLayout.ts`, shared with the menu's hero board. |
 | Choosing the board | Settings → Board: **Hexagon** (default) or Square. It applies to new games; a game in progress keeps its shape, and saves record it (saves without a shape are square). The AI worker receives the shape with the move list. |
-| Menu hero board | Follows the Board setting. The hex position is two Easy AIs' first eight words, replayed through the engine. |
+| Menu hero board | Follows the Board setting. The hex position is two Easy AIs' first ten words, replayed through the engine. |
 | Learn to play | Still teaches on the square board. Porting it is on the product backlog. |
+| First-word note | Shows the board's own limit ({n} in the copy deck): 4 letters on the square, 3 on the hexagon. |

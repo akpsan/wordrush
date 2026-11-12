@@ -35,6 +35,16 @@ Decided Nov 3, 2026 after the simulation batches ([findings.md](findings.md)). C
 
 **Why A's first word is shorter:** with "cornered loses" and no handicap, B wins slightly more often (54–56%), because when both players get boxed in during the same round, the player whose turn comes next loses. A's 4-letter first word brings it to 48–57% for A across bot styles, the fairest result tested. A 4-letter maximum for everyone and a bonus for B were also tested ([findings.md](findings.md)).
 
+## Hex mode
+
+Added Nov 12, 2026 as the game's direction (the product owner chose a honeycomb board). Simulator preset `HEX` in `engine/rules.py`; evidence in [findings.md](findings.md#hex-mode). Everything in Rules v4 applies, except:
+
+1. **Board:** a hexagon of 91 cells (radius 5, 6 cells to a side), drawn as a honeycomb.
+2. **Lines:** words run across (left to right), down-right or down-left. Every word reads left to right or downwards.
+3. **First word:** A starts in the top-left corner of the hexagon, with **at most 3 letters**; B ends in the bottom-right corner, as usual.
+
+**Why radius 5 and a 3-letter first word:** on a radius-4 hexagon (61 cells), A won 85% of games between balanced bots. Radius 5 with A's usual 4-letter first word was fair for balanced bots (48%) but not aggressive ones (31% for A). Cutting A's first word to 3 letters made both fair: 52% and 44% for A, over 300 games each.
+
 ## Rules v1
 
 **Setup**

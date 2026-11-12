@@ -18,6 +18,7 @@ describe('hex geometry', () => {
   it('runs words across, down-right and down-left, never off the hexagon', () => {
     expect(cellsFor(g, 0, R, 'downLeft', 3)).toEqual([R, g.size + R - 1, 2 * g.size + R - 2]);
     expect(cellsFor(g, 0, R, 'across', R + 2)).toBeNull(); // the top edge has R + 1 cells
+    expect(cellsFor(g, 0, R, 'across', R + 1)).not.toBeNull();
     expect(cellsFor(g, 0, R - 1, 'across', 3)).toBeNull(); // off the board on the left
   });
 });
@@ -28,15 +29,15 @@ describe('a hex game', () => {
     expect(waysOut(moveContext(s, 0), lex)).toBe(3);
     const first = legalMoves(s, lex);
     expect(new Set(first.map((m) => m.dir))).toEqual(new Set(['across', 'down', 'downLeft']));
-    expect(first.every((m) => m.word.length <= 4)).toBe(true);
-    s = play(s, lex, first.find((m) => m.word === 'team' && m.dir === 'across')!);
+    expect(first.every((m) => m.word.length <= 3)).toBe(true);
+    s = play(s, lex, first.find((m) => m.word === 'tea' && m.dir === 'across')!);
     const orange = legalMoves(s, lex);
     expect(orange.every((m) => cellsFor(g, m.row, m.col, m.dir, m.word.length)!.at(-1) === g.orangeCorner)).toBe(true);
   });
 
   it('accepts a down-left word chained from a letter', () => {
     let s = newGame(HEX_RULES);
-    s = play(s, lex, legalMoves(s, lex).find((m) => m.word === 'team' && m.dir === 'across')!);
+    s = play(s, lex, legalMoves(s, lex).find((m) => m.word === 'tea' && m.dir === 'across')!);
     s = play(s, lex, legalMoves(s, lex).find((m) => m.word === 'stone' && m.dir === 'across')!);
     const diag = legalMoves(s, lex).find((m) => m.dir === 'downLeft') as Placement;
     expect(diag).toBeDefined();

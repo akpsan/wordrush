@@ -137,7 +137,7 @@ export function GameScreen(props: GameScreenProps) {
               entry={entry}
               feedback={feedback}
               problemId={session.problem?.id ?? null}
-              firstWordNote={game.toMove === 0 && game.lastWord[0] === null}
+              firstWordNote={game.toMove === 0 && game.lastWord[0] === null ? game.rules.firstWordMaxLen : null}
               hint={hint}
               aiTurn={aiTurn}
             />

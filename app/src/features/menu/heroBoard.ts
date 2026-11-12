@@ -17,16 +17,18 @@ const MOVES: readonly ScriptedMove[] = [
   { word: 'gas', dir: 'across', at: 'end' },
 ];
 
-/** The hex board's position: two Easy AIs' first eight words (seed 42), replayed through the engine. */
+/** The hex board's position: two Easy AIs' first ten words (seed 42), replayed through the engine. */
 const HEX_MOVES: readonly { word: string; row: number; col: number; dir: Dir }[] = [
-  { word: 'gets', row: 0, col: 4, dir: 'down' },
-  { word: 'yard', row: 5, col: 7, dir: 'downLeft' },
-  { word: 'swap', row: 3, col: 4, dir: 'across' },
-  { word: 'died', row: 8, col: 1, dir: 'across' },
-  { word: 'loss', row: 0, col: 7, dir: 'downLeft' },
-  { word: 'bond', row: 5, col: 1, dir: 'down' },
-  { word: 'seas', row: 3, col: 4, dir: 'down' },
-  { word: 'oak', row: 6, col: 1, dir: 'across' },
+  { word: 'gas', row: 0, col: 5, dir: 'down' },
+  { word: 'yard', row: 7, col: 8, dir: 'downLeft' },
+  { word: 'spot', row: 2, col: 5, dir: 'across' },
+  { word: 'stay', row: 7, col: 5, dir: 'across' },
+  { word: 'pest', row: 2, col: 6, dir: 'downLeft' },
+  { word: 'lips', row: 7, col: 2, dir: 'across' },
+  { word: 'pads', row: 2, col: 6, dir: 'down' },
+  { word: 'ins', row: 7, col: 3, dir: 'down' },
+  { word: 'dam', row: 4, col: 6, dir: 'across' },
+  { word: 'idea', row: 7, col: 3, dir: 'downLeft' },
 ];
 
 function heroGame(lex: Lexicon, shape: Shape): GameState {

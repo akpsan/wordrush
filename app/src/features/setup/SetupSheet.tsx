@@ -5,6 +5,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { LEVELS, type Level } from '../../ai';
+import { rulesFor } from '../../engine';
 import { aiDescription, aiLevelName, aiName, t } from '../../copy';
 import type { FirstChoice } from '../game';
 import { Segmented } from '../../ui/Controls';
@@ -120,7 +121,7 @@ export function SetupSheet({ initial, records, onStart, onClose }: SetupSheetPro
           ]}
           onChange={setFirst}
         />
-        <p className="shelp">{t(`cpu.setup.first.${first}.help`)}</p>
+        <p className="shelp">{t(`cpu.setup.first.${first}.help`, { n: rulesFor(settings.board).firstWordMaxLen })}</p>
       </div>
       <div className="setrow">
         <div className="st">

@@ -27,8 +27,8 @@ export const STANDARD_RULES: Rules = {
   fullBoardTieWinner: 1,
 };
 
-/** Hex mode: Rules v4 on a hexagon (sim preset HEX1, see docs/findings.md). */
-export const HEX_RULES: Rules = { ...STANDARD_RULES, size: 9, shape: 'hex' };
+/** Hex mode (sim preset HEX, see docs/findings.md): a hexagon of radius 5, and Blue's first word at most 3 letters. */
+export const HEX_RULES: Rules = { ...STANDARD_RULES, size: 11, shape: 'hex', firstWordMaxLen: 3 };
 
 /** The rules for a board shape. */
 export const rulesFor = (shape: Shape): Rules => (shape === 'hex' ? HEX_RULES : STANDARD_RULES);

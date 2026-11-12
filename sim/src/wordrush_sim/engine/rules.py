@@ -87,4 +87,8 @@ HEX1 = V9.with_(board="hex", n=9)
 """Hex mode prototype (2026-11-12): Rules v4 on a hexagon of radius 4 (61 cells), with a third
 line direction, down-left. Words read left to right or downwards."""
 
-PRESETS = {"V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9, "HEX1": HEX1}
+HEX = HEX1.with_(n=11, a_first_max_len=3)
+"""Hex mode, adopted 2026-11-12 (experiments/hex.py): a hexagon of radius 5 (91 cells), and A's first
+word at most 3 letters. The fairest hex variant tested: A wins 52% (balanced bots) and 44% (aggressive)."""
+
+PRESETS = {"V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9, "HEX1": HEX1, "HEX": HEX}
