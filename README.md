@@ -36,10 +36,12 @@ uv run wordrush-sim run experiments/cornered.py    # run an experiment, writes r
 
 ```bash
 npm install
-npm test            # engine tests, including 1,350 replayed simulator games
+npm test            # engine tests, including replayed simulator games (square and hex)
 npm run dev         # local dev server
-npm run deploy      # build and publish to Cloudflare (needs `npx wrangler login` once)
+npm run deploy      # build and publish to Cloudflare by hand (needs `npx wrangler login` once)
 ```
+
+**Releasing:** work is merged into `develop`. Merging `develop` into `main` releases it: Cloudflare Workers Builds (Cloudflare's GitHub app) builds `app/` and deploys every push to `main` to https://wordrush.wordrush-app.workers.dev.
 
 **Design screens:** serve `design/handoff/design/` over HTTP (`python3 -m http.server`) and open it in a browser.
 
