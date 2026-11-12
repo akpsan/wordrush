@@ -5,6 +5,9 @@ import './theme/fonts';
 import './theme/tokens.css';
 import './ui/overlays.css';
 import './theme/layout.css';
+import { registerOffline } from './platform/offline';
+
+registerOffline();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
