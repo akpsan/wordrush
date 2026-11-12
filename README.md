@@ -44,7 +44,7 @@ npm run dev         # local dev server
 npm run deploy      # build and publish to Cloudflare by hand (needs `npx wrangler login` once)
 ```
 
-**Releasing:** work is merged into `develop`. Merging `develop` into `main` releases it: Cloudflare Workers Builds (Cloudflare's GitHub app) builds `app/` and deploys every push to `main` to https://wordrush.akpsan.workers.dev.
+**Branches and releases:** `main` is the default branch, and every merge into it deploys: Cloudflare Workers Builds (Cloudflare's GitHub app) builds `app/` and publishes https://wordrush.akpsan.workers.dev. Work happens on short-lived branches off `main`, named `feature/<short-name>`, `fix/<short-name>`, `chore/<short-name>` or `docs/<short-name>` (lowercase, hyphens), and lands through a pull request once the checks pass.
 
 **Design screens:** serve `design/handoff/design/` over HTTP (`python3 -m http.server`) and open it in a browser.
 
