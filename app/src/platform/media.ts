@@ -15,6 +15,6 @@ export function useMediaQuery(query: string): boolean {
 }
 
 /** Desktop gets the design's three-column layout. */
-export const useIsDesktop = () => useMediaQuery('(min-width: 1080px) and (min-height: 700px)');
+export const useIsDesktop = () => useMediaQuery('(min-width: 1080px) and (min-height: 600px)');
 export const usePrefersDark = () => useMediaQuery('(prefers-color-scheme: dark)');
 export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)');

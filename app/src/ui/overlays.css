@@ -35,3 +35,6 @@
 
 /* App: the design's .btn grows to share a row (flex:1); stacked in a sheet, it keeps its height. */
 .sheet > .btn{flex:none}
+
+/* App: desktop sheets sit 160px down on tall screens, rise on short laptops (down to 600px high), and scroll if still too tall. */
+.desk .sheet{top:clamp(24px,calc(100dvh - 740px),160px);max-height:calc(100dvh - 48px);overflow-y:auto}

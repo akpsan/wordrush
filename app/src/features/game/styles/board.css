@@ -57,3 +57,7 @@
 
 /* App: the mockup loops the opponent's-word flash; in play it flashes once (dev note 01). */
 .cell.flash::after{animation-iteration-count:1;animation-fill-mode:forwards}
+
+/* App: on short screens the board can be squeezed below its letters' natural size.
+   Scale the letters with the board (container units of .boardwrap) so tiles never spill out of it. */
+.wr.phone .boardwrap .cell{min-width:0;min-height:0;font-size:min(20px,calc(min(100cqw,100cqh) * .085))}
