@@ -12,9 +12,11 @@ export interface ActionsProps {
   /** Hints left for the player to move, or null when hints are off for this game. */
   readonly hintsLeft: number | null;
   readonly onHint: () => void;
+  /** The ready word loses the game (it leaves the player no words): Play turns into a warning. */
+  readonly losing?: boolean;
 }
 
-export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint }: ActionsProps) {
+export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint, losing }: ActionsProps) {
   const n = entry.spots.length;
   const i = entry.index + 1;
   const word = entry.typed.toUpperCase();
@@ -46,7 +48,7 @@ export function Actions({ entry, enabled, onFlip, onPlay, hintsLeft, onHint }: A
       {/* Stays tappable when not ready (aria-disabled), so tapping it explains why. On the AI's turn it's inactive but keeps focus. */}
       <button
         type="button"
-        className={entry.ready ? 'btn pri' : 'btn pri soft'}
+        className={entry.ready ? (losing ? 'btn pri losing' : 'btn pri') : 'btn pri soft'}
         onClick={() => enabled && onPlay()}
         aria-disabled={!enabled || !entry.ready}
       >

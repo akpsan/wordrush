@@ -76,8 +76,8 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | player.blue | Status bar | Player name | Blue |
 | player.orange | Status bar | Player name | Orange |
 | player.you | Status bar | Tag next to the local player | You |
-| ways.many | Status bar | Room left, 2 or more | {n} ways out |
-| ways.one | Status bar | Room left, running out | 1 way out! |
+| ways.many | Status bar | Room left, 2 or more (n is 2 or 3+) | {n} words to play |
+| ways.one | Status bar | Room left, running out | 1 word left! |
 | ways.none | Status bar | No room | Boxed in |
 | ways.unknown | Status bar | Not checked (game over / before first word) | — |
 | squares.count | Status bar | Secondary count | {n} squares |
@@ -97,7 +97,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | first.keepgoing | First move | Typing, nothing fits yet | Keep going |
 | type.start | Your turn | Before typing | Start or end with **{letters}** |
 | type.start.afterOpp | Your turn | Before typing, right after the opponent's move | {opponent} played {WORD}. Start or end with **{letters}** |
-| type.danger | Your turn, 1 way out | Before typing, light urgency | You're down to **1 way out.** Follow the dots! |
+| type.danger | Your turn, 1 way out | Before typing, light urgency | You're down to **1 word.** Follow the dots! |
 | type.partial | Typing | Letters so far fit somewhere | **{n} spots** so far |
 | type.partial.one | Typing | Same, singular | **1 spot** so far |
 | type.nospot | Typing | Nothing fits yet (calm, grey) | No spot yet. Start or end with **{letters}** |
@@ -128,7 +128,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | ID | Screen | Purpose | Final text |
 |---|---|---|---|
 | wait.thinking | Opponent's turn | Replaces the entry tiles | {opponent} is thinking |
-| wait.danger | Opponent's turn | Opponent is running out of room | {opponent} is down to 1 way out |
+| wait.danger | Opponent's turn | Opponent is running out of room | {opponent} is down to 1 word |
 | wait.youPlayed | Opponent's turn | Feedback line | You played **{WORD}** · +{n} squares |
 | wait.theyPlayed | Opponent's turn | Feedback line (other device) | {player} played **{WORD}** |
 
@@ -311,11 +311,11 @@ Rows used only when one player is the AI. Everything else reuses sections 2 and 
 | cpu.card.level | Status bar | Small tag on the AI's card | {level} |
 | cpu.card.aria | Status bar | Screen readers | {ai}, {level}: {waysOut} |
 | cpu.thinking | AI's turn | Replaces the entry tiles | {ai} is thinking |
-| cpu.thinking.danger | AI's turn | When it's down to 1 way out | {ai} is down to 1 way out |
+| cpu.thinking.danger | AI's turn | When it's down to 1 way out | {ai} is down to 1 word |
 | cpu.playing | AI's turn | While its letters appear | {ai} plays {WORD} |
 | cpu.played | Your turn | Feedback line after its move | {ai} played {WORD}. Start or end with **{letters}** |
-| cpu.danger.them | Your turn | The AI left itself 1 way out | {ai}'s down to **1 way out.** Box {ai} in! |
-| opp.danger.them | Your turn (pass and play) | Same, against a friend | {player}'s down to **1 way out.** Box them in! |
+| cpu.danger.them | Your turn | The AI left itself 1 way out | {ai}'s down to **1 word.** Box {ai} in! |
+| opp.danger.them | Your turn (pass and play) | Same, against a friend | {player}'s down to **1 word.** Box them in! |
 | cpu.sr.thinking | Screen readers | Live region, AI's turn starts | {ai} is thinking. |
 | cpu.sr.played | Screen readers | Live region, after its word lands | {ai} played {WORD}, going {across/down} from row {r}, column {c}. |
 | cpu.sr.yourturn | Screen readers | Live region, your turn | Your turn. Start or end with {letters}. |
@@ -359,8 +359,8 @@ Use these words everywhere a player reads. The last column lists words to keep o
 | Flip | Try your word in its next spot. | Tap Flip to send it down. | rotate, cycle |
 | Play | Put your word on the board for real. | Play RAT | place, commit, confirm |
 | In the way | Every letter on the board blocks new words, yours and your opponent's. | Your own P is in the way. | wall, collision |
-| Ways out | How many directions your last word can still grow. | 1 way out! | exits, room, danger level |
-| Running out of room | Down to just 1 or 2 ways out. | JAIL is running out of room. | in danger, nearly cornered |
+| Words to play | How many words you could play from your last word, shown as 1, 2 or 3+. (Changed 2026-11-12 from "ways out", the directions your word can grow.) | 1 word left! | room, danger level |
+| Running out of room | Down to just 1 or 2 words. | JAIL is running out of room. | in danger, nearly cornered |
 | Boxed in | No word fits off your last word. That player loses. | Orange boxed you in. | cornered, sealed, no way out |
 | Squares | The 64 spaces on the board. They only decide a full-board finish. | 18 squares | cells, score |
 | Hint | Shows one letter of a word that fits. | Stuck? Try a hint. | reveal, assist |

@@ -17,7 +17,7 @@ export interface EntryProps {
   /** Blue's first-word length limit, while the first-word note shows; null hides it. */
   readonly firstWordNote: number | null;
   /** What the ready word does to both players' ways out (copy with **bold**), in the note row. */
-  readonly impact?: { readonly text: string; readonly tone: 'good' | 'warn' | 'neutral' } | null;
+  readonly impact?: { readonly text: string; readonly tone: 'good' | 'warn' | 'err' | 'neutral' } | null;
   /** The current hint, shown as a chip above the tiles. */
   readonly hint?: HintView | null;
   /** The AI's turn: a "thinking" line replaces the tiles, and its note replaces the feedback. */
@@ -92,7 +92,7 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
         <HintChip hint={hint} />
       ) : impact && !showNote && !aiTurn ? (
         <p className={`tnote impact ${impact.tone}`}>
-          <Icon name={impact.tone === 'warn' ? 'warn' : 'note'} />
+          <Icon name={impact.tone === 'warn' || impact.tone === 'err' ? 'warn' : 'note'} />
           <span>
             <RichText text={impact.text} />
           </span>

@@ -1,11 +1,11 @@
 /**
- * What a ready word would do to the room on the board: the mover's and the opponent's ways out,
- * before and after. Shown once a word is ready (a real word in a legal spot), so it never reveals
- * the word list. Asks the engine: plays the word on a copy and counts ways out (waysOut).
+ * What a ready word would do to the room on the board: how many words the mover and the opponent
+ * could play next (counted up to 3, shown as 1, 2 or 3+), before and after. Shown once a word is ready (a real word in a legal spot), so it never reveals
+ * the word list. Asks the engine: plays the word on a copy and counts each player's legal words.
  */
 
 import { t } from '../../../copy';
-import { moveContext, otherPlayer, play, waysOut, type GameState, type Lexicon, type Placement } from '../../../engine';
+import { legalMoves, otherPlayer, play, type GameState, type Lexicon, type Placement } from '../../../engine';
 import type { EntryView } from './entry';
 import { nameOf } from './match';
 import type { Session } from './session';
@@ -28,7 +28,7 @@ export function impactOf(game: GameState, lex: Lexicon, p: Placement): Impact | 
   } catch {
     return null;
   }
-  const count = (g: GameState, who: typeof me) => waysOut(moveContext(g, who), lex);
+  const count = (g: GameState, who: typeof me) => Math.min(legalMoves(g, lex, who).length, 3);
   const boxesIn = next.result?.reason === 'boxed-in' && next.result.winner === me;
   return {
     boxesIn,
@@ -37,15 +37,16 @@ export function impactOf(game: GameState, lex: Lexicon, p: Placement): Impact | 
   };
 }
 
-const delta = (before: number, after: number): string =>
-  after === before ? t('impact.same') : after > before ? `+${after - before}` : `−${before - after}`;
+const words = (n: number): string => (n === 1 ? t('impact.one') : t('impact.n', { n: n >= 3 ? '3+' : n }));
+
+export type ImpactTone = 'good' | 'warn' | 'err' | 'neutral';
 
 /** The note-row line for a ready word, or null when there's nothing ready to play. */
 export function impactLine(
   s: Pick<Session, 'game' | 'match'>,
   entry: Pick<EntryView, 'ready' | 'current'>,
   lex: Lexicon,
-): { text: string; tone: 'good' | 'warn' | 'neutral' } | null {
+): { text: string; tone: ImpactTone } | null {
   if (!entry.ready || !entry.current) return null;
   const impact = impactOf(s.game, lex, entry.current);
   if (!impact) return null;
@@ -53,9 +54,10 @@ export function impactLine(
   const opp = nameOf(s.match, otherPlayer(s.game.toMove));
   if (impact.boxesIn) return { text: t('impact.boxes', { WORD, opp }), tone: 'good' };
   const { you, them } = impact;
-  const params = { WORD, opp, you: you.after, dYou: delta(you.before, you.after) };
+  // No words next turn: whatever the opponent plays, you're boxed in.
+  if (you.after === 0) return { text: t('impact.lose', { WORD }), tone: 'err' };
   const text = them
-    ? t('impact.both', { ...params, them: them.after, dThem: delta(them.before, them.after) })
-    : t('impact.you', params);
-  return { text, tone: you.after <= 1 ? 'warn' : 'neutral' };
+    ? t('impact.both', { WORD, you: words(you.after), opp, them: words(them.after) })
+    : t('impact.you', { WORD, you: words(you.after) });
+  return { text, tone: you.after === 1 ? 'warn' : 'neutral' };
 }

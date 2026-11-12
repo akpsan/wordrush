@@ -60,5 +60,5 @@ app/src/
 - `npm test`: unit and conformance tests
 - `npm run typecheck` and `npm run lint`
 - `npm run copy`: regenerate `src/copy/deck.ts` after the copy deck changes
-- `npm run deploy`: build and publish to Cloudflare by hand (a Worker serving the static `dist/`, configured in `wrangler.jsonc`). The live site is https://wordrush.wordrush-app.workers.dev
+- `npm run deploy`: build and publish to Cloudflare by hand (a Worker serving the static `dist/`, configured in `wrangler.jsonc`). The live site is https://wordrush.akpsan.workers.dev
 - Automatic deploys: Cloudflare Workers Builds (Cloudflare's GitHub app) builds and deploys every push to `main` (root directory `app`, build `npm run build`, deploy `npx wrangler deploy`). No secrets in GitHub. `develop` is where work is merged; merge it into `main` to release.

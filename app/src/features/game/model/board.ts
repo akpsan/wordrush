@@ -14,10 +14,13 @@ import {
   type Player,
   cellsFor,
   geometryOf,
+  legalMoves,
+  play,
+  type GameState,
 } from '../../../engine';
 import type { EntryView } from './entry';
 import type { Session } from './session';
-import { waysOutFor } from './status';
+import { wordsFor } from './status';
 
 export interface CellView {
   readonly index: CellIndex;
@@ -31,7 +34,11 @@ export interface CellView {
   readonly delay: number;
   readonly tap: 'flip' | 'filter' | null;
   readonly label: string;
+  /** Heatmap level of an empty cell: how many of the mover's words could pass through it (0 = none or off). */
+  readonly heat: HeatLevel;
 }
+
+export type HeatLevel = 0 | 1 | 2 | 3;
 
 export interface BoardOptions {
   /** Dots on the remaining exits when a player is down to 1 or 2 ways out. */
@@ -48,7 +55,28 @@ export interface BoardOptions {
    * (a tap skips the animation). Omit for a person's word (every letter pops, 60ms apart).
    */
   readonly aiReveal?: number;
+  /**
+   * Tint empty cells by how many of the mover's playable words pass through them. With a ready word,
+   * the tint shows the mover's words after playing it (where they could go next). Default off.
+   */
+  readonly heat?: boolean;
 }
+
+/** Words through each empty cell, for `player` in `game`. */
+export function heatCounts(game: GameState, lex: Lexicon, player: Player): Map<CellIndex, number> {
+  const counts = new Map<CellIndex, number>();
+  if (game.result) return counts;
+  const geo = geometryOf(game.rules);
+  for (const m of legalMoves(game, lex, player)) {
+    for (const c of cellsFor(geo, m.row, m.col, m.dir, m.word.length) ?? []) {
+      if (!game.board[c]) counts.set(c, (counts.get(c) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+/** 1 word, 2 to 4, 5 or more. */
+const heatLevel = (n: number): HeatLevel => (n === 0 ? 0 : n === 1 ? 1 : n <= 4 ? 2 : 3);
 
 /** How long ago a player played a word: 0 = their last word, 1 = the one before, 2 = older. */
 export type WordAge = 0 | 1 | 2;
@@ -111,12 +139,26 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   // Escape-route dots when the mover is running out of room.
   const routes = new Set<CellIndex>();
   if (opts.showWaysOut && myTurn && !firstMove && !s.typed) {
-    const ways = waysOutFor(game, lex, mover);
+    const ways = wordsFor(game, lex, mover);
     if (ways !== null && ways <= 2) {
       exitsOf(moveContext(game, mover), lex)
         .filter((e) => e.words > 0)
         .forEach((e) => e.cells.forEach((c) => routes.add(c)));
     }
+  }
+
+  // Heatmap: where the mover's words can go (after the ready word, if there is one).
+  let heat = new Map<CellIndex, number>();
+  if (opts.heat && myTurn) {
+    let g: GameState = game;
+    if (entry.ready && entry.current) {
+      try {
+        g = play(game, lex, entry.current);
+      } catch {
+        g = game;
+      }
+    }
+    heat = heatCounts(g, lex, mover);
   }
 
   // The boxed-in explanation.
@@ -197,7 +239,9 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
     // With fading on, plain empty squares lose their outline, so a faded tile never reads as empty.
     if (fade && cls.length === 1) cls.push('bare');
 
-    return { index, letter, className: cls.join(' '), linkBadge, mark, delay, tap, label: cellLabel(index, n, letter, cell?.owner, !!g) };
+    const h = !cell && !g && !mark ? heatLevel(heat.get(index) ?? 0) : 0; // marked corners keep their contrast
+    if (h) cls.push(`heat${h}`);
+    return { index, letter, className: cls.join(' '), linkBadge, mark, delay, tap, label: cellLabel(index, n, letter, cell?.owner, !!g), heat: h };
   });
 }
 

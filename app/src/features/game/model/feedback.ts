@@ -6,7 +6,7 @@ import type { Level } from '../../../ai';
 import type { EntryView } from './entry';
 import { aiParams, nameOf } from './match';
 import type { Session } from './session';
-import { letterChoices, waysOutFor } from './status';
+import { letterChoices, wordsFor } from './status';
 
 /** 'steer' is the tutorial's gentle redirect when the player types something off-script. */
 export type FeedbackTone = 'neutral' | 'good' | 'err' | 'warn' | 'steer';
@@ -57,8 +57,8 @@ export function feedbackFor(s: Session, entry: EntryView, lex: Lexicon): Feedbac
     if (match.mode === 'ai' && match.first === 'random' && game.turn === 1) return neutral(t('cpu.random.result.blue'));
     return neutral(mover === 0 ? t('first.start.blue') : t('first.start.orange'));
   }
-  if (waysOutFor(game, lex, mover) === 1) return { tone: 'warn', text: t('type.danger'), pip: null };
-  if (game.lastWord[opponent] !== null && waysOutFor(game, lex, opponent) === 1) {
+  if (wordsFor(game, lex, mover) === 1) return { tone: 'warn', text: t('type.danger'), pip: null };
+  if (game.lastWord[opponent] !== null && wordsFor(game, lex, opponent) === 1) {
     const text = match.mode === 'ai' ? t('cpu.danger.them', aiParams(match)) : t('opp.danger.them', { player: nameOf(match, opponent) });
     return neutral(text, opponent);
   }
@@ -108,7 +108,7 @@ export function aiTurnView(s: Session, lex: Lexicon, phase: 'thinking' | 'playin
   const line =
     phase === 'playing'
       ? t('cpu.playing', { ...params, WORD: aiWord })
-      : game.lastWord[ai] !== null && waysOutFor(game, lex, ai) === 1
+      : game.lastWord[ai] !== null && wordsFor(game, lex, ai) === 1
         ? t('cpu.thinking.danger', params)
         : t('cpu.thinking', params);
   // Under the line: the coin flip on a Random start, or the person's last word.

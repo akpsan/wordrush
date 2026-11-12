@@ -72,10 +72,16 @@ const missing = {
   'learn.recap.aria': 'The rules',
   'over.stats.hints': 'Hints used',
   // Word impact: shown once a word is ready (docs/ui-decisions.md).
-  'impact.both': 'After **{WORD}**: you {you} ways out ({dYou}), {opp} {them} ({dThem})',
-  'impact.you': 'After **{WORD}**: you {you} ways out ({dYou})',
+  'impact.both': 'After **{WORD}**: you {you}, {opp} {them}',
+  'impact.you': 'After **{WORD}**: you {you} to play',
   'impact.boxes': '**{WORD}** boxes {opp} in!',
-  'impact.same': 'same',
+  'impact.lose': '**{WORD}** leaves you no words. You would lose!',
+  'impact.n': '{n} words',
+  'impact.one': '1 word',
+  // Heatmap and words to play (docs/ui-decisions.md).
+  'settings.heatmap.label': 'Show where words fit',
+  'settings.heatmap.help': 'Empty squares glow where more of your words could go.',
+  'settings.heatmap.aria': 'Show where words fit: {on/off}',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

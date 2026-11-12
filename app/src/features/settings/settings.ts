@@ -14,6 +14,8 @@ export interface Settings {
   readonly showWaysOut: boolean;
   /** Keep every letter at full strength (older words fade when off). */
   readonly showAllLetters: boolean;
+  /** Tint empty cells by how many of your words could pass through them. */
+  readonly showHeatmap: boolean;
   /** Board shape for new games. Games in progress keep theirs. */
   readonly board: BoardSetting;
 }
@@ -25,6 +27,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showWaysOut: true,
   showAllLetters: false,
   board: 'hex',
+  showHeatmap: true,
 };
 
 /** Accept only known fields with valid values, so old or edited saves can't break the app. */
@@ -36,6 +39,7 @@ export function sanitize(raw: unknown): Settings {
     highlightLetters: typeof r.highlightLetters === 'boolean' ? r.highlightLetters : DEFAULT_SETTINGS.highlightLetters,
     showWaysOut: typeof r.showWaysOut === 'boolean' ? r.showWaysOut : DEFAULT_SETTINGS.showWaysOut,
     showAllLetters: typeof r.showAllLetters === 'boolean' ? r.showAllLetters : DEFAULT_SETTINGS.showAllLetters,
+    showHeatmap: typeof r.showHeatmap === 'boolean' ? r.showHeatmap : DEFAULT_SETTINGS.showHeatmap,
     board: r.board === 'hex' || r.board === 'square' ? r.board : DEFAULT_SETTINGS.board,
   };
 }

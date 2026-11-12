@@ -213,7 +213,7 @@ export function MenuScreen(props: MenuScreenProps) {
       )}
 
       {sheet === 'settings' && (
-        <SettingsSheet title={t('settings.title')} rows={['theme', 'board', 'hints', 'highlight', 'showAll']} onClose={() => setSheet(null)} />
+        <SettingsSheet title={t('settings.title')} rows={['theme', 'board', 'hints', 'highlight', 'heatmap', 'showAll']} onClose={() => setSheet(null)} />
       )}
       {sheet === 'setup' && (
         <SetupSheet
