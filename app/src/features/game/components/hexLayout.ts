@@ -6,7 +6,6 @@ import type { Geometry } from '../../../engine';
 /** Hex boards: a pointy-top hexagon is 2/sqrt(3) as tall as it is wide; rows sit 3/4 of that apart. */
 const HEX_H = 2 / Math.sqrt(3);
 const ROW_STEP = HEX_H * 0.75;
-const TILE = 0.86;
 const SLOT = 0.94;
 
 /** Positions for a hex board's cells, as percentages of the board (see board.css, .board.hex). */
@@ -28,7 +27,7 @@ export function hexLayout(geo: Geometry) {
   };
   return {
     style: { '--W': W, '--H': H, aspectRatio: `${W} / ${H}` } as CSSProperties,
-    tile: (i: number) => place(i, TILE, TILE),
+    /** The hexagon for cell i: the slot (its fill) and the cell above it (letter and rings) share it. */
     slot: (i: number) => place(i, SLOT, SLOT * HEX_H),
   };
 }

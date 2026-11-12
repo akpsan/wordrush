@@ -36,10 +36,10 @@ export function Board({ cells, onFlip, onFilter, onTap, geo }: BoardProps) {
   return (
     <section className={hex ? 'boardwrap hexwrap' : 'boardwrap'} aria-label={plain('board.aria')} onClick={onTap}>
       <div className={hex ? 'board hex' : 'board'} style={hex?.style}>
-        {hex && shown.map((cell) => <i key={`s${cell.index}`} className={cell.heat ? `hexslot heat${cell.heat}` : 'hexslot'} style={hex.slot(cell.index)} aria-hidden="true" />)}
+        {hex && shown.map((cell) => <i key={`s${cell.index}`} className={`hexslot ${cell.className.replace(/^cell ?/, '')}`.trim()} style={hex.slot(cell.index)} aria-hidden="true" />)}
         {shown.map((cell) => {
           const anim = cell.delay ? { animationDelay: `${cell.delay}ms` } : undefined;
-          const style = hex ? { ...hex.tile(cell.index), ...anim } : anim;
+          const style = hex ? { ...hex.slot(cell.index), ...anim } : anim;
           if (!cell.tap) {
             return (
               <div key={cell.index} className={cell.className} style={style} role="img" aria-label={cell.label}>
