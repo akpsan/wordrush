@@ -17,6 +17,7 @@ from datetime import datetime
 from multiprocessing import Pool
 from pathlib import Path
 
+from ..engine.geometry import geometry
 from ..agents import make_agent
 from ..engine import STUCK, TIMEOUT, Rules, apply, encode, get_lexicon, legal_moves, new_game
 
@@ -99,7 +100,7 @@ def play_game(job) -> dict:
         "words": state.words_played,
         "timeouts": state.timeouts,
         "filled": state.filled(),
-        "cells": n * n,
+        "cells": geometry(variant.rules.board, n).cells,
     }
 
 

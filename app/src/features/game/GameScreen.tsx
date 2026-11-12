@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '../../copy';
-import { otherPlayer, type GameResult, type GameState, type Lexicon } from '../../engine';
+import { geometryOf, otherPlayer, type GameResult, type GameState, type Lexicon } from '../../engine';
 import { useIsDesktop, usePrefersReducedMotion } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
@@ -55,7 +55,7 @@ export function GameScreen(props: GameScreenProps) {
   const reducedMotion = usePrefersReducedMotion();
   const { session, entry, dispatch } = useGame(
     lex,
-    saved ? { saved } : { hintsPerGame: settings.hints, match: props.match ?? FRIEND },
+    saved ? { saved } : { hintsPerGame: settings.hints, match: props.match ?? FRIEND, shape: settings.board },
   );
   const [overlay, setOverlay] = useState<Overlay>(null);
   const { phase, skip } = useAiTurn(session, dispatch, reducedMotion);
@@ -123,6 +123,7 @@ export function GameScreen(props: GameScreenProps) {
         onFlip={() => dispatch({ type: 'flip' })}
         onFilter={(cell) => dispatch({ type: 'filter', cell })}
         onTap={phase === 'playing' ? skip : undefined}
+        geo={geometryOf(game.rules)}
       />
       {match.mode === 'ai' && (
         <p className="sr" role="status">

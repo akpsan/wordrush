@@ -13,7 +13,7 @@ export async function openApp(page: Page, player: Player = 'returning', settings
       }
       localStorage.setItem(
         'wordrush:v1:settings',
-        JSON.stringify({ theme: 'dark', hints: 0, highlightLetters: true, showWaysOut: true, ...settings }),
+        JSON.stringify({ theme: 'dark', hints: 0, highlightLetters: true, showWaysOut: true, board: 'square', ...settings }),
       );
     },
     { player, settings },

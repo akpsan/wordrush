@@ -77,6 +77,9 @@ def check_invariants(s):
             users[cell] += 1
     assert users == s.users
     for i in range(n2):
+        if s.letters[i] == "#":  # off the board (hex)
+            assert s.users[i] == 0 and s.owner[i] == -1
+            continue
         assert bool(s.letters[i]) == (s.users[i] > 0) == (s.owner[i] >= 0)
     assert s.cells_owned == [s.owner.count(0), s.owner.count(1)]
     assert set(s.on_board) == {p.word for p in s.placements.values()}
@@ -87,7 +90,7 @@ def test_random_play_invariants_all_presets():
     lex = get_lexicon("everyday-3to5")
     rng = random.Random(7)
     for name, rules in PRESETS.items():
-        for n in (6, 8):
+        for n in ((5, 7) if rules.board == "hex" else (6, 8)):
             for _ in range(15):
                 s = new_game(rules.with_(n=n), lex)
                 while not s.over:

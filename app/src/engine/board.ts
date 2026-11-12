@@ -1,8 +1,9 @@
 /** Board geometry and pure board updates. */
 
+import { DELTA, onBoard, type Geometry } from './geometry';
 import type { Board, Cell, CellIndex, Dir, Player } from './types';
 
-export const emptyBoard = (size: number): Board => Array<Cell | null>(size * size).fill(null);
+export const emptyBoard = (g: Geometry): Board => Array<Cell | null>(g.size * g.size).fill(null);
 
 export const toIndex = (size: number, row: number, col: number): CellIndex => row * size + col;
 
@@ -12,38 +13,32 @@ export const toRowCol = (size: number, index: CellIndex): { row: number; col: nu
 });
 
 /** Distance between consecutive letters of a word in this direction. */
-export const stepOf = (size: number, dir: Dir): number => (dir === 'across' ? 1 : size);
+export const stepOf = (g: Geometry, dir: Dir): number => DELTA[dir][0] * g.size + DELTA[dir][1];
 
 /** Cells covered by a word, or null if it would leave the board. */
-export function cellsFor(
-  size: number,
-  row: number,
-  col: number,
-  dir: Dir,
-  length: number,
-): CellIndex[] | null {
-  if (row < 0 || col < 0) return null;
-  const endRow = dir === 'down' ? row + length - 1 : row;
-  const endCol = dir === 'across' ? col + length - 1 : col;
-  if (endRow >= size || endCol >= size) return null;
-  const step = stepOf(size, dir);
-  const start = toIndex(size, row, col);
-  return Array.from({ length }, (_, k) => start + k * step);
+export function cellsFor(g: Geometry, row: number, col: number, dir: Dir, length: number): CellIndex[] | null {
+  const [dr, dc] = DELTA[dir];
+  const cells: CellIndex[] = [];
+  for (let k = 0; k < length; k++) {
+    const r = row + k * dr;
+    const c = col + k * dc;
+    if (!onBoard(g, r, c)) return null;
+    cells.push(r * g.size + c);
+  }
+  return cells;
 }
 
 /** Cells reachable from `from` (inclusive), moving forward or backward along `dir`, up to `max` cells. */
-export function ray(
-  size: number,
-  from: CellIndex,
-  dir: Dir,
-  direction: 1 | -1,
-  max: number,
-): CellIndex[] {
-  const { row, col } = toRowCol(size, from);
-  const along = dir === 'across' ? col : row;
-  const room = direction === 1 ? size - 1 - along : along;
-  const step = stepOf(size, dir) * direction;
-  return Array.from({ length: Math.min(max, room + 1) }, (_, k) => from + k * step);
+export function ray(g: Geometry, from: CellIndex, dir: Dir, direction: 1 | -1, max: number): CellIndex[] {
+  const [dr, dc] = DELTA[dir];
+  let { row, col } = toRowCol(g.size, from);
+  const out: CellIndex[] = [];
+  while (out.length < max && onBoard(g, row, col)) {
+    out.push(row * g.size + col);
+    row += dr * direction;
+    col += dc * direction;
+  }
+  return out;
 }
 
 /** Write a word onto the board. Existing cells keep their owner and gain the word reference. */
@@ -64,7 +59,8 @@ export function writeWord(
   return next;
 }
 
-export const isFull = (board: Board): boolean => board.every((c) => c !== null);
+/** Every on-board cell holds a letter. */
+export const isFull = (board: Board, g: Geometry): boolean => board.every((c, i) => c !== null || !g.valid[i]);
 
 export function squaresOwned(board: Board, player: Player): number {
   return board.reduce((n, c) => (c && c.owner === player ? n + 1 : n), 0);

@@ -1,6 +1,7 @@
 """Game state, moves and the two pure functions: legal_moves and apply.
 
-Cells are indexed r * n + c. Directions: H (left to right) and V (top to bottom).
+Cells are indexed r * n + c. Directions: H (left to right), V (top to bottom) and, on hex
+boards, D (down-left). See geometry.py.
 Players: 0 is A (moves first), 1 is B.
 """
 
@@ -9,11 +10,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import NamedTuple
 
+from .geometry import geometry, ray, step
 from .lexicon import END, Lexicon
 from .rules import Rules
 
-H, V = 0, 1
-DIR_NAMES = "HV"
+H, V, D = 0, 1, 2
+DIR_NAMES = "HVD"
+VOID = "#"
+"""Letter of an off-board cell (hex boards): it blocks words like any letter, and is never anyone's."""
 
 
 class Move(NamedTuple):
@@ -94,7 +98,7 @@ class State:
         return self.cells_owned[player] + (self.rules.b_bonus if player == 1 else 0)
 
     def filled(self) -> int:
-        return sum(1 for ch in self.letters if ch)
+        return sum(1 for ch in self.letters if ch and ch != VOID)
 
     def render(self) -> str:
         """A's letters uppercase, B's lowercase, empty cells as dots."""
@@ -105,19 +109,21 @@ class State:
             for c in range(n):
                 i = r * n + c
                 ch = self.letters[i]
-                row.append("." if not ch else ch.upper() if self.owner[i] == 0 else ch)
+                row.append(" " if ch == VOID else "." if not ch else ch.upper() if self.owner[i] == 0 else ch)
             rows.append(" ".join(row))
         return "\n".join(rows)
 
 
 def new_game(rules: Rules, lex: Lexicon) -> State:
     size = rules.n * rules.n
-    return State(rules=rules, lex=lex, letters=[""] * size, owner=[-1] * size, users=[0] * size)
+    g = geometry(rules.board, rules.n)
+    letters = ["" if ok else VOID for ok in g.valid]
+    return State(rules=rules, lex=lex, letters=letters, owner=[-1] * size, users=[0] * size)
 
 
 def cells_of(n: int, word_len: int, start: int, d: int) -> tuple:
-    step = 1 if d == H else n
-    return tuple(start + k * step for k in range(word_len))
+    s = step(n, d)
+    return tuple(start + k * s for k in range(word_len))
 
 
 # ---------------------------------------------------------------------------
@@ -154,16 +160,15 @@ def _chain_moves(state: State, sources: list) -> list:
     both_ends = rules.anchor == "start_or_end"
     found: dict = {}
 
+    g = geometry(rules.board, n)
+    dirs = range(len(g.dirs))
     for placement in sources:
         for anchor in placement.cells:
-            r, c = divmod(anchor, n)
             ch = letters[anchor]
-            for d in (H, V):
-                step = 1 if d == H else n
-                room_fwd = (n - 1 - c) if d == H else (n - 1 - r)
+            for d in dirs:
                 fwd_node = lex.forward.get(ch)
                 if fwd_node is not None:
-                    path = [anchor + k * step for k in range(min(hi, room_fwd + 1))]
+                    path = ray(g, anchor, d, 1, hi)
                     out: list = []
                     _walk(fwd_node, path, 1, 0, letters, crossing, lo, hi, out)
                     for word, new in out:
@@ -172,14 +177,13 @@ def _chain_moves(state: State, sources: list) -> list:
                             found[m.key] = m
                 if both_ends:
                     rev_node = lex.reverse.get(ch)
-                    room_back = c if d == H else r
                     if rev_node is not None:
-                        path = [anchor - k * step for k in range(min(hi, room_back + 1))]
+                        path = ray(g, anchor, d, -1, hi)
                         out = []
                         _walk(rev_node, path, 1, 0, letters, crossing, lo, hi, out)
                         for word, new in out:
                             if new >= min_new and _usable(state, word):
-                                start = anchor - (len(word) - 1) * step
+                                start = anchor - (len(word) - 1) * step(n, d)
                                 m = Move(word, start, d, new)
                                 found[m.key] = m
     return list(found.values())
@@ -209,20 +213,21 @@ def _opening_moves(state: State, p: int) -> list:
         max_len = min(max_len, rules.a_first_max_len)
     first_word = state.words_played[p] == 0
 
+    g = geometry(rules.board, n)
+    dirs = range(len(g.dirs))
     if rules.opening == "corners" and first_word:
-        corner = 0 if p == 0 else n * n - 1
+        corner = g.a_corner if p == 0 else g.b_corner
         if not state.letters[corner]:
             moves = []
-            for d in (H, V):
-                step = 1 if d == H else n
+            for d in dirs:
                 sign = 1 if p == 0 else -1
-                path = [corner + sign * k * step for k in range(min(max_len, n))]
+                path = ray(g, corner, d, sign, max_len)
                 out: list = []
                 trie = lex.forward if p == 0 else lex.reverse
                 _walk(trie, path, 0, 0, state.letters, False, rules.min_len, max_len, out)
                 for word, new in out:
                     if _usable(state, word):
-                        start = corner if p == 0 else corner - (len(word) - 1) * step
+                        start = corner if p == 0 else corner - (len(word) - 1) * step(n, d)
                         moves.append(Move(word, start, d, new))
             return moves
 
@@ -232,12 +237,10 @@ def _opening_moves(state: State, p: int) -> list:
     for start in range(n * n):
         if letters[start]:
             continue
-        r, c = divmod(start, n)
-        for d in (H, V):
-            step = 1 if d == H else n
-            room = (n - c) if d == H else (n - r)
+        for d in dirs:
+            path = ray(g, start, d, 1, max_len)
             run = 0
-            while run < min(room, max_len) and not letters[start + run * step]:
+            while run < len(path) and not letters[path[run]]:
                 run += 1
             for length in range(rules.min_len, run + 1):
                 for word in lex.by_len.get(length, ()):
@@ -281,7 +284,7 @@ def apply(state: State, move) -> State:
     else:
         _place(s, move, p)
         s.passes_in_row = 0
-        if all(s.letters):
+        if all(s.letters):  # off-board cells hold VOID, so this counts on-board cells only
             _finish(s, "full")
             return s
     s.ply += 1

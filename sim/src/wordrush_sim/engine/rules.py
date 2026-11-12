@@ -8,6 +8,8 @@ from dataclasses import asdict, dataclass, replace
 @dataclass(frozen=True)
 class Rules:
     n: int = 8
+    board: str = "square"
+    """'square' or 'hex' (a hexagon of radius n // 2 in an n x n array; n must be odd). See geometry.py."""
     """Grid is n x n."""
 
     anchor: str = "start"
@@ -81,4 +83,8 @@ dropped because it never mattered under "cornered loses"."""
 
 CURRENT = V9
 
-PRESETS = {"V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9}
+HEX1 = V9.with_(board="hex", n=9)
+"""Hex mode prototype (2026-11-12): Rules v4 on a hexagon of radius 4 (61 cells), with a third
+line direction, down-left. Words read left to right or downwards."""
+
+PRESETS = {"V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9, "HEX1": HEX1}

@@ -13,6 +13,7 @@
 
 import {
   cellsFor,
+  geometryOf,
   exitsOf,
   legalMoves,
   moveContext,
@@ -104,9 +105,9 @@ function boxInMove(state: GameState, lex: Lexicon): Placement | null {
   const opp: Player = me === 0 ? 1 : 0;
   if (state.lastWord[opp] === null) return null;
   const live = exitsOf(moveContext(state, opp), lex).filter((e) => e.words > 0);
-  const n = state.rules.size;
+  const g = geometryOf(state.rules);
   const touchesAll = (m: Placement) => {
-    const cells = new Set(cellsFor(n, m.row, m.col, m.dir, m.word.length) ?? []);
+    const cells = new Set(cellsFor(g, m.row, m.col, m.dir, m.word.length) ?? []);
     return live.every((e) => e.cells.some((c) => cells.has(c)));
   };
   return legalMoves(state, lex).filter(touchesAll).find((m) => play(state, lex, m).result?.winner === me) ?? null;
@@ -146,7 +147,8 @@ export function candidates(state: GameState, moves: readonly Placement[], rng: R
 
 function nearMoves(state: GameState, moves: readonly Placement[]): Placement[] {
   if (state.lastWord[state.toMove] !== null) return []; // chained moves already touch letters
-  const n = state.rules.size;
+  const g = geometryOf(state.rules);
+  const n = g.size;
   const near = new Set<number>();
   state.board.forEach((cell, i) => {
     if (!cell) return;
@@ -158,9 +160,5 @@ function nearMoves(state: GameState, moves: readonly Placement[]): Placement[] {
     if (c < n - 1) near.add(i + 1);
   });
   if (near.size === 0) return [];
-  return moves.filter((m) => {
-    const step = m.dir === 'across' ? 1 : n;
-    const start = m.row * n + m.col;
-    return Array.from({ length: m.word.length }, (_, k) => start + k * step).some((c) => near.has(c));
-  });
+  return moves.filter((m) => (cellsFor(g, m.row, m.col, m.dir, m.word.length) ?? []).some((c) => near.has(c)));
 }

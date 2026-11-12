@@ -8,9 +8,9 @@ import { plain, t } from '../../copy';
 import { Segmented, Toggle } from '../../ui/Controls';
 import { Sheet } from '../../ui/Sheet';
 import { useSettings } from './context';
-import type { HintsPerGame, ThemeSetting } from './settings';
+import type { BoardSetting, HintsPerGame, ThemeSetting } from './settings';
 
-export type SettingsRow = 'theme' | 'hints' | 'highlight' | 'waysOut' | 'showAll';
+export type SettingsRow = 'theme' | 'board' | 'hints' | 'highlight' | 'waysOut' | 'showAll';
 
 export interface SettingsSheetProps {
   readonly title: string;
@@ -47,6 +47,19 @@ export function SettingsSheet({ title, rows, onClose, extra }: SettingsSheetProp
               { value: 'dark', label: t('settings.theme.dark') },
             ]}
             onChange={(theme) => update({ theme })}
+          />
+        </Row>
+      )}
+      {rows.includes('board') && (
+        <Row label={t('settings.board.label')} help={t('settings.board.help')}>
+          <Segmented<BoardSetting>
+            label={t('settings.board.label')}
+            value={settings.board}
+            options={[
+              { value: 'hex', label: t('settings.board.hex') },
+              { value: 'square', label: t('settings.board.square') },
+            ]}
+            onChange={(board) => update({ board })}
           />
         </Row>
       )}

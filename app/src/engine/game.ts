@@ -3,6 +3,7 @@
 import { emptyBoard, isFull, squaresOwned, writeWord, cellsFor } from './board';
 import type { Lexicon } from './lexicon';
 import { allMoves, hasAnyMove, placementKey, placementsForWord, type MoveContext } from './placements';
+import { geometryOf } from './geometry';
 import { STANDARD_RULES, type Rules } from './rules';
 import type { Anchor, Board, GameResult, Placement, PlayedWord, Player } from './types';
 
@@ -24,7 +25,7 @@ export const otherPlayer = (p: Player): Player => (p === 0 ? 1 : 0);
 export function newGame(rules: Rules = STANDARD_RULES): GameState {
   return {
     rules,
-    board: emptyBoard(rules.size),
+    board: emptyBoard(geometryOf(rules)),
     words: [],
     lastWord: [null, null],
     toMove: 0,
@@ -38,8 +39,8 @@ export function anchorsOf(state: GameState, player: Player): Anchor[] {
   const last = state.lastWord[player];
   if (last === null) {
     // First word: Blue starts in the top-left corner, Orange ends in the bottom-right.
-    const n = state.rules.size;
-    return player === 0 ? [{ cell: 0, modes: ['start'] }] : [{ cell: n * n - 1, modes: ['end'] }];
+    const g = geometryOf(state.rules);
+    return player === 0 ? [{ cell: g.blueCorner, modes: ['start'] }] : [{ cell: g.orangeCorner, modes: ['end'] }];
   }
   return state.words[last]!.cells.map((cell) => ({ cell, modes: ['start', 'end'] }));
 }
@@ -49,7 +50,7 @@ export function moveContext(state: GameState, player: Player = state.toMove): Mo
   const firstWordForBlue = player === 0 && state.lastWord[0] === null;
   return {
     board: state.board,
-    size: rules.size,
+    geo: geometryOf(rules),
     minLen: rules.minLen,
     maxLen: firstWordForBlue ? Math.min(rules.maxLen, rules.firstWordMaxLen) : rules.maxLen,
     anchors: anchorsOf(state, player),
@@ -79,7 +80,7 @@ export function play(state: GameState, lex: Lexicon, p: Placement): GameState {
   if (!isLegal(state, lex, p)) throw new Error(`Illegal move: ${placementKey(p)}`);
   const { rules } = state;
   const mover = state.toMove;
-  const cells = cellsFor(rules.size, p.row, p.col, p.dir, p.word.length)!;
+  const cells = cellsFor(geometryOf(rules), p.row, p.col, p.dir, p.word.length)!;
   const index = state.words.length;
   const played: PlayedWord = {
     word: p.word, row: p.row, col: p.col, dir: p.dir, player: mover, turn: state.turn, cells,
@@ -98,7 +99,7 @@ export function play(state: GameState, lex: Lexicon, p: Placement): GameState {
 }
 
 function resultAfterMove(state: GameState, lex: Lexicon, mover: Player): GameResult | null {
-  if (isFull(state.board)) {
+  if (isFull(state.board, geometryOf(state.rules))) {
     const a = squaresOwned(state.board, 0);
     const b = squaresOwned(state.board, 1);
     const winner: Player = a === b ? state.rules.fullBoardTieWinner : a > b ? 0 : 1;

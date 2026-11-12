@@ -4,12 +4,13 @@
  */
 
 import { cellsFor, ray, stepOf, toRowCol } from './board';
+import { DELTA, type Geometry } from './geometry';
 import type { Lexicon, TrieNode } from './lexicon';
 import type { Anchor, AnchorMode, Board, CellIndex, Dir, Placement } from './types';
 
 export interface MoveContext {
   readonly board: Board;
-  readonly size: number;
+  readonly geo: Geometry;
   readonly minLen: number;
   /** Maximum word length for this turn (shorter on Blue's first move). */
   readonly maxLen: number;
@@ -20,7 +21,6 @@ export interface MoveContext {
 }
 
 const MODES: readonly AnchorMode[] = ['start', 'end'];
-const DIRS: readonly Dir[] = ['across', 'down'];
 
 export const placementKey = (p: Pick<Placement, 'word' | 'row' | 'col' | 'dir'>): string =>
   `${p.word}@${p.row},${p.col},${p.dir}`;
@@ -44,10 +44,11 @@ function fit(
   dir: Dir,
 ): Placement | null {
   const offset = mode === 'start' ? 0 : letters.length - 1;
-  const { row: aRow, col: aCol } = toRowCol(ctx.size, anchor.cell);
-  const row = dir === 'down' ? aRow - offset : aRow;
-  const col = dir === 'across' ? aCol - offset : aCol;
-  const cells = cellsFor(ctx.size, row, col, dir, letters.length);
+  const { row: aRow, col: aCol } = toRowCol(ctx.geo.size, anchor.cell);
+  const [dr, dc] = DELTA[dir];
+  const row = aRow - offset * dr;
+  const col = aCol - offset * dc;
+  const cells = cellsFor(ctx.geo, row, col, dir, letters.length);
   if (!cells) return null;
   const ok = cells.every((cell, k) => {
     const existing = ctx.board[cell];
@@ -59,14 +60,14 @@ function fit(
 
 /**
  * Every spot a complete word fits, in a stable order: start-on-letter before end-on-letter,
- * across before down, then anchor order along the last word. Geometry only.
+ * in direction order (across, down, down-left), then anchor order along the last word. Geometry only.
  */
 export function placementsForWord(ctx: MoveContext, word: string): Placement[] {
   const w = word.toLowerCase();
   if (w.length < ctx.minLen || w.length > ctx.maxLen) return [];
   const found = new Map<string, Placement>();
   for (const mode of MODES) {
-    for (const dir of DIRS) {
+    for (const dir of ctx.geo.dirs) {
       for (const anchor of ctx.anchors) {
         if (!anchor.modes.includes(mode)) continue;
         const p = fit(ctx, w, anchor, mode, dir);
@@ -92,7 +93,7 @@ export function partialPlacements(ctx: MoveContext, prefix: string): Placement[]
     if (pl && !found.has(placementKey(pl))) found.set(placementKey(pl), pl);
   };
   for (const mode of MODES) {
-    for (const dir of DIRS) {
+    for (const dir of ctx.geo.dirs) {
       for (const anchor of ctx.anchors) {
         if (!anchor.modes.includes(mode)) continue;
         if (mode === 'start') {
@@ -146,16 +147,16 @@ function walk(
 function moveGroups(ctx: MoveContext, lex: Lexicon): MoveGroup[] {
   const groups: MoveGroup[] = [];
   for (const anchor of ctx.anchors) {
-    for (const dir of DIRS) {
+    for (const dir of ctx.geo.dirs) {
       for (const mode of anchor.modes) {
         const forward = mode === 'start';
-        const path = ray(ctx.size, anchor.cell, dir, forward ? 1 : -1, ctx.maxLen);
+        const path = ray(ctx.geo, anchor.cell, dir, forward ? 1 : -1, ctx.maxLen);
         const words: string[] = [];
         walk(ctx, forward ? lex.forward : lex.reverse, path, 0, words);
-        const step = stepOf(ctx.size, dir);
+        const step = stepOf(ctx.geo, dir);
         const moves = words.map((word): Placement => {
           const start = forward ? anchor.cell : anchor.cell - (word.length - 1) * step;
-          const { row, col } = toRowCol(ctx.size, start);
+          const { row, col } = toRowCol(ctx.geo.size, start);
           return { word, row, col, dir, anchor: anchor.cell, anchorAt: mode };
         });
         groups.push({ anchor: anchor.cell, mode, dir, moves });

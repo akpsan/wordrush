@@ -3,7 +3,8 @@
 /** 0 = Blue (always moves first), 1 = Orange. */
 export type Player = 0 | 1;
 
-export type Dir = 'across' | 'down';
+/** Line directions. 'downLeft' exists on hex boards only (see geometry.ts). */
+export type Dir = 'across' | 'down' | 'downLeft';
 
 /** Whether the new word starts or ends on the shared (link) letter. */
 export type AnchorMode = 'start' | 'end';

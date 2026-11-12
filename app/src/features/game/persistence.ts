@@ -4,7 +4,7 @@
  * engine, so a damaged or out-of-date save can never produce an illegal board: it's discarded.
  */
 
-import { newGame, play, type GameState, type Lexicon } from '../../engine';
+import { newGame, play, rulesFor, type Dir, type Shape, type GameState, type Lexicon } from '../../engine';
 import { load, remove, save } from '../../platform/storage';
 import { LEVELS } from '../../ai';
 import { FRIEND, type Match } from './model/match';
@@ -16,7 +16,7 @@ interface SavedMove {
   readonly word: string;
   readonly row: number;
   readonly col: number;
-  readonly dir: 'across' | 'down';
+  readonly dir: Dir;
 }
 
 /** Version 1 games were always pass and play; version 2 adds `match`. */
@@ -25,6 +25,8 @@ interface SavedGame {
   readonly moves: readonly SavedMove[];
   readonly hints?: { readonly perGame: number; readonly used: readonly [number, number] };
   readonly match?: Match;
+  /** Board shape. Missing in saves from before hex mode: square. */
+  readonly shape?: Shape;
 }
 
 /** A restored game, ready to continue. */
@@ -45,6 +47,7 @@ export function saveGame(game: GameState, hints: Hints, match: Match): void {
     moves: game.words.map(({ word, row, col, dir }) => ({ word, row, col, dir })),
     hints: { perGame: hints.perGame, used: hints.used },
     match,
+    shape: game.rules.shape,
   };
   save(KEY, saved);
 }
@@ -76,7 +79,7 @@ export function loadSavedGame(lex: Lexicon): SavedSession | null {
   const match = readMatch(saved.match);
   if (!match) return null;
   try {
-    let game = newGame();
+    let game = newGame(rulesFor(saved.shape === 'hex' ? 'hex' : 'square'));
     for (const m of saved.moves) {
       game = play(game, lex, { ...m, anchor: 0, anchorAt: 'start' });
     }
