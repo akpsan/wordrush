@@ -18,6 +18,7 @@ import { StatusBar } from './components/StatusBar';
 import { boardView } from './model/board';
 import { aiAnnouncement, aiTurnView, feedbackFor } from './model/feedback';
 import { FRIEND, isAi, nameOf, type Match } from './model/match';
+import { impactLine } from './model/impact';
 import { hintView } from './model/hint';
 import { hintsLeft } from './model/session';
 import type { SavedSession } from './persistence';
@@ -89,6 +90,8 @@ export function GameScreen(props: GameScreenProps) {
   const aiTurn = useMemo(() => (phase === 'idle' ? null : aiTurnView(session, lex, phase)), [session, lex, phase]);
   const hint = useMemo(() => hintView(session), [session]);
   const left = session.hints.perGame > 0 ? hintsLeft(session) : null;
+  // What the ready word does to both players' ways out (docs/ui-decisions.md, word impact).
+  const impact = useMemo(() => (yourTurn ? impactLine(session, entry, lex) : null), [yourTurn, session, entry, lex]);
   const highlight = useMemo(
     () => new Set(yourTurn && settings.highlightLetters ? letterChoices(game, game.toMove) : []),
     [yourTurn, settings.highlightLetters, game],
@@ -138,6 +141,7 @@ export function GameScreen(props: GameScreenProps) {
               feedback={feedback}
               problemId={session.problem?.id ?? null}
               firstWordNote={game.toMove === 0 && game.lastWord[0] === null ? game.rules.firstWordMaxLen : null}
+              impact={impact}
               hint={hint}
               aiTurn={aiTurn}
             />

@@ -16,6 +16,8 @@ export interface EntryProps {
   /** Show "First word: 4 letters max, starting in the corner" (Blue's first turn). */
   /** Blue's first-word length limit, while the first-word note shows; null hides it. */
   readonly firstWordNote: number | null;
+  /** What the ready word does to both players' ways out (copy with **bold**), in the note row. */
+  readonly impact?: { readonly text: string; readonly tone: 'good' | 'warn' | 'neutral' } | null;
   /** The current hint, shown as a chip above the tiles. */
   readonly hint?: HintView | null;
   /** The AI's turn: a "thinking" line replaces the tiles, and its note replaces the feedback. */
@@ -67,7 +69,7 @@ function linkSlot(entry: EntryView): number {
   return spot.anchorAt === 'start' ? 0 : spot.word.length - 1;
 }
 
-export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, hint, aiTurn }: EntryProps) {
+export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, impact, hint, aiTurn }: EntryProps) {
   const feedback = aiTurn ? (aiTurn.note ?? NO_FEEDBACK) : typingFeedback;
   const showNote = firstWordNote !== null && !aiTurn;
   const { typed, maxLen, ready } = entry;
@@ -88,6 +90,13 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
       {/* The note line is always rendered, so the board doesn't change size when it goes away. */}
       {hint ? (
         <HintChip hint={hint} />
+      ) : impact && !showNote && !aiTurn ? (
+        <p className={`tnote impact ${impact.tone}`}>
+          <Icon name={impact.tone === 'warn' ? 'warn' : 'note'} />
+          <span>
+            <RichText text={impact.text} />
+          </span>
+        </p>
       ) : (
         <p className={showNote ? 'tnote' : 'tnote off'} aria-hidden={!showNote}>
           <Icon name="note" />
