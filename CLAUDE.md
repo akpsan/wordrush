@@ -7,6 +7,7 @@ Simulator commands, conventions and simulation decisions: `sim/CLAUDE.md`.
 ## Repo conventions
 
 - Don't create folders for future phases until they're needed.
+- `main` is the default branch and deploys on every merge. Branch off it as `feature/<short-name>`, `fix/<short-name>`, `chore/<short-name>` or `docs/<short-name>` (lowercase, hyphens), and merge through a pull request once the checks pass.
 
 ## Game
 
