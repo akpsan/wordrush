@@ -1,7 +1,7 @@
 import { plain } from '../../../copy';
-import type { CSSProperties } from 'react';
 import type { CellIndex, Geometry } from '../../../engine';
 import { Icon } from '../../../ui/Icon';
+import { hexLayout } from './hexLayout';
 import type { CellView } from '../model/board';
 import '../styles/board.css';
 
@@ -13,36 +13,6 @@ export interface BoardProps {
   readonly onTap?: () => void;
   /** The board's shape. Square when left out (the tutorial and the menu). */
   readonly geo?: Geometry;
-}
-
-/** Hex boards: a pointy-top hexagon is 2/sqrt(3) as tall as it is wide; rows sit 3/4 of that apart. */
-const HEX_H = 2 / Math.sqrt(3);
-const ROW_STEP = HEX_H * 0.75;
-const TILE = 0.86;
-const SLOT = 0.94;
-
-/** Positions for a hex board's cells, as percentages of the board (see board.css, .board.hex). */
-function hexLayout(geo: Geometry) {
-  const n = geo.size;
-  const R = (n - 1) / 2;
-  const W = n;
-  const H = HEX_H + 2 * R * ROW_STEP;
-  const pct = (v: number, of: number) => `${(v / of) * 100}%`;
-  const place = (index: number, size: number, tall: number): CSSProperties => {
-    const r = Math.floor(index / n);
-    const x = (2 * (index % n) + r - R) / 2; // left edge of the slot, in cell widths (axial q + r/2 + R)
-    return {
-      left: pct(x + (1 - size) / 2, W),
-      top: pct(r * ROW_STEP + (HEX_H - tall) / 2, H),
-      width: pct(size, W),
-      height: pct(tall, H),
-    };
-  };
-  return {
-    style: { '--W': W, '--H': H, aspectRatio: `${W} / ${H}` } as CSSProperties,
-    tile: (i: number) => place(i, TILE, TILE),
-    slot: (i: number) => place(i, SLOT, SLOT * HEX_H),
-  };
 }
 
 function CellContent({ cell }: { cell: CellView }) {

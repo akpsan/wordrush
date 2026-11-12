@@ -17,11 +17,11 @@ EXPERIMENT = Experiment(
         Variant("hex r5", HEX1.with_(n=11)),
         Variant("hex r4, A's first word 3 letters", HEX1.with_(a_first_max_len=3)),
         Variant("hex r5, A's first word 3 letters", HEX1.with_(n=11, a_first_max_len=3)),
+        Variant("hex r5, no first-word limit", HEX1.with_(n=11, a_first_max_len=5)),
     ],
     matchups=[
         ("balanced", "balanced"),
         ("aggressive", "aggressive"),
-        ("lookahead", "lookahead"),
         ("random", "balanced"),
     ],
     games=300,

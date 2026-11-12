@@ -5,15 +5,15 @@
 
 import { useMemo, useState } from 'react';
 import { aiLevelName, aiName, plain, playerName, t } from '../../copy';
-import type { Lexicon } from '../../engine';
-import type { SavedSession } from '../game';
+import { geometryOf, type Geometry, type Lexicon } from '../../engine';
+import { hexLayout, type SavedSession } from '../game';
 import { DEFAULT_SETUP, SetupSheet, type AiRecords, type AiSetup } from '../setup';
 import { useIsDesktop } from '../../platform/media';
 import { Frame } from '../../ui/Frame';
 import { Icon } from '../../ui/Icon';
 import { RichText } from '../../ui/RichText';
 import { Sheet } from '../../ui/Sheet';
-import { SettingsSheet, useResolvedTheme } from '../settings';
+import { SettingsSheet, useResolvedTheme, useSettings } from '../settings';
 import { heroBoard, type HeroCell } from './heroBoard';
 import './menu.css';
 
@@ -41,14 +41,20 @@ export interface MenuScreenProps {
 /** A new game the player asked for, waiting on "start a new game?" when one is saved. */
 type Pending = { readonly mode: 'friend' } | { readonly mode: 'ai'; readonly setup: AiSetup };
 
-function HeroBoard({ cells }: { cells: readonly HeroCell[] }) {
+function HeroBoard({ cells, geo }: { cells: readonly HeroCell[]; geo: Geometry }) {
+  const hex = geo.shape === 'hex' ? hexLayout(geo) : null;
+  const shown = cells.map((c, i) => [c, i] as const).filter(([, i]) => geo.valid[i]);
   return (
-    <div className="board mboard" aria-hidden="true">
-      {cells.map((c, i) => (
-        <div key={i} className={c.className} style={c.delay ? { animationDelay: `${c.delay}ms` } : undefined}>
-          <span className="l">{c.letter}</span>
-        </div>
-      ))}
+    <div className={hex ? 'board mboard hex' : 'board mboard'} style={hex?.style} aria-hidden="true">
+      {hex && shown.map(([, i]) => <i key={`s${i}`} className="hexslot" style={hex.slot(i)} />)}
+      {shown.map(([c, i]) => {
+        const anim = c.delay ? { animationDelay: `${c.delay}ms` } : undefined;
+        return (
+          <div key={i} className={c.className} style={hex ? { ...hex.tile(i), ...anim } : anim}>
+            <span className="l">{c.letter}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -84,7 +90,8 @@ export function MenuScreen(props: MenuScreenProps) {
   const { lex, firstLaunch, saved, aiSetup, lastMode, records, onContinue, onLearn } = props;
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
-  const cells = useMemo(() => heroBoard(lex), [lex]);
+  const { settings } = useSettings();
+  const hero = useMemo(() => heroBoard(lex, settings.board), [lex, settings.board]);
   const [sheet, setSheet] = useState<'settings' | 'setup' | 'abandon' | null>(props.showSetup ? 'setup' : null);
   const [pending, setPending] = useState<Pending | null>(null);
 
@@ -171,7 +178,7 @@ export function MenuScreen(props: MenuScreenProps) {
 
         {!desk && (
           <div className="mboardwrap">
-            <HeroBoard cells={cells} />
+            <HeroBoard cells={hero.cells} geo={geometryOf(hero.game.rules)} />
           </div>
         )}
 
@@ -201,7 +208,7 @@ export function MenuScreen(props: MenuScreenProps) {
 
       {desk && (
         <div className="menuright">
-          <HeroBoard cells={cells} />
+          <HeroBoard cells={hero.cells} geo={geometryOf(hero.game.rules)} />
         </div>
       )}
 

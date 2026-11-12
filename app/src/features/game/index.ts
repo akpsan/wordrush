@@ -12,5 +12,6 @@ export { createSession, type Session } from './model/session';
 export { FRIEND, type Match, type AiMatch, type FirstChoice } from './model/match';
 export type { Feedback, FeedbackTone } from './model/feedback';
 export { Board } from './components/Board';
+export { hexLayout } from './components/hexLayout';
 export { Entry } from './components/Entry';
 export { Keyboard } from './components/Keyboard';

@@ -62,3 +62,9 @@
 
 /* App: tablets in portrait (phone layout, lots of height): a bigger hero board instead of empty space. */
 @media (min-width:600px) and (min-height:900px){.wr.menu.phone .mboard{width:420px;padding:7px;gap:5px;border-radius:20px}.wr.menu.phone .mboard .cell{font-size:22px}}
+
+/* Hex hero board (Board setting = Hexagon): the game's honeycomb, scaled to the hero's width. */
+.mboard.hex{display:block;position:relative;padding:0;background:transparent;border:0;container-type:inline-size}
+.mboard.hex>.cell,.mboard.hex>.hexslot{position:absolute;aspect-ratio:auto}
+.mboard.hex>.cell:where(:not(.a,.b)){background:transparent;box-shadow:none}
+.mboard.hex .cell,.desk .mboard.hex .cell{font-size:calc(100cqw / var(--W) * .5)}

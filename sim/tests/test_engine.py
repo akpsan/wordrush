@@ -159,3 +159,19 @@ def test_current_rules_full_board_tie_goes_to_b():
     _finish(s, "full")
     assert s.winner == 1
     assert CURRENT.b_bonus == 0 and CURRENT.stuck == "lose" and CURRENT.a_first_max_len == 4
+
+
+def test_hex_geometry_and_opening():
+    from wordrush_sim.engine.geometry import geometry
+    from wordrush_sim.engine.rules import HEX1
+
+    g = geometry("hex", 9)
+    assert g.cells == 61 and g.a_corner == 4 and g.b_corner == 8 * 9 + 4
+    assert not g.valid[0] and not g.valid[80]
+    lex = get_lexicon("everyday-3to5")
+    s = new_game(HEX1, lex)
+    first = legal_moves(s)
+    assert {m.dir for m in first} == {0, 1, 2}  # across, down, down-left
+    assert all(m.start == g.a_corner and len(m.word) <= 4 for m in first)
+    s = apply(s, first[0])
+    assert all(m.start + (len(m.word) - 1) * (1, 9, 8)[m.dir] == g.b_corner for m in legal_moves(s))
