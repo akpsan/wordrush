@@ -2,7 +2,7 @@
 
 A two-player word game on a shared 8 × 8 grid. Each player grows a chain of words from their own last word, every letter on the board blocks new words, and **the player who gets boxed in first loses**. Play a friend on one device, or play against an AI (Pip, Juno or Rex, easy to hard).
 
-**Play it:** https://wordrush.wordrush-app.workers.dev
+**Play it:** https://wordrush.akpsan.workers.dev
 
 The repo holds the game's rules, the simulation lab used to design them, the UI design, and the web app.
 
@@ -41,7 +41,7 @@ npm run dev         # local dev server
 npm run deploy      # build and publish to Cloudflare by hand (needs `npx wrangler login` once)
 ```
 
-**Releasing:** work is merged into `develop`. Merging `develop` into `main` releases it: Cloudflare Workers Builds (Cloudflare's GitHub app) builds `app/` and deploys every push to `main` to https://wordrush.wordrush-app.workers.dev.
+**Releasing:** work is merged into `develop`. Merging `develop` into `main` releases it: Cloudflare Workers Builds (Cloudflare's GitHub app) builds `app/` and deploys every push to `main` to https://wordrush.akpsan.workers.dev.
 
 **Design screens:** serve `design/handoff/design/` over HTTP (`python3 -m http.server`) and open it in a browser.
 

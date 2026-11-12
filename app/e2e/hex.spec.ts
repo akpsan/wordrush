@@ -6,7 +6,8 @@ test('hex board: 91 cells, a corner start, and a full turn each', async ({ page 
   await openApp(page, 'returning', { board: 'hex' });
   await page.getByRole('button', { name: /Play a friend/ }).click();
   await expect(page.locator('.hexslot')).toHaveCount(91);
-  await expect(page.locator('.pl.a')).toContainText('3 ways out');
+  await expect(page.locator('.pl.a')).toContainText('3+ words to play');
+  expect(await page.locator('.hexslot[class*=heat]').count()).toBeGreaterThan(0); // the heatmap around Blue's corner
   await keys(page, 'tea\n');
   await expect(page.getByLabel('Row 1, column 6: T, Blue')).toBeVisible();
   await keys(page, 'stone\n');

@@ -156,3 +156,15 @@ From the owner's playtest: it was hard to tell whether a word helps or hurts. Fi
 | Doesn't reveal the word list | It appears only in the ready state, which already confirms the word. |
 | How | `features/game/model/impact.ts` plays the word on a copy through the engine and counts ways out (`waysOut`) for both players. Your own count at 1 or less gets the warning icon. |
 | Not in the tutorial | The tutorial's lessons control that row themselves. |
+
+## Build decisions (words to play, heatmap, losing words, 2026-11-12)
+
+From the owner's playtest on the live hex game.
+
+| Topic | Decision |
+| --- | --- |
+| Words to play, not ways out | The cards count the words a player could play next, shown as **1, 2 or 3+** ("3+ words to play", "1 word left!"). "Ways out" (directions a word can grow) didn't say anything a player could use. Boxed in is still 0 words, so the rules don't change. Danger lines say "down to 1 word". Copy deck rows `ways.*`, `type.danger`, `wait.danger`, `cpu.*danger*`, `opp.danger.them` and the glossary changed; the tutorial's meter (`learn.8.*`) still counts ways out. |
+| Heatmap | Empty cells are tinted in the mover's colour by how many of their playable words pass through them: 1, 2 to 4, 5 or more. With a ready word, the tint shows where the mover could go next after playing it. Only on your own turn; never on the START and END corners (their marks need the contrast). Hex boards tint the hexagon slot. Settings: "Show where words fit", on by default, in both settings sheets. `heatCounts` in `features/game/model/board.ts`. |
+| Losing words | A ready word that leaves you no words to play says "**RIM** leaves you no words. You would lose!" in bold with a warning icon, and Play turns into an outlined, striped warning button. It can still be played. |
+| Impact line | Uses the same counts: "After **ATE**: you 3+ words, Orange 2 words". |
+| Link badge on hex | Smaller and pushed into the tile's corner, so it no longer covers the link letter. |

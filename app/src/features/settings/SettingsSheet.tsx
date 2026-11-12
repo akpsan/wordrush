@@ -10,7 +10,7 @@ import { Sheet } from '../../ui/Sheet';
 import { useSettings } from './context';
 import type { BoardSetting, HintsPerGame, ThemeSetting } from './settings';
 
-export type SettingsRow = 'theme' | 'board' | 'hints' | 'highlight' | 'waysOut' | 'showAll';
+export type SettingsRow = 'theme' | 'board' | 'heatmap' | 'hints' | 'highlight' | 'waysOut' | 'showAll';
 
 export interface SettingsSheetProps {
   readonly title: string;
@@ -60,6 +60,15 @@ export function SettingsSheet({ title, rows, onClose, extra }: SettingsSheetProp
               { value: 'square', label: t('settings.board.square') },
             ]}
             onChange={(board) => update({ board })}
+          />
+        </Row>
+      )}
+      {rows.includes('heatmap') && (
+        <Row label={t('settings.heatmap.label')} help={t('settings.heatmap.help')}>
+          <Toggle
+            on={settings.showHeatmap}
+            label={plain('settings.heatmap.aria', { 'on/off': settings.showHeatmap ? 'on' : 'off' })}
+            onChange={(showHeatmap) => update({ showHeatmap })}
           />
         </Row>
       )}

@@ -78,3 +78,15 @@
 .wr.phone .hexwrap .board.hex{width:min(100cqw,calc(100cqh * var(--W) / var(--H)));--bw:min(100cqw,calc(100cqh * var(--W) / var(--H)))}
 .wr.desk .board.hex{width:min(640px,100cqw,calc((100dvh - 140px) * var(--W) / var(--H)));--bw:min(640px,100cqw,calc((100dvh - 140px) * var(--W) / var(--H)))}
 .wr.phone .boardwrap .board.hex .cell{font-size:calc(var(--bw) / var(--W) * .5)}
+
+/* Heatmap (Settings: Show where words fit): empty cells tinted in the mover's colour by how many of their
+   words could pass through. Square boards tint the cell; hex boards tint the hexagon slot under it. */
+.cell.heat1,.hexslot.heat1{background-color:color-mix(in srgb,var(--p) 14%,var(--cell))}
+.cell.heat2,.hexslot.heat2{background-color:color-mix(in srgb,var(--p) 28%,var(--cell))}
+.cell.heat3,.hexslot.heat3{background-color:color-mix(in srgb,var(--p) 44%,var(--cell))}
+.hexslot{transition:background-color .2s}
+@media (prefers-reduced-motion:reduce){.hexslot{transition:none}}
+/* Hex tiles are smaller: a smaller link badge, pushed into the corner so it doesn't cover the letter. */
+.board.hex .gb{width:13px;height:13px;right:-8px;bottom:-8px;box-shadow:0 0 0 1.5px var(--surface)}
+.board.hex .gb .ico{width:8px;height:8px}
+.desk .board.hex .gb{width:18px;height:18px;right:-9px;bottom:-9px}.desk .board.hex .gb .ico{width:11px;height:11px}
