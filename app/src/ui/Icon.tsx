@@ -72,6 +72,7 @@ const PATHS = {
   ),
   play: <path d="M7 5l12 7-12 7z" />,
   chevron: <path d="M15 6l-6 6 6 6" />,
+  chevronRight: <path d="M9 6l6 6-6 6" />,
   plus: <path d="M12 5v14M5 12h14" />,
   trophy: (
     <>

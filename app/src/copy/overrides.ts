@@ -101,6 +101,11 @@ const missing = {
   'learn.hex.8.coach': "Your opponent's last word, THEM, has one way out left. Close it off with **RACE**.",
   'learn.hex.8.ready': '**RACE** closes off THEM. Play it!',
   'learn.hex.8.won.coach': 'THEM has no room left: every gap is too small for a word. **You win!**',
+  // Game screen redesign (docs/ui-decisions.md): the spot stepper and Play in the keyboard.
+  'stepper.ready': '**{WORD}** fits · spot {i} of {n}',
+  'stepper.partial': 'Spot {i} of {n}',
+  'stepper.prev.aria': 'Previous spot',
+  'stepper.next.aria': 'Next spot',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

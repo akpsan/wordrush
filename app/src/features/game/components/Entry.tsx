@@ -1,9 +1,9 @@
-import { plain, t } from '../../../copy';
+import { listLetters, plain, t } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
 import '../styles/entry.css';
 import { RichText } from '../../../ui/RichText';
 import type { EntryView } from '../model/entry';
-import type { AiTurnView, Feedback } from '../model/feedback';
+import { CHIPS, type AiTurnView, type Feedback } from '../model/feedback';
 import type { HintView } from '../model/hint';
 
 const SLOTS = 5;
@@ -22,6 +22,28 @@ export interface EntryProps {
   readonly hint?: HintView | null;
   /** The AI's turn: a "thinking" line replaces the tiles, and its note replaces the feedback. */
   readonly aiTurn?: AiTurnView | null;
+  /** With two or more spots, a stepper (previous / spot i of n / next) replaces the feedback line. */
+  readonly stepper?: { readonly onPrev: () => void; readonly onNext: () => void } | null;
+}
+
+/** The mover's letters as chips, where the feedback text holds CHIPS. */
+function boldOrChips(letters: readonly string[] | undefined) {
+  return (part: string, key: number) =>
+    part === CHIPS && letters ? (
+      <span key={key}>
+        {/* Screen readers hear "T, E or A"; the chips are for the eye. */}
+        <span className="sr">{listLetters(letters)}</span>
+        <span className="chips" aria-hidden="true">
+          {letters.map((l) => (
+            <span key={l} className="chip">
+              {l}
+            </span>
+          ))}
+        </span>
+      </span>
+    ) : (
+      <b key={key}>{part}</b>
+    );
 }
 
 /** Spoken by the game's own live region (cpu.sr.*), so this line isn't a live region itself. */
@@ -69,7 +91,7 @@ function linkSlot(entry: EntryView): number {
   return spot.anchorAt === 'start' ? 0 : spot.word.length - 1;
 }
 
-export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, impact, hint, aiTurn }: EntryProps) {
+export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNote, impact, hint, aiTurn, stepper }: EntryProps) {
   const feedback = aiTurn ? (aiTurn.note ?? NO_FEEDBACK) : typingFeedback;
   const showNote = firstWordNote !== null && !aiTurn;
   const { typed, maxLen, ready } = entry;
@@ -121,16 +143,36 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
           ))}
         </div>
       )}
-      <p className={fbClass} role={aiTurn ? undefined : 'status'}>
-        {feedback.tone === 'good' && <Icon name="check" />}
-        {feedback.tone === 'err' && <Icon name="info" />}
-        {feedback.tone === 'warn' && <Icon name="warn" />}
-        {feedback.tone === 'steer' && <Icon name="note" />}
-        {feedback.pip !== null && <span className={feedback.pip === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />}
-        <span>
-          <RichText text={feedback.text} />
-        </span>
-      </p>
+      {stepper && !aiTurn && feedback.tone !== 'err' && entry.spots.length >= 2 ? (
+        <div className="stepper">
+          <button type="button" className="stepbtn" aria-label={plain('stepper.prev.aria')} onMouseDown={(e) => e.preventDefault()} onClick={stepper.onPrev}>
+            <Icon name="chevron" />
+          </button>
+          <p className="steplabel" role="status">
+            <RichText
+              text={
+                entry.ready
+                  ? t('stepper.ready', { WORD: typed.toUpperCase(), i: entry.index + 1, n: entry.spots.length })
+                  : t('stepper.partial', { i: entry.index + 1, n: entry.spots.length })
+              }
+            />
+          </p>
+          <button type="button" className="stepbtn" aria-label={plain('stepper.next.aria')} onMouseDown={(e) => e.preventDefault()} onClick={stepper.onNext}>
+            <Icon name="chevronRight" />
+          </button>
+        </div>
+      ) : (
+        <p className={fbClass} role={aiTurn ? undefined : 'status'}>
+          {feedback.tone === 'good' && <Icon name="check" />}
+          {feedback.tone === 'err' && <Icon name="info" />}
+          {feedback.tone === 'warn' && <Icon name="warn" />}
+          {feedback.tone === 'steer' && <Icon name="note" />}
+          {feedback.pip !== null && <span className={feedback.pip === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />}
+          <span>
+            <RichText text={feedback.text} renderBold={boldOrChips(feedback.letters)} />
+          </span>
+        </p>
+      )}
     </div>
   );
 }

@@ -68,6 +68,8 @@ export type SessionAction =
   | { readonly type: 'delete' }
   | { readonly type: 'escape' }
   | { readonly type: 'flip' }
+  /** The previous spot (the stepper's back button). */
+  | { readonly type: 'flipBack' }
   | { readonly type: 'filter'; readonly cell: CellIndex }
   | { readonly type: 'play' }
   | { readonly type: 'giveUp' }
@@ -116,10 +118,12 @@ export function sessionReducer(lex: Lexicon, hintWords?: ReadonlySet<string>) {
       case 'escape':
         if (s.filter !== null) return editing(s, s.typed, null);
         return s.typed ? editing(s, '') : s;
-      case 'flip': {
+      case 'flip':
+      case 'flipBack': {
         const { spots, index } = entryView(s, lex);
         if (spots.length < 2) return s;
-        const next = spots[(index + 1) % spots.length]!;
+        const step = action.type === 'flip' ? 1 : spots.length - 1;
+        const next = spots[(index + step) % spots.length]!;
         return { ...s, preferred: { anchor: next.anchor, anchorAt: next.anchorAt, dir: next.dir } };
       }
       case 'filter':

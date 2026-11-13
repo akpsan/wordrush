@@ -200,3 +200,17 @@ From the owner's playtest: players didn't expect words to read one way only, and
 | Hex box-in | Orange's last word **THEM** has one way out left, and **RACE** closes it. The position (ASH, FRAME, HAND, FAKE, DOORS, TIME, ROVER, THEM) came from playing random everyday-word games on the hexagon and keeping one where Blue has an everyday box-in word; `lesson.test.ts` checks it against the full playable list. |
 | Copy | Hex steps use `learn.hex.*` strings in `copy/overrides.ts`; steps whose words are the same reuse the deck's. |
 | Opponent meter | Counts words like the game's cards ("1 word left!", "3+ words to play") instead of ways out, on both boards. |
+
+## Build decisions (game screen redesign, 2026-11-13)
+
+From the owner's mockup ("WordRush – Mobile Game Screen Redesign", a Design canvas), shipped on the owner's request. Layout and interaction only; the rules are unchanged.
+
+| Topic | Decision |
+| --- | --- |
+| Play | A key at the start of the keyboard's bottom row ("Play", aria-label "Play TEAM" when ready). Blue when a word is ready; outlined when the word would lose. The separate Flip/Play row is gone, which gives the board its height. |
+| Flip | Replaced by a stepper in the feedback line when a word has two or more spots: "‹ **ATE** fits · spot 1 of 3 ›" (or "Spot 1 of 3" while typing). Back goes to the previous spot (`flipBack`). Errors still take the line. Space still moves to the next spot. |
+| Your letters | "Start or end with" shows them as chips. Screen readers hear "T, E or A" from hidden text; the chips are `aria-hidden`. |
+| Header | The logo on the left; hint (with the count left), give up, help and menu on the right. The hint button moved here from the old action row. |
+| Letter slots | Share the row on phones (up to 62px wide, 50px tall; 42px and 38px on short screens). |
+| Desktop key help | "Space for the next spot" (it said "Tab or Space to flip"; Tab only moves focus). |
+| Not taken from the mockup | Its words in six directions (two-way words: simulated, not yet adopted; it would break the hex tutorial's bump and box-in lessons), its "cells to connect" goal (a different game; needs simulating), and its Lexend font and navy palette (the design handoff's tokens stay). All three are on the backlog. |
