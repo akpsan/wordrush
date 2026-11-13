@@ -73,7 +73,6 @@
 .board.hex{display:block;position:relative;padding:0;background:transparent;border:0}
 .board.hex>.cell,.board.hex>.hexslot{position:absolute;aspect-ratio:auto}
 .hexslot{background:var(--cell);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
-.board.hex>.cell:where(:not(.a,.b,.gpart,.gnew,.endmark,.gap,.start,.route)){background-color:transparent;box-shadow:none}
 .board.hex .cell{font-size:calc(var(--bw) / var(--W) * .5)}
 .wr.phone .hexwrap .board.hex{width:min(100cqw,calc(100cqh * var(--W) / var(--H)));--bw:min(100cqw,calc(100cqh * var(--W) / var(--H)))}
 .wr.desk .board.hex{width:min(640px,100cqw,calc((100dvh - 140px) * var(--W) / var(--H)));--bw:min(640px,100cqw,calc((100dvh - 140px) * var(--W) / var(--H)))}
@@ -90,3 +89,43 @@
 .board.hex .gb{width:13px;height:13px;right:-8px;bottom:-8px;box-shadow:0 0 0 1.5px var(--surface)}
 .board.hex .gb .ico{width:8px;height:8px}
 .desk .board.hex .gb{width:18px;height:18px;right:-9px;bottom:-9px}.desk .board.hex .gb .ico{width:11px;height:11px}
+
+/* Hex tiles (2026-11-12). The hexagon slot under each cell carries the tile's fill (Hexagon slots get the cell's
+   classes in Board.tsx); the cell above it is transparent and holds the letter, marks and badge. Rings and outlines
+   are hexagon rings drawn by the cell's ::after: a clip-path hexagon with a hexagon hole (evenodd). Players stay
+   distinguishable without colour: Orange tiles are striped, Blue tiles plain. */
+.board.hex{
+  --hex:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  --ring-thin:polygon(evenodd,50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%,50% 0,50% 8%,7% 29%,7% 71%,50% 92%,93% 71%,93% 29%,50% 8%);
+  --ring-thick:polygon(evenodd,50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%,50% 0,50% 13%,11% 31.5%,11% 68.5%,50% 87%,89% 68.5%,89% 31.5%,50% 13%);
+}
+.board.hex>.cell{background:transparent!important;box-shadow:none!important;border:0!important;outline:0!important;border-radius:0}
+.board.hex>.cell::after{content:none}
+.board.hex>.cell:is(.anchor,.anchor-dim,.anchor-on,.start,.flash,.sealed,.gring,.route,.wall,.gpart,.gnew,.endmark,.gap)::after{content:'';position:absolute;inset:0;border:0;box-shadow:none;background:var(--ring,var(--text));clip-path:var(--ringpath,var(--ring-thin));border-radius:0;z-index:3;pointer-events:none}
+.board.hex>.cell.anchor-dim,.board.hex>.cell.gpart,.board.hex>.cell.gap{--ring:var(--muted)}
+.board.hex>.cell.anchor{--ring:var(--text)}
+.board.hex>.cell.gnew,.board.hex>.cell.route{--ring:var(--p)}
+.board.hex>.cell.endmark{--ring:var(--b)}
+.board.hex>.cell.start{--ring:var(--p);--ringpath:var(--ring-thick)}
+.board.hex>.cell.flash{--ring:var(--fc);--ringpath:var(--ring-thick)}
+.board.hex>.cell.anchor-on,.board.hex>.cell.wall,.board.hex>.cell.sealed{--ring:var(--text);--ringpath:var(--ring-thick)}
+.board.hex>.cell.gring{--ring:var(--p);--ringpath:var(--ring-thick)}
+.board.hex>.cell.gring.weak{--ring:var(--muted);--ringpath:var(--ring-thin)}
+/* Fills on the slots. */
+.hexslot.a{background:var(--aTint)}
+.hexslot.b{background-color:var(--bTint);background-image:repeating-linear-gradient(135deg,var(--hatch) 0 3px,rgba(0,0,0,0) 3px 8px)}
+.hexslot.a.recent{background:var(--a)}
+.hexslot.b.recent{background-color:var(--b);background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.11) 0 3px,rgba(0,0,0,0) 3px 8px)}
+.hexslot.gnew{background:color-mix(in srgb,var(--p) 22%,var(--cell))}
+.hexslot.gpart{background:color-mix(in srgb,var(--p) 8%,var(--cell))}
+.hexslot.endmark{background:color-mix(in srgb,var(--b) 14%,var(--cell))}
+.hexslot.wall{background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--text) 22%,transparent) 0 2px,rgba(0,0,0,0) 2px 6px)}
+.hexslot.fdim{opacity:.4}.hexslot.dim{opacity:.28}
+.hexslot.a,.hexslot.b{transition:opacity .2s}
+/* Faded words stay readable on hex: the hexagon fill already sets the tile apart. */
+.board.hex .cell.prev .l{opacity:.85}
+.board.hex .cell.old .l{opacity:.62}
+/* The link-letter dot (xa/xb) sits inside the hexagon's top-right edge. */
+.board.hex .cell.xa::before,.board.hex .cell.xb::before{top:17%;right:22%;width:15%;height:12%}
+/* While typing, the rest of the board dims; on hex the fill and the letter dim separately, so dim each less. */
+.board.hex>.cell.fdim{opacity:.7}.hexslot.fdim{opacity:.55}

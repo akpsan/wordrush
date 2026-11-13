@@ -90,5 +90,13 @@ for (const theme of ['dark', 'light'] as const) {
       await page.getByRole('button', { name: 'Skip' }).click();
       await scan(page, 'tutorial skip sheet');
     });
+
+    test('hex board: your turn, a ready word, the heatmap', async ({ page }) => {
+      await openApp(page, 'returning', { theme, board: 'hex', showAllLetters: true });
+      await page.getByRole('button', { name: /Play a friend/ }).click();
+      await scan(page, 'hex (first move)');
+      await keys(page, 'tea\nstone\nate');
+      await scan(page, 'hex (ready word, heatmap)');
+    });
   });
 }
