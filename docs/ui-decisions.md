@@ -152,7 +152,7 @@ From the owner's playtest: it was hard to tell whether a word helps or hurts. Fi
 | Topic | Decision |
 | --- | --- |
 | What it shows | Once a word is ready (a real word in a legal spot), the note row above the tiles says what playing it would do: "After **ATE**: you 6 ways out (−1), Orange 10 (same)", or "**PLANT** boxes Orange in!". Before the opponent's first word, only your own count. |
-| Where | The note row, which is always rendered (it holds the first-word note), so nothing on screen moves. A hint chip, when hints are on, keeps the row. |
+| Where | The note row, which is always rendered (it holds the first-word note), so nothing on screen moves. Since 2026-11-13 the impact also wins the row over the hint chip once a word is ready: the hint helped find a word, and now there is one. The hint button stays in the actions row. |
 | Doesn't reveal the word list | It appears only in the ready state, which already confirms the word. |
 | How | `features/game/model/impact.ts` plays the word on a copy through the engine and counts ways out (`waysOut`) for both players. Your own count at 1 or less gets the warning icon. |
 | Not in the tutorial | The tutorial's lessons control that row themselves. |

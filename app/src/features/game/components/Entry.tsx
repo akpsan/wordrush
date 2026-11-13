@@ -88,15 +88,16 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
   return (
     <div className="entrywrap">
       {/* The note line is always rendered, so the board doesn't change size when it goes away. */}
-      {hint ? (
-        <HintChip hint={hint} />
-      ) : impact && !showNote && !aiTurn ? (
+      {/* A ready word's impact wins the row, even over a hint: the hint helped find a word, and now there is one. */}
+      {impact && !showNote && !aiTurn ? (
         <p className={`tnote impact ${impact.tone}`}>
           <Icon name={impact.tone === 'warn' || impact.tone === 'err' ? 'warn' : 'note'} />
           <span>
             <RichText text={impact.text} />
           </span>
         </p>
+      ) : hint ? (
+        <HintChip hint={hint} />
       ) : (
         <p className={showNote ? 'tnote' : 'tnote off'} aria-hidden={!showNote}>
           <Icon name="note" />
