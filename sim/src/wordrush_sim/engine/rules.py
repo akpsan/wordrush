@@ -10,6 +10,8 @@ class Rules:
     n: int = 8
     board: str = "square"
     """'square' or 'hex' (a hexagon of radius n // 2 in an n x n array; n must be odd). See geometry.py."""
+    two_way: bool = False
+    """Hex only: words may also read backwards (right to left, or upwards), doubling the line directions."""
     """Grid is n x n."""
 
     anchor: str = "start"
