@@ -36,3 +36,23 @@ test('vs AI on the hex board: the AI answers', async ({ page }) => {
   await expect(page.locator('p.fb')).toHaveText(/^Juno played [A-Z]+\./, { timeout: 15_000 });
   await expect(page.locator('.hexslot')).toHaveCount(91);
 });
+
+test('Learn to play on the hexagon: TEA to the box-in win', async ({ page }) => {
+  await openApp(page, 'new', { board: 'hex' });
+  await page.getByRole('button', { name: /Learn to play/ }).click();
+  await page.getByRole('button', { name: "Let's go" }).click();
+  await expect(page.locator('.hexslot')).toHaveCount(91);
+  await keys(page, 'tea\n');
+  await page.getByRole('button', { name: 'Your turn' }).click();
+  await keys(page, 'arm');
+  const fits = page.getByRole('status').filter({ hasText: 'ARM fits!' });
+  for (let i = 0; i < 3 && !(await fits.isVisible()); i++) await keys(page, ' ');
+  await expect(fits).toBeVisible();
+  await keys(page, '\n');
+  await page.getByRole('button', { name: 'Your turn' }).click();
+  await keys(page, 'car\nsea');
+  await expect(page.getByRole('status').filter({ hasText: 'your own letters are in the way' })).toBeVisible();
+  await page.getByRole('button', { name: 'Got it' }).click();
+  await keys(page, 'race\n');
+  await expect(page.getByText('Boxed in', { exact: true })).toBeVisible();
+});

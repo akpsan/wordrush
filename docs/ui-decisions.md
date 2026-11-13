@@ -142,7 +142,7 @@ The product owner chose a honeycomb board as the game's direction. Rules and sim
 | Drawing the board | A hexagon per cell. **Since 2026-11-13 the tiles are hexagons too:** the hexagon slot carries the tile's fill (it gets the cell's classes), and the cell above it is transparent and holds the letter. Every ring and outline (your letters, the preview, START/END, the opponent's flash, the boxed-in explanation) is a hexagon ring: a clip-path hexagon with a hexagon hole. Players stay distinguishable without colour: Orange is striped, Blue plain. Faded letters are stronger on hex (85% and 62%), since the fill already sets old tiles apart; an axe scan covers the hex board in both themes. (Before, round and square tiles sat centred on the slots.) Positions are percentages from `features/game/components/hexLayout.ts`, shared with the menu's hero board. |
 | Choosing the board | Settings → Board: **Hexagon** (default) or Square. It applies to new games; a game in progress keeps its shape, and saves record it (saves without a shape are square). The AI worker receives the shape with the move list. |
 | Menu hero board | Follows the Board setting. The hex position is two Easy AIs' first ten words, replayed through the engine. |
-| Learn to play | Still teaches on the square board. Porting it is on the product backlog. |
+| Learn to play | Follows the Board setting since 2026-11-13: a hex script (below) or the square one. |
 | First-word note | Shows the board's own limit ({n} in the copy deck): 4 letters on the square, 3 on the hexagon. |
 
 ## Build decisions (word impact, 2026-11-12)
@@ -190,3 +190,13 @@ From the owner's playtest: players didn't expect words to read one way only, and
 | Topic | Decision |
 | --- | --- |
 | Screens 680px tall or less | The 91-cell hexagon is limited by height there, so the controls give room back: keys 33px tall (36px up to 720px), letter slots 34px, buttons 38px, 4px gaps, slimmer player cards. On 360×640 the board grows from 241px to 284px tall (cells 23px → 27px wide); on 375×667 the hexagon now fills the width. Keys stay at least 33px tall. |
+
+## Build decisions (Learn to play on the hexagon, 2026-11-13)
+
+| Topic | Decision |
+| --- | --- |
+| Which board | The tutorial teaches on the board new games use (Settings → Board). Each shape has its own script (`features/tutorial/script.ts`): the game it builds, the box-in position and the nine steps. |
+| Hex lessons | Blue's first word has at most 3 letters on the hexagon, so the words change: **TEA** from the corner, Orange's **DOG** into its corner, **ARM** sent down-right with Flip, Orange's **BIG** ending on the G, **CAR** ending on your R, then **SEA**, which has no spot at all: your own C, E and A block all three ways in to your A. |
+| Hex box-in | Orange's last word **THEM** has one way out left, and **RACE** closes it. The position (ASH, FRAME, HAND, FAKE, DOORS, TIME, ROVER, THEM) came from playing random everyday-word games on the hexagon and keeping one where Blue has an everyday box-in word; `lesson.test.ts` checks it against the full playable list. |
+| Copy | Hex steps use `learn.hex.*` strings in `copy/overrides.ts`; steps whose words are the same reuse the deck's. |
+| Opponent meter | Counts words like the game's cards ("1 word left!", "3+ words to play") instead of ways out, on both boards. |

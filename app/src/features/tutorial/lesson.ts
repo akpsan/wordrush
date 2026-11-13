@@ -4,7 +4,7 @@
  */
 
 import { t, type CopyId } from '../../copy';
-import { cellsFor, DELTA, geometryOf, moveContext, newGame, playScripted, rulesFor, toIndex, waysOut, type Dir, type Shape, type CellIndex, type GameState, type Lexicon } from '../../engine';
+import { cellsFor, DELTA, geometryOf, legalMoves, newGame, playScripted, rulesFor, toIndex, type Dir, type Shape, type CellIndex, type GameState, type Lexicon } from '../../engine';
 import {
   boardView,
   createSession,
@@ -154,7 +154,7 @@ export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): 
     feedback: feedbackFor(step, lesson, { typed, onScript, complete, onTarget, bumped, real: lex.has(typed) }),
     coachTag: t(step.kind === 'type' && lesson.won ? 'learn.8.won.tag' : step.tag),
     coachLine: t(
-      step.kind === 'type' && lesson.won ? 'learn.8.won.coach' : bumped && step.kind === 'bump' ? step.bumpCoach : step.coach,
+      step.kind === 'type' && lesson.won ? positions.script.wonCoach : bumped && step.kind === 'bump' ? step.bumpCoach : step.coach,
     ),
     typing: typingKeys,
     canPlay,
@@ -181,10 +181,11 @@ export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): 
 
 /** Orange's room in the last lesson, measured like the game's own meter. */
 function opponentMeter(game: GameState, lex: Lexicon): { them: string; themSegments: number } {
-  const ways = waysOut(moveContext(game, 1), lex);
-  return ways === 0
-    ? { them: t('learn.8.won.meter'), themSegments: 0 }
-    : { them: t('learn.8.meter.them', { n: ways }), themSegments: Math.min(ways, 4) };
+  // Words Orange could play, counted like the game's cards: 1, 2 or 3+ (docs/ui-decisions.md).
+  const words = Math.min(legalMoves(game, lex, 1).length, 3);
+  if (words === 0) return { them: t('learn.8.won.meter'), themSegments: 0 };
+  const them = words === 1 ? t('ways.one') : t('ways.many', { n: words >= 3 ? '3+' : words });
+  return { them, themSegments: words >= 3 ? 4 : words };
 }
 
 interface Progress {

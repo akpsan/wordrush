@@ -98,6 +98,9 @@ const missing = {
   'learn.hex.7.empty': 'Type **SEA**',
   'learn.hex.7.bump.coach': 'Your C, E and A are in the way, so SEA has no way in to your A.',
   'learn.hex.7.bump.line': 'No room: your own letters are in the way.',
+  'learn.hex.8.coach': "Your opponent's last word, THEM, has one way out left. Close it off with **RACE**.",
+  'learn.hex.8.ready': '**RACE** closes off THEM. Play it!',
+  'learn.hex.8.won.coach': 'THEM has no room left: every gap is too small for a word. **You win!**',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

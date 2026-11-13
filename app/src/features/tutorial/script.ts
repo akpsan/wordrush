@@ -135,9 +135,11 @@ export interface Script {
   readonly boxIn: readonly ScriptedMove[];
   readonly boxInWord: ScriptedMove;
   readonly steps: readonly Step[];
+  /** The coach line once the box-in word is played. */
+  readonly wonCoach: CopyId;
 }
 
-export const SQUARE_SCRIPT: Script = { chain: CHAIN, boxIn: BOX_IN, boxInWord: BOX_IN_WORD, steps: STEPS };
+export const SQUARE_SCRIPT: Script = { chain: CHAIN, boxIn: BOX_IN, boxInWord: BOX_IN_WORD, steps: STEPS, wonCoach: 'learn.8.won.coach' };
 
 /**
  * The hex tutorial (2026-11-13): the same nine steps on the 91-cell hexagon, where Blue's first word has
@@ -152,6 +154,36 @@ export const HEX_CHAIN: readonly ScriptedMove[] = [
   { word: 'big', dir: 'down' },
   { word: 'car', dir: 'across' },
 ];
+
+/**
+ * The hex box-in lesson: Orange's last word, THEM, has a single way out left, and RACE closes it.
+ * Found by playing random everyday-word games on the hexagon and keeping a position where Blue has an
+ * everyday box-in word; checked against the full playable list by lesson.test.ts.
+ */
+export const HEX_BOX_IN: readonly ScriptedMove[] = [
+  { word: 'ash', dir: 'downLeft' },
+  { word: 'frame', dir: 'down', row: 6 },
+  { word: 'hand', dir: 'across', row: 2 },
+  { word: 'fake', dir: 'downLeft', row: 7 },
+  { word: 'doors', dir: 'downLeft', row: 2 },
+  { word: 'time', dir: 'across', row: 10 },
+  { word: 'rover', dir: 'down', row: 5 },
+  { word: 'them', dir: 'down', row: 7 },
+];
+
+export const HEX_BOX_IN_WORD: ScriptedMove = { word: 'race', dir: 'across', row: 5 };
+
+const HEX_BOX_IN_STEP: Step = {
+  kind: 'type',
+  tag: 'learn.8.tag',
+  coach: 'learn.hex.8.coach',
+  word: 'race',
+  spot: { row: 5, col: 3, dir: 'across' },
+  empty: 'learn.4.empty',
+  ready: 'learn.hex.8.ready',
+  flip: 'learn.flip.generic',
+  board: 'boxIn',
+};
 
 export const HEX_STEPS: readonly Step[] = [
   { kind: 'intro', tag: 'learn.1.tag', coach: 'learn.1.coach' },
@@ -205,6 +237,12 @@ export const HEX_STEPS: readonly Step[] = [
   { kind: 'done', tag: 'learn.9.tag', coach: 'learn.9.coach' },
 ];
 
-export const HEX_SCRIPT: Script = { chain: HEX_CHAIN, boxIn: HEX_BOX_IN, boxInWord: HEX_BOX_IN_WORD, steps: HEX_STEPS };
+export const HEX_SCRIPT: Script = {
+  chain: HEX_CHAIN,
+  boxIn: HEX_BOX_IN,
+  boxInWord: HEX_BOX_IN_WORD,
+  steps: HEX_STEPS,
+  wonCoach: 'learn.hex.8.won.coach',
+};
 
 export const scriptFor = (shape: Shape): Script => (shape === 'hex' ? HEX_SCRIPT : SQUARE_SCRIPT);
