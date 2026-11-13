@@ -25,15 +25,21 @@ class Geometry(NamedTuple):
 
 
 @lru_cache(maxsize=None)
-def geometry(board: str, n: int) -> Geometry:
+def geometry(board: str, n: int, two_way: bool = False) -> Geometry:
+    """two_way (hex only): words may also read backwards, adding directions h, v, d (3, 4, 5)."""
     if board == "square":
+        if two_way:
+            raise ValueError("two_way is only defined for hex boards")
         return Geometry(n, (True,) * (n * n), ((0, 1), (1, 0)), 0, n * n - 1, n * n)
     if board == "hex":
         if n % 2 == 0:
             raise ValueError("a hex board needs an odd n (2R + 1)")
         R = n // 2
         valid = tuple(R <= r + c <= 3 * R for r in range(n) for c in range(n))
-        return Geometry(n, valid, ((0, 1), (1, 0), (1, -1)), R, 2 * R * n + R, sum(valid))
+        dirs = ((0, 1), (1, 0), (1, -1))
+        if two_way:
+            dirs += tuple((-dr, -dc) for dr, dc in dirs)
+        return Geometry(n, valid, dirs, R, 2 * R * n + R, sum(valid))
     raise ValueError(f"unknown board {board!r}")
 
 
@@ -53,4 +59,4 @@ def ray(g: Geometry, cell: int, d: int, sign: int, limit: int) -> list:
 
 def step(n: int, d: int) -> int:
     """Index distance between consecutive letters in direction d."""
-    return (1, n, n - 1)[d]
+    return (1, n, n - 1, -1, -n, -(n - 1))[d]

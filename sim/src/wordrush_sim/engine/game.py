@@ -15,7 +15,8 @@ from .lexicon import END, Lexicon
 from .rules import Rules
 
 H, V, D = 0, 1, 2
-DIR_NAMES = "HVD"
+DIR_NAMES = "HVDhvd"
+"""Lowercase: the same line read backwards (Rules.two_way, hex only)."""
 VOID = "#"
 """Letter of an off-board cell (hex boards): it blocks words like any letter, and is never anyone's."""
 
@@ -116,7 +117,7 @@ class State:
 
 def new_game(rules: Rules, lex: Lexicon) -> State:
     size = rules.n * rules.n
-    g = geometry(rules.board, rules.n)
+    g = geometry(rules.board, rules.n, rules.two_way)
     letters = ["" if ok else VOID for ok in g.valid]
     return State(rules=rules, lex=lex, letters=letters, owner=[-1] * size, users=[0] * size)
 
@@ -160,7 +161,7 @@ def _chain_moves(state: State, sources: list) -> list:
     both_ends = rules.anchor == "start_or_end"
     found: dict = {}
 
-    g = geometry(rules.board, n)
+    g = geometry(rules.board, n, rules.two_way)
     dirs = range(len(g.dirs))
     for placement in sources:
         for anchor in placement.cells:
@@ -213,7 +214,7 @@ def _opening_moves(state: State, p: int) -> list:
         max_len = min(max_len, rules.a_first_max_len)
     first_word = state.words_played[p] == 0
 
-    g = geometry(rules.board, n)
+    g = geometry(rules.board, n, rules.two_way)
     dirs = range(len(g.dirs))
     if rules.opening == "corners" and first_word:
         corner = g.a_corner if p == 0 else g.b_corner
