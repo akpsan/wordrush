@@ -15,7 +15,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Impact line with hints on | The hint chip takes the note row, so the impact line disappears | Show both, or move the impact into the feedback line when a hint is shown | 3 | 3 | 2 | 4.5 | Shipped |
 | Hex tiles and faded contrast | On hex, faded older words nearly vanish; round/square tiles don't match hexagon cells | Hexagon-shaped tiles (keep a different border or pattern per player), stronger faded contrast on hex | 4 | 3 | 3 | 4.0 | Shipped |
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Shipped |
-| AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Planned |
+| AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Shipped |
 | Learn to play on hex | The tutorial still teaches the square board while games default to hex | Rebuild the scripted lessons on the hexagon (split into lessons; one per run) | 3 | 4 | 4 | 3.0 | Shipped |
 | Any-direction words | Players don't expect one-way words | Let words run backwards too; simulate first (longer games, harder box-ins) | 3 | 2 | 4 | 1.5 | Idea |
 
@@ -23,6 +23,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-13 | AI calibration on hex, 40 games per pairing | Hard beats Medium 70% and Easy 73%; Medium beats Easy 65%. Against a casual player Hard (83%) isn't clearly above Medium (93%). Hard thinks up to 5.7s on hex; the app caps it at 2.5s. |
 | 2026-11-12 | Owner playtest (live, hex) | A losing word looked like a normal one; the link badge hid the letter; slanted words are hard to follow; faded words nearly vanish; "ways out" meant nothing to players. |
 | 2026-11-12 | Simulator, 300 games per setting | Hex fairness: radius 4 gave Blue 85% (balanced bots). Radius 5 with Blue's first word at most 3 letters: 52% / 44%. Adopted (`HEX`). |
 | 2026-11-12 | Simulator | Hex games last about 8 words per player (square: 6). Random play beats the balanced bot 17% of the time on hex (23% on square). |
@@ -32,7 +33,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | feature/hex-tutorial |
+| 2026-11-13 | AI on hex: calibrated (40 games per pairing); Easy < Medium < Hard holds head to head, no tuning needed. `calibrate-ai.ts` takes a board | chore/hex-ai-calibration |
+| 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | akpsan/wordrush#20 |
 | 2026-11-13 | Small phones: on screens 680px tall or less, tighter keys (33px), slots, buttons and gaps give the board back 43px; on 360×640 the hexagon grows from 241px to 284px tall (cells 23px → 27px wide) | akpsan/wordrush#19 |
 | 2026-11-13 | Impact line with hints on: once a word is ready, its impact takes the note row from the hint chip | akpsan/wordrush#18 |
 | 2026-11-13 | Direction marks: an arrow (→ ↓ ↘ ↙) on each previewed letter; "**WORD** would read backwards here" when letters only fit right to left or upwards | akpsan/wordrush#17 |

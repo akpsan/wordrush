@@ -222,6 +222,23 @@ From [hex.md](../sim/reports/hex.md): 300 games per row, Rules v4 with the board
 - **The lookahead bot was left out** of the full run because it is slow on bigger boards. In a 40-game trial on radius 4 it split about evenly.
 - The app's engine replays 160 simulated hex games with identical decisions (`sim/scripts/export_hex_conformance.py`).
 
+## AI levels on the hexagon
+
+From `app/scripts/calibrate-ai.ts 40 all hex` (Nov 13): 40 games per pairing, sides swapped on each seed. The "novice" is a stand-in for a casual player: a random everyday word each turn.
+
+| Pairing | First side wins | 95% CI | Words per game |
+| --- | --- | --- | --- |
+| Easy vs novice | 80% | 65–90% | 16.4 |
+| Medium vs novice | 93% | 80–97% | 13.4 |
+| Hard vs novice | 83% | 68–91% | 14.7 |
+| Medium vs Easy | 65% | 50–78% | 16.9 |
+| Hard vs Easy | 73% | 57–84% | 14.4 |
+| Hard vs Medium | 70% | 55–82% | 16.2 |
+
+- **The order Easy < Medium < Hard holds on the hexagon,** in every head-to-head pairing.
+- **Against the novice, Hard is not clearly stronger than Medium** (83% against 93%, overlapping ranges at 40 games). Hard plays for the long game and the box-in; a random player rarely punishes Medium's simpler plan. No tuning was made; a bigger run would settle it.
+- **Hard thinks longer on the bigger board:** median 1.5s, 95th percentile 4.2s, max 5.7s per move in this script, which has no time limit. The app stops Hard at 2.5s and plays its best move so far, so players never wait longer than that.
+
 ## Still to test
 
 - **A rule-agnostic MCTS bot,** to confirm the "cornered loses" results with a stronger player that wasn't hand-tuned for the rule.
