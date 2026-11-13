@@ -4,7 +4,7 @@
  */
 
 import type { CopyId } from '../../copy';
-import type { Dir, ScriptedMove } from '../../engine';
+import type { Dir, ScriptedMove, Shape } from '../../engine';
 
 export interface Spot {
   readonly row: number;
@@ -128,3 +128,83 @@ export const STEPS: readonly Step[] = [
   },
   { kind: 'done', tag: 'learn.9.tag', coach: 'learn.9.coach' },
 ];
+
+/** Everything a board shape's tutorial needs: the game it builds, the box-in position and the steps. */
+export interface Script {
+  readonly chain: readonly ScriptedMove[];
+  readonly boxIn: readonly ScriptedMove[];
+  readonly boxInWord: ScriptedMove;
+  readonly steps: readonly Step[];
+}
+
+export const SQUARE_SCRIPT: Script = { chain: CHAIN, boxIn: BOX_IN, boxInWord: BOX_IN_WORD, steps: STEPS };
+
+/**
+ * The hex tutorial (2026-11-13): the same nine steps on the 91-cell hexagon, where Blue's first word has
+ * at most 3 letters. TEA, DOG, ARM (sent down-right with Flip), BIG, CAR (ending on your R). SEA, ending
+ * on your A, has no spot at all: your own C, E and A block all three ways in. Moves are checked by
+ * lesson.test.ts.
+ */
+export const HEX_CHAIN: readonly ScriptedMove[] = [
+  { word: 'tea', dir: 'across' },
+  { word: 'dog', dir: 'across' },
+  { word: 'arm', dir: 'down' },
+  { word: 'big', dir: 'down' },
+  { word: 'car', dir: 'across' },
+];
+
+export const HEX_STEPS: readonly Step[] = [
+  { kind: 'intro', tag: 'learn.1.tag', coach: 'learn.1.coach' },
+  {
+    kind: 'type',
+    tag: 'learn.2.tag',
+    coach: 'learn.hex.2.coach',
+    word: 'tea',
+    spot: { row: 0, col: 5, dir: 'across' },
+    empty: 'learn.hex.2.empty',
+    ready: 'learn.hex.2.ready',
+    flip: 'learn.flip.generic',
+    note: 'learn.hex.2.note',
+    board: 'chain',
+  },
+  { kind: 'watch', tag: 'learn.3.tag', coach: 'learn.3.coach', move: HEX_CHAIN[1]! },
+  {
+    kind: 'type',
+    tag: 'learn.4.tag',
+    coach: 'learn.hex.4.coach',
+    word: 'arm',
+    spot: { row: 0, col: 7, dir: 'down' },
+    empty: 'learn.4.empty',
+    ready: 'learn.hex.4.ready',
+    flip: 'learn.hex.4.flip',
+    board: 'chain',
+  },
+  { kind: 'watch', tag: 'learn.5.tag', coach: 'learn.5.coach', move: HEX_CHAIN[3]! },
+  {
+    kind: 'type',
+    tag: 'learn.6.tag',
+    coach: 'learn.hex.6.coach',
+    word: 'car',
+    spot: { row: 1, col: 5, dir: 'across' },
+    empty: 'learn.4.empty',
+    ready: 'learn.hex.6.ready',
+    flip: 'learn.flip.generic',
+    board: 'chain',
+  },
+  {
+    kind: 'bump',
+    tag: 'learn.7.tag',
+    coach: 'learn.hex.7.coach',
+    word: 'sea',
+    attempt: { row: 1, col: 4, dir: 'across' },
+    empty: 'learn.hex.7.empty',
+    bumpCoach: 'learn.hex.7.bump.coach',
+    bumpLine: 'learn.hex.7.bump.line',
+  },
+  HEX_BOX_IN_STEP,
+  { kind: 'done', tag: 'learn.9.tag', coach: 'learn.9.coach' },
+];
+
+export const HEX_SCRIPT: Script = { chain: HEX_CHAIN, boxIn: HEX_BOX_IN, boxInWord: HEX_BOX_IN_WORD, steps: HEX_STEPS };
+
+export const scriptFor = (shape: Shape): Script => (shape === 'hex' ? HEX_SCRIPT : SQUARE_SCRIPT);

@@ -2,7 +2,7 @@
 
 import { useMemo, useReducer, useState } from 'react';
 import { plain, t } from '../../copy';
-import { STANDARD_RULES, type Lexicon } from '../../engine';
+import { geometryOf, type Lexicon } from '../../engine';
 import { useIsDesktop } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
@@ -10,7 +10,7 @@ import { Icon } from '../../ui/Icon';
 import { RichText } from '../../ui/RichText';
 import { Sheet } from '../../ui/Sheet';
 import { Board, Entry, Keyboard } from '../game';
-import { useResolvedTheme } from '../settings';
+import { useResolvedTheme, useSettings } from '../settings';
 import { buildPositions, lessonReducer, lessonView, startLesson, STEP_COUNT, type LessonAction, type LessonView } from './lesson';
 import './tutorial.css';
 
@@ -99,7 +99,7 @@ function Controls({ view, dispatch }: { view: LessonView; dispatch: (a: LessonAc
           entry={entry}
           feedback={view.feedback}
           problemId={view.bumped ? 1 : null}
-          firstWordNote={view.note !== null ? STANDARD_RULES.firstWordMaxLen : null}
+          firstWordNote={view.note !== null ? entry.maxLen : null}
         />
       )}
       <Keyboard
@@ -145,7 +145,9 @@ function Controls({ view, dispatch }: { view: LessonView; dispatch: (a: LessonAc
 export function TutorialScreen({ lex, onExit, hasSavedGame = false }: TutorialScreenProps) {
   const theme = useResolvedTheme();
   const desk = useIsDesktop();
-  const positions = useMemo(() => buildPositions(lex), [lex]);
+  const { settings } = useSettings();
+  // The tutorial teaches on the board new games use (Settings: Board).
+  const positions = useMemo(() => buildPositions(lex, settings.board), [lex, settings.board]);
   const reducer = useMemo(() => lessonReducer(positions, lex), [positions, lex]);
   const [lesson, dispatch] = useReducer(reducer, undefined, startLesson);
   const [skipping, setSkipping] = useState(false);
@@ -182,7 +184,7 @@ export function TutorialScreen({ lex, onExit, hasSavedGame = false }: TutorialSc
         </div>
       </section>
 
-      <Board cells={view.cells} onFlip={() => dispatch({ type: 'flip' })} onFilter={() => undefined} />
+      <Board cells={view.cells} onFlip={() => dispatch({ type: 'flip' })} onFilter={() => undefined} geo={geometryOf(positions.start.rules)} />
 
       <section className="bottom">
         {step.kind === 'intro' && (
