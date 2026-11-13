@@ -239,6 +239,19 @@ From `app/scripts/calibrate-ai.ts 40 all hex` (Nov 13): 40 games per pairing, si
 - **Against the novice, Hard is not clearly stronger than Medium** (83% against 93%, overlapping ranges at 40 games). Hard plays for the long game and the box-in; a random player rarely punishes Medium's simpler plan. No tuning was made; a bigger run would settle it.
 - **Hard thinks longer on the bigger board:** median 1.5s, 95th percentile 4.2s, max 5.7s per move in this script, which has no time limit. The app stops Hard at 2.5s and plays its best move so far, so players never wait longer than that.
 
+## Two-way words on the hexagon
+
+From [two_way.md](../sim/reports/two_way.md) (Nov 13): 200 games per row, hex mode (`HEX`) against the same rules with words also allowed to read backwards (right to left, or upwards; `two_way=True`).
+
+| Variant | A wins: balanced mirror | A wins: aggressive mirror | Words per player | Random beats balanced |
+| --- | --- | --- | --- | --- |
+| Hex, one way (current) | 46% | 46% | 8.4 | 14% |
+| Hex, two-way words | 48% | 47% | 8.3 | 16% |
+
+- **Allowing backwards words changes almost nothing:** fairness, game length and the skill gap all stay within the noise.
+- **Why:** a word may already start *or end* on your letter, so a backwards word covers exactly the cells a forward word ending there would. Two-way words add spellings that fit, not new places to go. Bots that already see every word gain little; players who know fewer words would gain more options in the same spots.
+- **So the rule is safe to adopt** for clarity if the owner wants it (owner playtest: one-way words confused players). It would need the TypeScript engine, the conformance fixture and the preview's arrows to follow. Not adopted yet: rule changes are the owner's call.
+
 ## Still to test
 
 - **A rule-agnostic MCTS bot,** to confirm the "cornered loses" results with a stronger player that wasn't hand-tuned for the rule.
