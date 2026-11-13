@@ -82,6 +82,8 @@ const missing = {
   'settings.heatmap.label': 'Show where words fit',
   'settings.heatmap.help': 'Empty squares glow where more of your words could go.',
   'settings.heatmap.aria': 'Show where words fit: {on/off}',
+  // Direction marks: words only read left to right or downwards (docs/ui-decisions.md).
+  'type.backwards': '**{WORD}** would read backwards here. Words go left to right or downwards',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

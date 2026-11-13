@@ -71,3 +71,16 @@ function touchesYourLetters(ctx: MoveContext, word: string): boolean {
     );
   });
 }
+
+/**
+ * True when the typed letters have no spot as typed, but would fit read backwards (right to left or
+ * upwards). Geometry only, like the preview: it never says whether either string is a real word.
+ * Lets the UI explain that words only read left to right or downwards.
+ */
+export function fitsOnlyBackwards(state: GameState, typed: string): boolean {
+  const ctx = moveContext(state);
+  const w = typed.toLowerCase();
+  if (w.length < ctx.minLen) return false;
+  if (placementsForWord(ctx, w).length > 0) return false;
+  return placementsForWord(ctx, [...w].reverse().join('')).length > 0;
+}

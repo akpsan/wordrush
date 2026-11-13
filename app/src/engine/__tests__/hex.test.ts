@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../dictionary';
-import { HEX_RULES, cellsFor, geometryOf, legalMoves, moveContext, newGame, play, waysOut, type Placement } from '..';
+import { HEX_RULES, cellsFor, fitsOnlyBackwards, geometryOf, legalMoves, moveContext, newGame, play, waysOut, type Placement } from '..';
 
 const lex = getLexicon();
 const g = geometryOf(HEX_RULES);
@@ -43,5 +43,13 @@ describe('a hex game', () => {
     expect(diag).toBeDefined();
     s = play(s, lex, diag);
     expect(s.words.at(-1)!.dir).toBe('downLeft');
+  });
+});
+
+describe('reading direction', () => {
+  it('fitsOnlyBackwards: false when the letters fit as typed or not at all', () => {
+    const s = newGame(HEX_RULES);
+    expect(fitsOnlyBackwards(s, 'tea')).toBe(false); // fits from the corner as typed
+    expect(fitsOnlyBackwards(s, 'te')).toBe(false); // too short to judge
   });
 });
