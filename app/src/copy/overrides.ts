@@ -84,6 +84,23 @@ const missing = {
   'settings.heatmap.aria': 'Show where words fit: {on/off}',
   // Direction marks: words only read left to right or downwards (docs/ui-decisions.md).
   'type.backwards': '**{WORD}** would read backwards here. Words go left to right or downwards',
+  // Learn to play on the hexagon (docs/ui-decisions.md): the steps whose words differ from the square board.
+  'learn.hex.2.coach': 'Start in the top-left corner. Type **TEA**!',
+  'learn.hex.2.note': 'First word: 3 letters max',
+  'learn.hex.2.empty': 'Tap the letters to spell **TEA**',
+  'learn.hex.2.ready': '**TEA** fits! Play it.',
+  'learn.hex.4.coach': 'Start or end on any letter of your last word. Type **ARM**.',
+  'learn.hex.4.flip': 'Nice! Now tap **Flip** to send it down from the A.',
+  'learn.hex.4.ready': '**ARM** fits! Play it.',
+  'learn.hex.6.coach': 'Your word can also end on one of your letters. Type **CAR**.',
+  'learn.hex.6.ready': '**CAR** ends on your R. Play it!',
+  'learn.hex.7.coach': 'Every letter blocks the way, even yours. Try **SEA**, ending on your A.',
+  'learn.hex.7.empty': 'Type **SEA**',
+  'learn.hex.7.bump.coach': 'Your C, E and A are in the way, so SEA has no way in to your A.',
+  'learn.hex.7.bump.line': 'No room: your own letters are in the way.',
+  'learn.hex.8.coach': "Your opponent's last word, THEM, has one way out left. Close it off with **RACE**.",
+  'learn.hex.8.ready': '**RACE** closes off THEM. Play it!',
+  'learn.hex.8.won.coach': 'THEM has no room left: every gap is too small for a word. **You win!**',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
   'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',

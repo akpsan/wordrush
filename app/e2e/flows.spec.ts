@@ -15,7 +15,7 @@ test('first launch: Learn to play first, through to a real game', async ({ page 
   await keys(page, 'cat');
   await expect(page.getByRole('status').filter({ hasText: 'your own E is in the way' })).toBeVisible();
   await page.getByRole('button', { name: 'Got it' }).click();
-  await expect(page.getByText(/\d+ ways out/)).toBeVisible();
+  await expect(page.getByText(/words to play|word left/).first()).toBeVisible();
   await keys(page, 'plant\n');
   await expect(page.getByText('Boxed in', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Finish' }).click();

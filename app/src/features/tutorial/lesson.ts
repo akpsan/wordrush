@@ -4,7 +4,7 @@
  */
 
 import { t, type CopyId } from '../../copy';
-import { cellsFor, DELTA, geometryOf, moveContext, playScripted, toIndex, waysOut, type Dir, type CellIndex, type GameState, type Lexicon } from '../../engine';
+import { cellsFor, DELTA, geometryOf, legalMoves, newGame, playScripted, rulesFor, toIndex, type Dir, type Shape, type CellIndex, type GameState, type Lexicon } from '../../engine';
 import {
   boardView,
   createSession,
@@ -14,7 +14,7 @@ import {
   type Feedback,
   type Session,
 } from '../game';
-import { BOX_IN, BOX_IN_WORD, CHAIN, STEPS, type Step } from './script';
+import { SQUARE_SCRIPT, STEPS, scriptFor, type Script, type Step } from './script';
 
 export interface Lesson {
   /** 0-based index into STEPS. */
@@ -39,14 +39,21 @@ export interface Positions {
   /** After the first n moves of the tutorial game. */
   readonly chain: readonly GameState[];
   readonly boxIn: GameState;
+  /** The board shape's script: its moves and its steps. */
+  readonly script: Script;
+  /** The empty board the tutorial starts from (its rules give the board shape). */
+  readonly start: GameState;
 }
 
-export function buildPositions(lex: Lexicon): Positions {
-  const chain = CHAIN.reduce<GameState[]>(
+/** Every position the tutorial shows, played through the real rules on the given board. */
+export function buildPositions(lex: Lexicon, shape: Shape = 'square'): Positions {
+  const script = shape === 'square' ? SQUARE_SCRIPT : scriptFor(shape);
+  const start = newGame(rulesFor(shape));
+  const chain = script.chain.reduce<GameState[]>(
     (acc, move) => [...acc, playScripted(lex, [move], acc[acc.length - 1])],
-    [playScripted(lex, [])],
+    [start],
   );
-  return { chain, boxIn: playScripted(lex, BOX_IN) };
+  return { chain, boxIn: playScripted(lex, script.boxIn, start), script, start };
 }
 
 /** The game position a step shows, and the word just played (for the pop animation). */
@@ -69,11 +76,11 @@ function positionFor(step: number, lesson: Lesson, p: Positions, lex: Lexicon): 
       return { game: { ...p.chain[5]!, toMove: 0 }, popped: null };
     case 7: {
       if (!lesson.won) return { game: p.boxIn, popped: null };
-      const won = playScripted(lex, [BOX_IN_WORD], p.boxIn);
+      const won = playScripted(lex, [p.script.boxInWord], p.boxIn);
       return { game: won, popped: last(won) };
     }
     default: {
-      const done = playScripted(lex, [BOX_IN_WORD], p.boxIn);
+      const done = playScripted(lex, [p.script.boxInWord], p.boxIn);
       return { game: done, popped: null };
     }
   }
@@ -111,7 +118,7 @@ const lessonSession = (game: GameState, lesson: Lesson, popped: number | null): 
 });
 
 export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): LessonView {
-  const step = STEPS[lesson.step]!;
+  const step = positions.script.steps[lesson.step]!;
   const { game, popped } = positionFor(lesson.step, lesson, positions, lex);
   const session = lessonSession(game, lesson, popped);
   const base = entryView(session, lex);
@@ -147,7 +154,7 @@ export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): 
     feedback: feedbackFor(step, lesson, { typed, onScript, complete, onTarget, bumped, real: lex.has(typed) }),
     coachTag: t(step.kind === 'type' && lesson.won ? 'learn.8.won.tag' : step.tag),
     coachLine: t(
-      step.kind === 'type' && lesson.won ? 'learn.8.won.coach' : bumped && step.kind === 'bump' ? step.bumpCoach : step.coach,
+      step.kind === 'type' && lesson.won ? positions.script.wonCoach : bumped && step.kind === 'bump' ? step.bumpCoach : step.coach,
     ),
     typing: typingKeys,
     canPlay,
@@ -174,10 +181,11 @@ export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): 
 
 /** Orange's room in the last lesson, measured like the game's own meter. */
 function opponentMeter(game: GameState, lex: Lexicon): { them: string; themSegments: number } {
-  const ways = waysOut(moveContext(game, 1), lex);
-  return ways === 0
-    ? { them: t('learn.8.won.meter'), themSegments: 0 }
-    : { them: t('learn.8.meter.them', { n: ways }), themSegments: Math.min(ways, 4) };
+  // Words Orange could play, counted like the game's cards: 1, 2 or 3+ (docs/ui-decisions.md).
+  const words = Math.min(legalMoves(game, lex, 1).length, 3);
+  if (words === 0) return { them: t('learn.8.won.meter'), themSegments: 0 };
+  const them = words === 1 ? t('ways.one') : t('ways.many', { n: words >= 3 ? '3+' : words });
+  return { them, themSegments: words >= 3 ? 4 : words };
 }
 
 interface Progress {
@@ -219,7 +227,7 @@ function spotlight(
     cellsFor(geometryOf(game.rules), c.row, c.col, c.dir, c.word.length)?.forEach((cell) => lit.add(cell));
   }
   if (typing && !game.result) addWord(game.lastWord[game.toMove]);
-  if (typing && game.lastWord[0] === null) lit.add(0);
+  if (typing && game.lastWord[0] === null) lit.add(geometryOf(game.rules).blueCorner);
   addWord(popped);
   if (step === 7) {
     addWord(game.lastWord[1]); // JAIL
@@ -260,7 +268,7 @@ function withAttempt(cells: readonly CellView[], game: GameState, attempt: { row
 export function lessonReducer(positions: Positions, lex: Lexicon) {
   return function reduce(lesson: Lesson, action: LessonAction): Lesson {
     const view = lessonView(lesson, positions, lex);
-    const advance = (): Lesson => ({ step: Math.min(lesson.step + 1, STEPS.length - 1), typed: '', preferred: null, won: false });
+    const advance = (): Lesson => ({ step: Math.min(lesson.step + 1, positions.script.steps.length - 1), typed: '', preferred: null, won: false });
     switch (action.type) {
       case 'letter':
         if (!view.typing || lesson.typed.length >= view.entry.maxLen) return lesson;

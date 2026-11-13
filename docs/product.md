@@ -16,7 +16,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Hex tiles and faded contrast | On hex, faded older words nearly vanish; round/square tiles don't match hexagon cells | Hexagon-shaped tiles (keep a different border or pattern per player), stronger faded contrast on hex | 4 | 3 | 3 | 4.0 | Shipped |
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Shipped |
 | AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Planned |
-| Learn to play on hex | The tutorial still teaches the square board while games default to hex | Rebuild the scripted lessons on the hexagon (split into lessons; one per run) | 3 | 4 | 4 | 3.0 | Planned |
+| Learn to play on hex | The tutorial still teaches the square board while games default to hex | Rebuild the scripted lessons on the hexagon (split into lessons; one per run) | 3 | 4 | 4 | 3.0 | Shipped |
 | Any-direction words | Players don't expect one-way words | Let words run backwards too; simulate first (longer games, harder box-ins) | 3 | 2 | 4 | 1.5 | Idea |
 
 ## Insights
@@ -32,7 +32,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-13 | Small phones: on screens 680px tall or less, tighter keys (33px), slots, buttons and gaps give the board back 43px; on 360×640 the hexagon grows from 241px to 284px tall (cells 23px → 27px wide) | fix/small-phones-hex |
+| 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | feature/hex-tutorial |
+| 2026-11-13 | Small phones: on screens 680px tall or less, tighter keys (33px), slots, buttons and gaps give the board back 43px; on 360×640 the hexagon grows from 241px to 284px tall (cells 23px → 27px wide) | akpsan/wordrush#19 |
 | 2026-11-13 | Impact line with hints on: once a word is ready, its impact takes the note row from the hint chip | akpsan/wordrush#18 |
 | 2026-11-13 | Direction marks: an arrow (→ ↓ ↘ ↙) on each previewed letter; "**WORD** would read backwards here" when letters only fit right to left or upwards | akpsan/wordrush#17 |
 | 2026-11-13 | Calmer shared danger: only the player about to move gets the pulsing alarm at 1 word; the other card keeps its warning icon | akpsan/wordrush#16 |
