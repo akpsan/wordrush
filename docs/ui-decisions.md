@@ -184,3 +184,9 @@ From the owner's playtest: players didn't expect words to read one way only, and
 | Arrows on the preview | Each previewed letter (not the shared link letter) shows a small arrow for the word's direction: → across, ↓ down on the square, ↘ down-right and ↙ down-left on the hexagon. |
 | Backwards words | When the typed letters (3 or more) have no spot as typed but would fit reversed, the feedback line says "**WORD** would read backwards here. Words go left to right or downwards". Geometry only (`fitsOnlyBackwards` in `engine/entry.ts`), so it never reveals whether a string is a word. Not on a first move. |
 | Words stay one-way | Allowing backwards words is still only an idea on the backlog; it would need simulation first. |
+
+## Build decisions (very short phones, 2026-11-13)
+
+| Topic | Decision |
+| --- | --- |
+| Screens 680px tall or less | The 91-cell hexagon is limited by height there, so the controls give room back: keys 33px tall (36px up to 720px), letter slots 34px, buttons 38px, 4px gaps, slimmer player cards. On 360×640 the board grows from 241px to 284px tall (cells 23px → 27px wide); on 375×667 the hexagon now fills the width. Keys stay at least 33px tall. |
