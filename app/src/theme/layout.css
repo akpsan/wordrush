@@ -60,6 +60,19 @@ body {
   .wr.phone .bottom { gap: 5px; }
 }
 
+/* Very short phones (360x640, iPhone SE 1st gen): the 91-cell hexagon is height-limited, so every pixel
+   the controls give back goes to the board. Keys stay at least 33px tall. */
+@media (max-height: 680px) {
+  .wr.phone { gap: 4px; padding-top: calc(4px + env(safe-area-inset-top, 0px)); padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+  .wr.phone .pl { padding: 5px 9px; gap: 4px; }
+  .wr.phone .key { height: 33px; }
+  .wr.phone .kb { gap: 4px; }
+  .wr.phone .entry { height: 34px; }
+  .wr.phone .slot { width: 34px; height: 34px; font-size: 18px; }
+  .wr.phone .btn { height: 38px; }
+  .wr.phone .bottom { gap: 4px; }
+}
+
 /* Desktop (>= 1080px wide, set by useIsDesktop): the design's three columns. */
 .wr.desk {
   width: 100%;
