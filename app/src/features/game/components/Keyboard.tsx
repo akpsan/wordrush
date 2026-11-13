@@ -13,6 +13,11 @@ export interface KeyboardProps {
   readonly onDelete: () => void;
   /** Optional emphasis per key ('delete' for the delete key). The tutorial uses it to spotlight keys. */
   readonly emphasis?: (key: string) => 'next' | 'dim' | undefined;
+  /**
+   * A Play key at the start of the bottom row (the game; the tutorial keeps its own buttons). It stays
+   * tappable when not ready (aria-disabled), so tapping it explains why.
+   */
+  readonly play?: { readonly ready: boolean; readonly losing: boolean; readonly label: string; readonly onPlay: () => void };
 }
 
 /**
@@ -21,7 +26,7 @@ export interface KeyboardProps {
  */
 const keepFocus = (e: MouseEvent) => e.preventDefault();
 
-export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis }: KeyboardProps) {
+export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis, play }: KeyboardProps) {
   const extra = (key: string) => {
     const e = emphasis?.(key);
     return e ? ` ${e}` : '';
@@ -30,6 +35,18 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis }: K
     <div className={enabled ? 'kb' : 'kb off'} role="group" aria-label={plain('keyboard.aria')}>
       {ROWS.map((row, r) => (
         <div key={row} className={r === 1 ? 'krow mid' : 'krow'}>
+          {r === 2 && play && (
+            <button
+              type="button"
+              className={play.ready ? (play.losing ? 'key play ready losing' : 'key play ready') : 'key play'}
+              aria-label={play.label}
+              aria-disabled={!enabled || !play.ready}
+              onMouseDown={keepFocus}
+              onClick={() => enabled && play.onPlay()}
+            >
+              {plain('btn.play')}
+            </button>
+          )}
           {[...row].map((letter) => {
             const mine = highlight.has(letter);
             return (

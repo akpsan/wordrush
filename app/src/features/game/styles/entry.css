@@ -63,3 +63,22 @@
 /* A word that leaves you no words to play: the note row and the Play button warn. */
 .tnote.impact.err{color:var(--text);font-weight:800}.tnote.impact.err .ico{color:var(--text)}
 .btn.pri.losing{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px var(--text);background-image:repeating-linear-gradient(135deg,color-mix(in srgb,var(--text) 10%,transparent) 0 4px,transparent 4px 10px)}
+
+/* Game screen redesign (2026-11-13, from the owner's mockup). */
+/* Play lives in the keyboard, at the start of the bottom row. */
+.key.play{flex:1.8 1 0;font-size:14px;font-weight:800;background:var(--surface2);color:var(--muted)}
+.key.play.ready{background:var(--p);color:var(--pInk);box-shadow:0 4px 12px var(--pGlow)}
+.key.play.ready.losing{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px var(--text)}
+/* The spot stepper replaces the Flip button: previous, "spot i of n", next. */
+.stepper{display:flex;align-items:center;justify-content:center;gap:8px;min-height:36px}
+.stepbtn{width:44px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center;padding:0}
+.stepbtn .ico{width:18px;height:18px}
+.steplabel{min-width:140px;margin:0;text-align:center;font-size:13px;font-weight:700;color:var(--text)}
+/* The mover's letters as chips in "Start or end with". */
+.chips{display:inline-flex;gap:5px;margin-left:4px;vertical-align:middle}
+.chip{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--p);background:color-mix(in srgb,var(--p) 18%,var(--surface));color:var(--text);display:inline-grid;place-items:center;font-size:13px;font-weight:800}
+/* Bigger letter slots: they share the row. */
+.wr.phone .entry{gap:8px}
+.wr.phone .slot{flex:1 1 0;max-width:62px;width:auto;height:50px;font-size:24px}
+@media (max-height:720px){.wr.phone .slot{height:42px;font-size:20px}.stepper{min-height:32px}.stepbtn{height:32px}}
+@media (max-height:680px){.wr.phone .slot{height:38px;font-size:18px}}

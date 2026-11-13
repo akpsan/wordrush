@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
 import { entryView } from './entry';
-import { feedbackFor } from './feedback';
+import { CHIPS, feedbackFor } from './feedback';
 import { checkEntry } from '../../../engine';
 import type { Match } from './match';
 import { createSession, sessionReducer, type Session, type SessionAction } from './session';
@@ -83,8 +83,9 @@ describe('playing', () => {
     const s = run([...playWord('team'), ...playWord('stone')]);
     expect(feedbackFor(s, entryView(s, lex), lex)).toEqual({
       tone: 'neutral',
-      text: 'Orange played STONE. Start or end with **T, E, A or M**',
+      text: `Orange played STONE. Start or end with **${CHIPS}**`,
       pip: 1,
+      letters: ['T', 'E', 'A', 'M'],
     });
   });
 });

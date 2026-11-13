@@ -10,21 +10,21 @@ test.describe('physical keyboard', () => {
   });
 
   const turn = (page: import('@playwright/test').Page) => page.locator('.tnum');
-  const count = (page: import('@playwright/test').Page) => page.locator('.actions .cnt');
+  const count = (page: import('@playwright/test').Page) => page.locator('.steplabel');
 
-  test('after clicking Flip, Enter still plays the word', async ({ page }) => {
+  test('after clicking Next spot, Enter still plays the word', async ({ page }) => {
     await keys(page, 'team');
-    await page.getByRole('button', { name: /Flip to the next spot/ }).click();
+    await page.getByRole('button', { name: 'Next spot' }).click();
     await page.keyboard.press('Enter');
     await expect(turn(page)).toHaveText('2');
   });
 
-  test('after clicking Flip, Space flips once', async ({ page }) => {
+  test('after clicking Next spot, Space moves on once', async ({ page }) => {
     await keys(page, 'team');
-    await page.getByRole('button', { name: /Flip to the next spot/ }).click();
-    await expect(count(page)).toHaveText('2 of 2');
+    await page.getByRole('button', { name: 'Next spot' }).click();
+    await expect(count(page)).toContainText('spot 2 of 2');
     await page.keyboard.press('Space');
-    await expect(count(page)).toHaveText('1 of 2');
+    await expect(count(page)).toContainText('spot 1 of 2');
   });
 
   test('after closing a sheet, Enter plays instead of reopening it', async ({ page }) => {
@@ -41,10 +41,10 @@ test.describe('physical keyboard', () => {
     for (let i = 0; i < 80; i++) {
       await page.keyboard.press('Tab');
       const label = await page.evaluate(() => document.activeElement?.getAttribute('aria-label') ?? '');
-      if (label.startsWith('Flip')) break;
+      if (label === 'Next spot') break;
     }
     await page.keyboard.press('Enter');
-    await expect(count(page)).toHaveText('2 of 2');
+    await expect(count(page)).toContainText('spot 2 of 2');
     await expect(turn(page)).toHaveText('1');
   });
 

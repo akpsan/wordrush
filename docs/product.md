@@ -17,7 +17,9 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Shipped |
 | AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Shipped |
 | Learn to play on hex | The tutorial still teaches the square board while games default to hex | Rebuild the scripted lessons on the hexagon (split into lessons; one per run) | 3 | 4 | 4 | 3.0 | Shipped |
-| Any-direction words | Players don't expect one-way words | Let words run backwards too. Simulated 2026-11-13: fairness, length and skill unchanged (findings.md). Needs the owner's yes, then the TS engine, conformance and arrows | 3 | 4 | 4 | 3.0 | Owner decision |
+| Any-direction words | Players don't expect one-way words; the owner's redesign mockup uses six directions | Let words run backwards too. Simulated 2026-11-13: fairness, length and skill unchanged (findings.md). Needs the TS engine, a new sim preset and conformance, the arrows, and new hex tutorial bump and box-in positions (SEA and THEM break) | 3 | 4 | 4 | 3.0 | Planned |
+| Connect-the-sides mode | The owner's mockup shows "cells to connect · top ↕ bottom / left ↔ right" | A second goal: connect your two sides of the hexagon (like the board game Hex). Simulate first: fairness, length, whether words still matter | 3 | 2 | 5 | 1.2 | Idea |
+| Redesign palette and font | The owner's mockup uses Lexend and a navy palette | Try them as theme tokens (bundled font), check contrast in both themes | 2 | 3 | 2 | 3.0 | Idea |
 
 ## Insights
 
@@ -34,6 +36,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-13 | Game screen redesign from the owner's mockup: Play in the keyboard, a spot stepper instead of Flip, letter chips, logo-left header with the hint button, bigger slots and board | feature/game-screen-redesign |
 | 2026-11-13 | AI on hex: calibrated (40 games per pairing); Easy < Medium < Hard holds head to head, no tuning needed. `calibrate-ai.ts` takes a board | akpsan/wordrush#21 |
 | 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | akpsan/wordrush#20 |
 | 2026-11-13 | Small phones: on screens 680px tall or less, tighter keys (33px), slots, buttons and gaps give the board back 43px; on 360×640 the hexagon grows from 241px to 284px tall (cells 23px → 27px wide) | akpsan/wordrush#19 |

@@ -86,3 +86,8 @@
 .pl.a.cpu .lvl{left:10px}.pl.b.cpu .lvl{right:10px}
 .desk .pl.b.cpu .lvl{right:auto;left:10px}
 .typing .pip{display:inline-block}
+
+/* Game header (redesign): the logo on the left, the buttons on the right. */
+.hdr.game{display:flex;justify-content:space-between}
+.hdr.game .hbtns{gap:0}
+.hintbtn .hcount{position:absolute;right:6px;top:6px;min-width:14px;height:14px;border-radius:7px;background:var(--p);color:var(--pInk);font-size:9px;font-weight:800;display:grid;place-items:center;padding:0 3px}

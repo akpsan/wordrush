@@ -73,7 +73,7 @@ export const deck = {
   "btn.play.ready": "Play {WORD}",
   "key.delete.aria": "Delete",
   "key.letter.aria": "{L}, one of your letters",
-  "desk.keys": "Just type! **Enter** to play · **Tab** or **Space** to flip · **⌫** to delete",
+  "desk.keys": "Just type! **Enter** to play · **Space** for the next spot · **⌫** to delete",
   "oops.short": "Words need at least **3 letters**",
   "oops.played": "**{WORD}** has already been played. Try another?",
   "oops.notword": "Hmm, **{WORD}** isn't a word we know. Try another?",

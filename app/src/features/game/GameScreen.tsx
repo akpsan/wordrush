@@ -1,13 +1,13 @@
 /** The game screen: assembles the header, status bar, board and controls for one game. */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { t } from '../../copy';
+import { plain, t } from '../../copy';
 import { geometryOf, otherPlayer, type GameResult, type GameState, type Lexicon } from '../../engine';
 import { useIsDesktop, usePrefersReducedMotion } from '../../platform/media';
 import { useKeyboardCommands, type KeyCommand } from '../../platform/keyboard';
 import { Frame } from '../../ui/Frame';
 import { SettingsSheet, useResolvedTheme, useSettings } from '../settings';
-import { Actions, KeyHelp } from './components/Actions';
+import { KeyHelp } from './components/Actions';
 import { Board } from './components/Board';
 import { BoxedInPanel, GameOverPanel } from './components/EndPanels';
 import { Entry } from './components/Entry';
@@ -120,6 +120,8 @@ export function GameScreen(props: GameScreenProps) {
         onGiveUp={() => setOverlay('giveUp')}
         canGiveUp={yourTurn}
         onHelp={onHelp}
+        hintsLeft={left}
+        onHint={() => dispatch({ type: 'hint' })}
       />
       <StatusBar players={players} turn={turnStatus(session)} thinking={phase === 'thinking'} />
       <Board
@@ -145,21 +147,19 @@ export function GameScreen(props: GameScreenProps) {
               impact={impact}
               hint={hint}
               aiTurn={aiTurn}
+              stepper={yourTurn ? { onPrev: () => dispatch({ type: 'flipBack' }), onNext: () => dispatch({ type: 'flip' }) } : null}
             />
             <Keyboard
               enabled={yourTurn}
               highlight={highlight}
               onLetter={(letter) => dispatch({ type: 'letter', letter })}
               onDelete={() => dispatch({ type: 'delete' })}
-            />
-            <Actions
-              entry={entry}
-              enabled={yourTurn}
-              onFlip={() => dispatch({ type: 'flip' })}
-              onPlay={() => dispatch({ type: 'play' })}
-              hintsLeft={left}
-              onHint={() => dispatch({ type: 'hint' })}
-              losing={impact?.tone === 'err'}
+              play={{
+                ready: entry.ready,
+                losing: impact?.tone === 'err',
+                label: entry.ready ? plain('btn.play.ready', { WORD: entry.typed.toUpperCase() }) : plain('btn.play'),
+                onPlay: () => dispatch({ type: 'play' }),
+              }}
             />
             <KeyHelp />
           </>

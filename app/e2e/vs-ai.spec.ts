@@ -22,7 +22,7 @@ test('first time: Play vs AI opens setup; number keys pick, Enter starts, and th
   await expect(page.locator('.pl.cpu')).toContainText('Hard');
   await keys(page, 'team\n');
   await expect(page.locator('.typing')).toHaveText('Rex is thinking');
-  await expect(feedback(page)).toHaveText(/^Rex played [A-Z]+\. Start or end with T, E, A or M$/, AI_TURN);
+  await expect(feedback(page)).toHaveText(/^Rex played [A-Z]+\. Start or end with T, E, A or M/, AI_TURN);
 });
 
 test('keys pressed during the AI\'s turn are ignored, not queued', async ({ page }) => {

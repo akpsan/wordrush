@@ -17,15 +17,25 @@ export interface Feedback {
   readonly text: string;
   /** Show a player pip before the text (whose word is being mentioned). */
   readonly pip: Player | null;
+  /** The mover's letters, drawn as chips where the text holds CHIPS (in bold markers). */
+  readonly letters?: readonly string[];
 }
+
+/** Placeholder for the mover's letters in feedback text; the entry draws them as chips. */
+export const CHIPS = '§chips§';
 
 const neutral = (text: string, pip: Player | null = null): Feedback => ({ tone: 'neutral', text, pip });
 
 export function feedbackFor(s: Session, entry: EntryView, lex: Lexicon): Feedback {
+  const f = feedbackText(s, entry, lex);
+  return f.text.includes(CHIPS) ? { ...f, letters: letterChoices(s.game, s.game.toMove).map((l) => l.toUpperCase()) } : f;
+}
+
+function feedbackText(s: Session, entry: EntryView, lex: Lexicon): Feedback {
   const { game } = s;
   const mover = game.toMove;
   const word = s.typed.toUpperCase();
-  const letters = listLetters(letterChoices(game, mover));
+  const letters = CHIPS;
   const firstMove = game.lastWord[mover] === null;
 
   if (s.problem) return { tone: 'err', text: problemText(s.problem.kind, word, letters), pip: null };

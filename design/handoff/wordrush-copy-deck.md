@@ -111,7 +111,7 @@ A fun friend explaining the game: short sentences, everyday words, "you" for the
 | btn.play.ready | Action row | Ready | Play {WORD} |
 | key.delete.aria | Keyboard | Backspace key | Delete |
 | key.letter.aria | Keyboard | One of your letters | {L}, one of your letters |
-| desk.keys | Desktop | Keyboard help under the actions | Just type! **Enter** to play · **Tab** or **Space** to flip · **⌫** to delete |
+| desk.keys | Desktop | Keyboard help under the actions | Just type! **Enter** to play · **Space** for the next spot · **⌫** to delete |
 
 ### When a word doesn't work (shown after Play / Enter, with a shake)
 
