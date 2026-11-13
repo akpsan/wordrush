@@ -174,3 +174,13 @@ From the owner's playtest on the live hex game.
 | Topic | Decision |
 | --- | --- |
 | Both players on 1 word | Only the player about to move gets the pulsing alarm on their card. The other card keeps the warning icon and "1 word left!", so the screen points at the person who has to act. |
+
+## Build decisions (reading direction, 2026-11-13)
+
+From the owner's playtest: players didn't expect words to read one way only, and slanted hex lines are hard to follow.
+
+| Topic | Decision |
+| --- | --- |
+| Arrows on the preview | Each previewed letter (not the shared link letter) shows a small arrow for the word's direction: → across, ↓ down on the square, ↘ down-right and ↙ down-left on the hexagon. |
+| Backwards words | When the typed letters (3 or more) have no spot as typed but would fit reversed, the feedback line says "**WORD** would read backwards here. Words go left to right or downwards". Geometry only (`fitsOnlyBackwards` in `engine/entry.ts`), so it never reveals whether a string is a word. Not on a first move. |
+| Words stay one-way | Allowing backwards words is still only an idea on the backlog; it would need simulation first. |

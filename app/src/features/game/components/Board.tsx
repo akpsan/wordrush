@@ -20,6 +20,11 @@ function CellContent({ cell }: { cell: CellView }) {
     <>
       <span className="l">{cell.letter}</span>
       {cell.mark && <span className="mk">{cell.mark}</span>}
+      {cell.arrow && (
+        <span className="ar" aria-hidden="true">
+          {cell.arrow}
+        </span>
+      )}
       {cell.linkBadge && (
         <span className="gb">
           <Icon name="link" />

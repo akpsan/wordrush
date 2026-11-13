@@ -17,6 +17,8 @@ import {
   legalMoves,
   play,
   type GameState,
+  type Dir,
+  type Shape,
 } from '../../../engine';
 import type { EntryView } from './entry';
 import type { Session } from './session';
@@ -34,6 +36,8 @@ export interface CellView {
   readonly delay: number;
   readonly tap: 'flip' | 'filter' | null;
   readonly label: string;
+  /** Reading direction on a previewed letter (→ ↓ ↘ ↙), or null. */
+  readonly arrow: string | null;
   /** Heatmap level of an empty cell: how many of the mover's words could pass through it (0 = none or off). */
   readonly heat: HeatLevel;
 }
@@ -183,6 +187,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
     let letter = cell?.letter ?? '';
     let linkBadge = false;
     let mark: string | null = null;
+    let arrow: string | null = null;
     let delay = 0;
     let tap: CellView['tap'] = null;
 
@@ -205,6 +210,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
         cls.push(entry.ready ? 'gnew' : 'gpart');
         letter = g.letter;
         linkBadge = g.link;
+        arrow = arrowOf(entry.current!.dir, geo.shape);
       } else {
         cls.push('gring');
         if (!entry.ready) cls.push('weak');
@@ -241,7 +247,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
 
     const h = !cell && !g && !mark ? heatLevel(heat.get(index) ?? 0) : 0; // marked corners keep their contrast
     if (h) cls.push(`heat${h}`);
-    return { index, letter, className: cls.join(' '), linkBadge, mark, delay, tap, label: cellLabel(index, n, letter, cell?.owner, !!g), heat: h };
+    return { index, letter, className: cls.join(' '), linkBadge, mark, arrow, delay, tap, label: cellLabel(index, n, letter, cell?.owner, !!g), heat: h };
   });
 }
 
@@ -254,4 +260,11 @@ function cellLabel(index: number, size: number, letter: string, owner: Player | 
       ? plain('cell.aria.letter', { L, owner: playerName(owner) })
       : plain('cell.aria.empty');
   return plain('cell.aria', { row: row + 1, col: col + 1, content });
+}
+
+/** The reading direction of a previewed word, drawn on its letters. On a hex board "down" runs down-right. */
+function arrowOf(dir: Dir, shape: Shape): string {
+  if (dir === 'across') return '→';
+  if (dir === 'downLeft') return '↙';
+  return shape === 'hex' ? '↘' : '↓';
 }

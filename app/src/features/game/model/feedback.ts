@@ -1,7 +1,7 @@
 /** The one-line feedback under the entry tiles. Rules from the design's feedback-line notes. */
 
 import { listLetters, plain, t } from '../../../copy';
-import { otherPlayer, type Lexicon, type Player, type Problem } from '../../../engine';
+import { fitsOnlyBackwards, otherPlayer, type Lexicon, type Player, type Problem } from '../../../engine';
 import type { Level } from '../../../ai';
 import type { EntryView } from './entry';
 import { aiParams, nameOf } from './match';
@@ -46,6 +46,7 @@ export function feedbackFor(s: Session, entry: EntryView, lex: Lexicon): Feedbac
       return neutral(n === 1 ? t('type.partial.one') : t('type.partial', { n }));
     }
     case 'no-spot':
+      if (!firstMove && fitsOnlyBackwards(game, s.typed)) return neutral(t('type.backwards', { WORD: word }));
       return neutral(firstMove ? t('first.keepgoing') : t('type.nospot', { letters }));
     case 'empty':
       break;

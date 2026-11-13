@@ -129,3 +129,7 @@
 .board.hex .cell.xa::before,.board.hex .cell.xb::before{top:17%;right:22%;width:15%;height:12%}
 /* While typing, the rest of the board dims; on hex the fill and the letter dim separately, so dim each less. */
 .board.hex>.cell.fdim{opacity:.7}.hexslot.fdim{opacity:.55}
+
+/* Direction marks: a small arrow on each previewed letter shows which way the word reads. */
+.ar{position:absolute;right:7%;bottom:3%;font-size:.55em;line-height:1;font-weight:800;color:var(--pText);opacity:1;pointer-events:none;z-index:4}
+.board.hex .ar{right:24%;bottom:12%}
