@@ -3,20 +3,22 @@
  * person with a small vocabulary (a random everyday word each turn). Pairs of games share a seed
  * with sides swapped, so neither side gets the first-move edge. Also reports thinking time.
  *
- * Usage (from app/): npx vite-node scripts/calibrate-ai.ts [gamesPerPairing=100] [level]
- * With a level, only the pairings that include it are played.
+ * Usage (from app/): npx vite-node scripts/calibrate-ai.ts [gamesPerPairing=100] [level|all] [square|hex]
+ * With a level, only the pairings that include it are played. The board defaults to square.
  */
 
 import { chooseMove, createRng, type Level, type Rng } from '../src/ai';
 import { getHintWords, getLexicon } from '../src/dictionary';
-import { legalMoves, newGame, play, type GameState, type Placement } from '../src/engine';
+import { legalMoves, newGame, play, rulesFor, type GameState, type Placement } from '../src/engine';
 
 type Side = Level | 'novice';
 
 const lex = getLexicon();
 const familiar = getHintWords();
 const games = Number(process.argv[2] ?? 100);
-const only = process.argv[3] as Side | undefined;
+const onlyArg = process.argv[3];
+const only = onlyArg && onlyArg !== 'all' ? (onlyArg as Side) : undefined;
+const shape = process.argv[4] === 'hex' ? 'hex' : 'square';
 const times: Record<Side, number[]> = { novice: [], easy: [], medium: [], hard: [] };
 
 function novice(state: GameState, rng: Rng): Placement | null {
@@ -28,7 +30,7 @@ function novice(state: GameState, rng: Rng): Placement | null {
 
 function playGame(blue: Side, orange: Side, seed: number): { winner: 0 | 1; turns: number } {
   const rng = createRng(seed);
-  let state = newGame();
+  let state = newGame(rulesFor(shape));
   while (!state.result) {
     const side = state.toMove === 0 ? blue : orange;
     const t0 = performance.now();
