@@ -12,7 +12,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Direction marks on the preview | Words on slanted hex lines are hard to follow; players don't expect one-way words | A small arrow on the previewed word's tiles; say so when a word would only fit backwards | 3 | 4 | 2 | 6.0 | Shipped |
 | Calmer shared danger state | When both players are on 1 word, both cards shout equally | Keep the alarm for the mover; a quieter warning on the other card | 2 | 4 | 1 | 8.0 | Shipped |
-| Impact line with hints on | The hint chip takes the note row, so the impact line disappears | Show both, or move the impact into the feedback line when a hint is shown | 3 | 3 | 2 | 4.5 | Planned |
+| Impact line with hints on | The hint chip takes the note row, so the impact line disappears | Show both, or move the impact into the feedback line when a hint is shown | 3 | 3 | 2 | 4.5 | Shipped |
 | Hex tiles and faded contrast | On hex, faded older words nearly vanish; round/square tiles don't match hexagon cells | Hexagon-shaped tiles (keep a different border or pattern per player), stronger faded contrast on hex | 4 | 3 | 3 | 4.0 | Shipped |
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Planned |
 | AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Planned |
@@ -32,7 +32,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-13 | Direction marks: an arrow (→ ↓ ↘ ↙) on each previewed letter; "**WORD** would read backwards here" when letters only fit right to left or upwards | feature/direction-marks |
+| 2026-11-13 | Impact line with hints on: once a word is ready, its impact takes the note row from the hint chip | fix/impact-with-hints |
+| 2026-11-13 | Direction marks: an arrow (→ ↓ ↘ ↙) on each previewed letter; "**WORD** would read backwards here" when letters only fit right to left or upwards | akpsan/wordrush#17 |
 | 2026-11-13 | Calmer shared danger: only the player about to move gets the pulsing alarm at 1 word; the other card keeps its warning icon | akpsan/wordrush#16 |
 | 2026-11-13 | Hexagon tiles on the hex board: fills on the hexagon slots, every ring and outline (your letters, previews, boxed-in explanation) as a hexagon ring; stronger faded letters on hex | akpsan/wordrush#15 |
 | 2026-11-13 | Words to play (1, 2, 3+), heatmap of where your words fit, losing-word warning, smaller hex link badge | akpsan/wordrush#9 (released in #10) |
