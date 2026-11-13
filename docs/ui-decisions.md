@@ -168,3 +168,9 @@ From the owner's playtest on the live hex game.
 | Losing words | A ready word that leaves you no words to play says "**RIM** leaves you no words. You would lose!" in bold with a warning icon, and Play turns into an outlined, striped warning button. It can still be played. |
 | Impact line | Uses the same counts: "After **ATE**: you 3+ words, Orange 2 words". |
 | Link badge on hex | Smaller and pushed into the tile's corner, so it no longer covers the link letter. |
+
+## Build decisions (danger state, 2026-11-13)
+
+| Topic | Decision |
+| --- | --- |
+| Both players on 1 word | Only the player about to move gets the pulsing alarm on their card. The other card keeps the warning icon and "1 word left!", so the screen points at the person who has to act. |

@@ -97,7 +97,8 @@ export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerSt
       : plain('ways.aria', { player: name, waysOut: label }),
     segments: ways === null ? 0 : ways >= 3 ? 4 : ways,
     warn: ways !== null && ways <= 1,
-    alarm: ways === 1 && !game.result,
+    // Only the player about to move gets the pulsing alarm; the other card keeps its quieter warning icon.
+    alarm: ways === 1 && !game.result && game.toMove === player,
     squares: squares(game, player),
     delta: last && last.player === player ? t('squares.delta', { n: s.lastPlay!.gain }) : null,
   };

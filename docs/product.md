@@ -11,7 +11,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Item | Problem | Idea | Impact | Confidence | Effort | Score | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Direction marks on the preview | Words on slanted hex lines are hard to follow; players don't expect one-way words | A small arrow on the previewed word's tiles; say so when a word would only fit backwards | 3 | 4 | 2 | 6.0 | Next |
-| Calmer shared danger state | When both players are on 1 word, both cards shout equally | Keep the alarm for the mover; a quieter warning on the other card | 2 | 4 | 1 | 8.0 | Planned |
+| Calmer shared danger state | When both players are on 1 word, both cards shout equally | Keep the alarm for the mover; a quieter warning on the other card | 2 | 4 | 1 | 8.0 | Shipped |
 | Impact line with hints on | The hint chip takes the note row, so the impact line disappears | Show both, or move the impact into the feedback line when a hint is shown | 3 | 3 | 2 | 4.5 | Planned |
 | Hex tiles and faded contrast | On hex, faded older words nearly vanish; round/square tiles don't match hexagon cells | Hexagon-shaped tiles (keep a different border or pattern per player), stronger faded contrast on hex | 4 | 3 | 3 | 4.0 | Shipped |
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Planned |
@@ -32,7 +32,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-13 | Hexagon tiles on the hex board: fills on the hexagon slots, every ring and outline (your letters, previews, boxed-in explanation) as a hexagon ring; stronger faded letters on hex | feature/hex-tiles |
+| 2026-11-13 | Calmer shared danger: only the player about to move gets the pulsing alarm at 1 word; the other card keeps its warning icon | fix/calmer-danger |
+| 2026-11-13 | Hexagon tiles on the hex board: fills on the hexagon slots, every ring and outline (your letters, previews, boxed-in explanation) as a hexagon ring; stronger faded letters on hex | akpsan/wordrush#15 |
 | 2026-11-13 | Words to play (1, 2, 3+), heatmap of where your words fit, losing-word warning, smaller hex link badge | akpsan/wordrush#9 (released in #10) |
 | 2026-11-12 | Word impact preview | akpsan/wordrush#4 |
 | 2026-11-12 | Hex mode (91-cell honeycomb, default board) | akpsan/wordrush#3 (released in #8) |
