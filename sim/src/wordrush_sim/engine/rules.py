@@ -93,4 +93,12 @@ HEX = HEX1.with_(n=11, a_first_max_len=3)
 """Hex mode, adopted 2026-11-12 (experiments/hex.py): a hexagon of radius 5 (91 cells), and A's first
 word at most 3 letters. The fairest hex variant tested: A wins 52% (balanced bots) and 44% (aggressive)."""
 
-PRESETS = {"V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9, "HEX1": HEX1, "HEX": HEX}
+HEX2 = HEX.with_(two_way=True)
+"""Hex mode with any-direction words (2026-11-14, not adopted yet): HEX, but words may also read
+backwards (right to left, or upwards), so six line directions. Simulated in experiments/two_way.py:
+fairness, game length and skill barely change. The app's engine supports it (HEX_TWO_WAY_RULES)."""
+
+PRESETS = {
+    "V1": V1, "V2": V2, "V3": V3, "V4": V4, "V5": V5, "V6": V6, "V7": V7, "V8": V8, "V9": V9,
+    "HEX1": HEX1, "HEX": HEX, "HEX2": HEX2,
+}
