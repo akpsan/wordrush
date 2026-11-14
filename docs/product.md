@@ -40,7 +40,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-14 | Any-direction words, slice 1 (engine only, no visible change): sim preset `HEX2`, `HEX_TWO_WAY_RULES` in the TS engine (directions left, up, up-right), and an 80-game two-way conformance fixture | PR_LINK |
+| 2026-11-14 | Any-direction words, slice 1 (engine only, no visible change): sim preset `HEX2`, `HEX_TWO_WAY_RULES` in the TS engine (directions left, up, up-right), and an 80-game two-way conformance fixture | akpsan/wordrush#24 |
 | 2026-11-13 | Game screen redesign from the owner's mockup: Play in the keyboard, a spot stepper instead of Flip, letter chips, logo-left header with the hint button, bigger slots and board | feature/game-screen-redesign |
 | 2026-11-13 | AI on hex: calibrated (40 games per pairing); Easy < Medium < Hard holds head to head, no tuning needed. `calibrate-ai.ts` takes a board | akpsan/wordrush#21 |
 | 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | akpsan/wordrush#20 |
@@ -61,4 +61,4 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
-| 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. PR_LINK |
+| 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. akpsan/wordrush#24 |
