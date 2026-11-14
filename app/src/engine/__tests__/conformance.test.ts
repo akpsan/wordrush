@@ -6,9 +6,10 @@
 
 import { describe, expect, it } from 'vitest';
 import everyday from '../../../../data/dictionaries/everyday-3to5.txt?raw';
-import { HEX_RULES, createLexicon, legalMoves, newGame, parseWordList, play, type GameState, type Placement, type Rules } from '..';
+import { HEX_RULES, HEX_TWO_WAY_RULES, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Placement, type Rules } from '..';
 import fixture from './fixtures/sim-games.json';
 import hexFixture from './fixtures/sim-hex-games.json';
+import hex2Fixture from './fixtures/sim-hex2-games.json';
 
 interface SimGame {
   agents: string[];
@@ -17,6 +18,9 @@ interface SimGame {
   reason: string;
 }
 
+/** The simulator's direction letters (DIR_NAMES): lowercase is the same line read backwards. */
+const SIM_DIRS: Record<string, Dir> = { H: 'across', V: 'down', D: 'downLeft', h: 'left', v: 'up', d: 'upRight' };
+
 function decode(text: string, size: number): Placement {
   const [word, pos] = text.split('@') as [string, string];
   const [r, c, d] = pos.split(',') as [string, string, string];
@@ -24,7 +28,7 @@ function decode(text: string, size: number): Placement {
     word,
     row: Number(r),
     col: Number(c),
-    dir: d === 'H' ? 'across' : d === 'V' ? 'down' : 'downLeft',
+    dir: SIM_DIRS[d]!,
     anchor: Number(r) * size + Number(c),
     anchorAt: 'start',
   };
@@ -62,5 +66,16 @@ describe('conformance with the Python simulator', () => {
     expect(hex.n).toBe(HEX_RULES.size);
     expect(hex.games.length).toBe(160);
     replayAll(hex.games, HEX_RULES, lex);
+  });
+
+  // Any-direction words: 80 games under the simulator's HEX2 preset (export_hex_conformance.py HEX2).
+  it('replays two-way hex games with identical decisions', { timeout: 60_000 }, () => {
+    const hex2 = hex2Fixture as unknown as { rules: string; n: number; games: SimGame[] };
+    expect(hex2.rules).toBe('HEX2');
+    expect(hex2.n).toBe(HEX_TWO_WAY_RULES.size);
+    expect(hex2.games.length).toBe(80);
+    // The fixture must exercise backwards words, or this test proves nothing.
+    expect(hex2.games.some((g) => g.plies.some(([m]) => /,[hvd]$/.test(m)))).toBe(true);
+    replayAll(hex2.games, HEX_TWO_WAY_RULES, lex);
   });
 });

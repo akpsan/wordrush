@@ -17,7 +17,10 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Small phones on hex | On 360×640 the 91-cell hexagon has cells about 16px | Tighter controls on short screens, or a bigger board share | 3 | 3 | 3 | 3.0 | Shipped |
 | AI strength on hex | The AI levels were calibrated on the square board | Run `app/scripts/calibrate-ai.ts` on hex (small sample) and tune if Easy < Medium < Hard breaks | 3 | 3 | 2 | 4.5 | Shipped |
 | Learn to play on hex | The tutorial still teaches the square board while games default to hex | Rebuild the scripted lessons on the hexagon (split into lessons; one per run) | 3 | 4 | 4 | 3.0 | Shipped |
-| Any-direction words | Players don't expect one-way words; the owner's redesign mockup uses six directions | Let words run backwards too. Simulated 2026-11-13: fairness, length and skill unchanged (findings.md). Needs the TS engine, a new sim preset and conformance, the arrows, and new hex tutorial bump and box-in positions (SEA and THEM break) | 3 | 4 | 4 | 3.0 | Planned |
+| Any-direction words | Players don't expect one-way words; the owner's redesign mockup uses six directions | Let words run backwards too. Simulated 2026-11-13: fairness, length and skill unchanged (findings.md). Split 2026-11-14: slice 1 (sim preset `HEX2`, TS engine, conformance) shipped; the rest is the three rows below | 3 | 4 | 4 | 3.0 | Building |
+| Two-way words: arrows and feedback | The arrows and the "would read backwards" line assume one-way words; the new directions (left, up, up-right) have no arrow yet | Arrows for all six directions (← ↖ ↗ on hex); under two-way rules drop the "reads backwards" message, since backwards fits | 3 | 4 | 2 | 6.0 | Next |
+| Two-way words: hex tutorial | The hex lessons' SEA bump and RACE-boxes-in-THEM positions break when words can run backwards | New bump and box-in positions that hold under `HEX_TWO_WAY_RULES`; check with the scripted-lesson tests | 3 | 3 | 3 | 3.0 | Planned |
+| Two-way words: turn it on | The app still plays one-way hex | Make `HEX_TWO_WAY_RULES` the hex rules (after arrows and tutorial); recalibrate the AIs (small sample), since about 3× more legal moves could slow Hard past its 2.5s cap | 3 | 3 | 2 | 4.5 | Planned |
 | Connect-the-sides mode | The owner's mockup shows "cells to connect · top ↕ bottom / left ↔ right" | A second goal: connect your two sides of the hexagon (like the board game Hex). Simulate first: fairness, length, whether words still matter | 3 | 2 | 5 | 1.2 | Idea |
 | Redesign palette and font | The owner's mockup uses Lexend and a navy palette | Try them as theme tokens (bundled font), check contrast in both themes | 2 | 3 | 2 | 3.0 | Idea |
 
@@ -25,6 +28,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Conformance, 80 two-way hex games | The TS engine matches the simulator move for move under `HEX2`. Two-way words give far more choices: 2,835 legal moves at turn 3 of one game, against 975 with the same board one-way. Expect slower AI turns and a busier heatmap. |
 | 2026-11-13 | Simulator, 200 games per row | Two-way words on hex change almost nothing: Blue 47–48% (one way: 46%), 8.3 words per player (8.4), random beats balanced 16% (14%). Backwards words fill the same cells as forward words ending on a letter. |
 | 2026-11-13 | AI calibration on hex, 40 games per pairing | Hard beats Medium 70% and Easy 73%; Medium beats Easy 65%. Against a casual player Hard (83%) isn't clearly above Medium (93%). Hard thinks up to 5.7s on hex; the app caps it at 2.5s. |
 | 2026-11-12 | Owner playtest (live, hex) | A losing word looked like a normal one; the link badge hid the letter; slanted words are hard to follow; faded words nearly vanish; "ways out" meant nothing to players. |
@@ -36,6 +40,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-14 | Any-direction words, slice 1 (engine only, no visible change): sim preset `HEX2`, `HEX_TWO_WAY_RULES` in the TS engine (directions left, up, up-right), and an 80-game two-way conformance fixture | PR_LINK |
 | 2026-11-13 | Game screen redesign from the owner's mockup: Play in the keyboard, a spot stepper instead of Flip, letter chips, logo-left header with the hint button, bigger slots and board | feature/game-screen-redesign |
 | 2026-11-13 | AI on hex: calibrated (40 games per pairing); Easy < Medium < Hard holds head to head, no tuning needed. `calibrate-ai.ts` takes a board | akpsan/wordrush#21 |
 | 2026-11-13 | Learn to play on the hexagon: follows the Board setting; TEA, DOG, ARM, BIG, CAR, the SEA bump and RACE boxing in THEM; tutorial meter counts words | akpsan/wordrush#20 |
@@ -56,3 +61,4 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
+| 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. PR_LINK |

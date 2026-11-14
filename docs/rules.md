@@ -45,6 +45,8 @@ Added Nov 12, 2026 as the game's direction (the product owner chose a honeycomb 
 
 **Why radius 5 and a 3-letter first word:** on a radius-4 hexagon (61 cells), A won 85% of games between balanced bots. Radius 5 with A's usual 4-letter first word was fair for balanced bots (48%) but not aggressive ones (31% for A). Cutting A's first word to 3 letters made both fair: 52% and 44% for A, over 300 games each.
 
+**Variant, any-direction words (not adopted yet):** the same rules, but words may also read backwards (right to left, up-left or up-right), so six line directions. Simulator preset `HEX2`; app `HEX_TWO_WAY_RULES`, which the engine supports and the conformance test checks, but the app doesn't offer yet. Simulated Nov 13, 2026 (`experiments/two_way.py`): fairness, game length and skill barely change.
+
 ## Rules v1
 
 **Setup**
