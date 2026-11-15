@@ -29,8 +29,6 @@ export interface PlayerStatus {
   readonly level: RoomLevel;
   readonly label: string;
   readonly aria: string;
-  /** Filled meter segments, 0 to 4. */
-  readonly segments: number;
   readonly warn: boolean;
   readonly alarm: boolean;
   readonly squares: number;
@@ -95,7 +93,6 @@ export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerSt
     aria: ai
       ? plain('cpu.card.aria', { ai: name, level: ai.levelName, waysOut: label })
       : plain('ways.aria', { player: name, waysOut: label }),
-    segments: ways === null ? 0 : ways >= 3 ? 4 : ways,
     warn: ways !== null && ways <= 1,
     // Only the player about to move gets the pulsing alarm; the other card keeps its quieter warning icon.
     alarm: ways === 1 && !game.result && game.toMove === player,

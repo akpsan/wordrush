@@ -16,7 +16,7 @@ function PlayerCard({ p, thinking }: { p: PlayerStatus; thinking: boolean }) {
     .filter(Boolean)
     .join(' ');
   return (
-    <div className={classes}>
+    <div className={classes} role="group" aria-label={p.aria}>
       <div className="ptop">
         <PlayerPip player={p.player} ai={p.ai} />
         <span className="pname">{p.name}</span>
@@ -27,25 +27,11 @@ function PlayerCard({ p, thinking }: { p: PlayerStatus; thinking: boolean }) {
           </span>
         )}
       </div>
-      <div
-        className={`room ${p.level}`}
-        role="meter"
-        aria-label={p.aria}
-        aria-valuemin={0}
-        aria-valuemax={4}
-        aria-valuenow={p.segments}
-        aria-valuetext={p.label}
-      >
-        <span className="segs">
-          {[0, 1, 2, 3].map((i) => (
-            <i key={i} className={i < p.segments ? 'on' : ''} />
-          ))}
+      <div className={`pfoot ${p.level}`}>
+        <span className="rlbl">
+          {p.warn && <Icon name="warn" />}
+          {p.label}
         </span>
-        {p.warn && <Icon name="warn" />}
-      </div>
-      <div className="pfoot">
-        <span className="rlbl">{p.label}</span>
-        <span className="pcells">{t('squares.count', { n: p.squares })}</span>
       </div>
       {p.delta && (
         <span key={p.delta + p.squares} className={p.player === 0 ? 'delta' : 'delta db'} aria-hidden="true">
