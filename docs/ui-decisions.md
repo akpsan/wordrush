@@ -214,3 +214,18 @@ From the owner's mockup ("WordRush – Mobile Game Screen Redesign", a Design ca
 | Letter slots | Share the row on phones (up to 62px wide, 50px tall; 42px and 38px on short screens). |
 | Desktop key help | "Space for the next spot" (it said "Tab or Space to flip"; Tab only moves focus). |
 | Not taken from the mockup | Its words in six directions (two-way words: simulated, not yet adopted; it would break the hex tutorial's bump and box-in lessons), its "cells to connect" goal (a different game; needs simulating), and its Lexend font and navy palette (the design handoff's tokens stay). All three are on the backlog. |
+
+## Build decisions (two-way words on the hexagon, 2026-11-15)
+
+Hex games now use two-way words (rules: `docs/rules.md`, Hex mode). This replaces the redesign's "not taken from the mockup" note on six directions.
+
+| Topic | Decision |
+| --- | --- |
+| Arrows | One per direction on the previewed letters. On hex: → ↘ ↙ ← ↖ ↗ (square keeps → ↓). |
+| "Reads backwards" line | Only on the square board now; on two-way hex, backwards is just another direction. |
+| Tutorial, bump step | SEA still bumps into your C going across, but it is no longer blocked everywhere, so the coach says "this way": "Your C is in the way, so SEA can't come across onto your A. Words can run any way, but never through a letter." Line: "No room this way: your own **C** is in the way." |
+| Tutorial, box-in step | THEM has two ways out under two-way rules; RACE closes both: "Your opponent's last word, THEM, has two ways out left. **RACE** closes off both." |
+| Board setting help | "For new games. On the hexagon, words run along all three lines, either way." |
+| Screen reader | The AI's word is announced with a direction in words (`dir.*` in `copy/overrides.ts`: "down to the left", "up to the right"...), not the internal name. |
+| Saved games | A hex game saved before the switch is replayed under the new rules; its one-way words are all legal there. |
+

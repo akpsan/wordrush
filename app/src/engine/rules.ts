@@ -34,10 +34,10 @@ export const STANDARD_RULES: Rules = {
 export const HEX_RULES: Rules = { ...STANDARD_RULES, size: 11, shape: 'hex', firstWordMaxLen: 3 };
 
 /**
- * Hex mode with any-direction words (sim preset HEX2): words may also read backwards. Not used by
- * the app yet; it needs the arrows, the tutorial and a setting first (docs/product.md).
+ * Hex mode with two-way words (sim preset HEX2): words may also read backwards. The app's hex rules
+ * since 2026-11-15 (docs/rules.md, Hex mode); HEX_RULES stays for replaying one-way games.
  */
 export const HEX_TWO_WAY_RULES: Rules = { ...HEX_RULES, twoWay: true };
 
-/** The rules for a board shape. */
-export const rulesFor = (shape: Shape): Rules => (shape === 'hex' ? HEX_RULES : STANDARD_RULES);
+/** The rules for a new game on a board shape. */
+export const rulesFor = (shape: Shape): Rules => (shape === 'hex' ? HEX_TWO_WAY_RULES : STANDARD_RULES);

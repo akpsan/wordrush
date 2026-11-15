@@ -40,12 +40,12 @@ Decided Nov 3, 2026 after the simulation batches ([findings.md](findings.md)). C
 Added Nov 12, 2026 as the game's direction (the product owner chose a honeycomb board). Simulator preset `HEX` in `engine/rules.py`; evidence in [findings.md](findings.md#hex-mode). Everything in Rules v4 applies, except:
 
 1. **Board:** a hexagon of 91 cells (radius 5, 6 cells to a side), drawn as a honeycomb.
-2. **Lines:** words run across (left to right), down-right or down-left. Every word reads left to right or downwards.
+2. **Lines:** words run along the three lines of the hexagon (across, down-right, down-left), **in either direction** (since Nov 15, 2026: two-way words, preset `HEX2`). Before that, every word read left to right or downwards (preset `HEX`).
 3. **First word:** A starts in the top-left corner of the hexagon, with **at most 3 letters**; B ends in the bottom-right corner, as usual.
 
 **Why radius 5 and a 3-letter first word:** on a radius-4 hexagon (61 cells), A won 85% of games between balanced bots. Radius 5 with A's usual 4-letter first word was fair for balanced bots (48%) but not aggressive ones (31% for A). Cutting A's first word to 3 letters made both fair: 52% and 44% for A, over 300 games each.
 
-**Variant, any-direction words (not adopted yet):** the same rules, but words may also read backwards (right to left, up-left or up-right), so six line directions. Simulator preset `HEX2`; app `HEX_TWO_WAY_RULES`, which the engine supports and the conformance test checks, but the app doesn't offer yet. Simulated Nov 13, 2026 (`experiments/two_way.py`): fairness, game length and skill barely change.
+**Two-way words (adopted Nov 15, 2026):** words may also read backwards (right to left, up-left or up-right), so six line directions. Simulator preset `HEX2`; app `HEX_TWO_WAY_RULES`, which `rulesFor('hex')` returns. Players found one-way words confusing, and the simulation (Nov 13, `experiments/two_way.py`) found fairness, game length and skill barely change: Blue 47–48% (one-way 46%), 8.3 words per player.
 
 ## Rules v1
 
