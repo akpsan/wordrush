@@ -15,8 +15,6 @@
 .mmeters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:2px}
 .mm{display:flex;flex-direction:column;gap:4px}
 .mm .mmh{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-.mm .segs{height:7px}
-.mm.a .segs i.on{background:var(--a)}.mm.b .segs i.on{background:var(--b)}
 .mm .rlbl{font-size:12px}
 .mm.zero .rlbl{animation:dropin .6s ease-out both}
 @keyframes dropin{0%{transform:translateY(-6px);opacity:0}100%{transform:none;opacity:1}}
@@ -43,7 +41,6 @@
 
 /* App: the design's .btn grows to share a row (flex:1); in these vertical panels it must keep its height. */
 .intro .btn,.donep .orow{flex:none}
-.mm .segs{flex:none}
 .lnote{text-align:center;font-size:13px;line-height:1.4;color:var(--muted)}
 
 /* App: on short phones the recap panel took the board's room; tighten it so the finished board stays visible. */

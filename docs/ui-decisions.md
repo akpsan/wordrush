@@ -229,3 +229,14 @@ Hex games now use two-way words (rules: `docs/rules.md`, Hex mode). This replace
 | Screen reader | The AI's word is announced with a direction in words (`dir.*` in `copy/overrides.ts`: "down to the left", "up to the right"...), not the internal name. |
 | Saved games | A hex game saved before the switch is replayed under the new rules; its one-way words are all legal there. |
 
+
+## Build decisions (room meter and squares count dropped, 2026-11-15)
+
+On the owner's request. Layout only; the rules are unchanged.
+
+| Topic | Decision |
+| --- | --- |
+| Four-segment meter | **Removed** from the player cards and from the tutorial's box-in step. It only repeated the "words to play" label (0, 1, 2 or 3+ words → 0, 1, 2 or 4 segments), and because one open line already holds 3+ words it stayed full until a player was all but boxed in. This overrides the handoff's `.room` / `.segs` styles. |
+| "N squares" on the cards | **Removed** too. Squares only decide a full board, which hasn't happened in simulation; the results screen still lists them, and "+n" still rises from the card after a play. |
+| What stays | The label ("3+ words to play", "1 word left!", "Boxed in"), with the warning icon now beside it at 1 word or fewer, and the card's pulsing alarm at exactly 1 word on your turn. The tutorial keeps its text ("Lots of room", "Boxed in"). |
+| Screen reader | Each card is a group named by the old meter label ("Rex, Hard: 3+ words to play"); the `meter` role is gone. |

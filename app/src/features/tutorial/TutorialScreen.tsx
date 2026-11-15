@@ -49,22 +49,12 @@ function Meters({ them, themSegments }: { them: string; themSegments: number }) 
           <span className="mini a" aria-hidden="true" />
           {t('player.you')}
         </span>
-        <span className="segs">
-          {[0, 1, 2, 3].map((i) => (
-            <i key={i} className="on" />
-          ))}
-        </span>
         <span className="rlbl">{t('learn.8.meter.you')}</span>
       </div>
-      <div className={themSegments === 0 ? 'mm b zero' : 'mm b'} role="meter" aria-label={plain('player.orange')} aria-valuetext={them} aria-valuenow={themSegments} aria-valuemin={0} aria-valuemax={4}>
+      <div className={themSegments === 0 ? 'mm b zero' : 'mm b'}>
         <span className="mmh">
           <span className="mini b" aria-hidden="true" />
           {t('player.orange')}
-        </span>
-        <span className="segs">
-          {[0, 1, 2, 3].map((i) => (
-            <i key={i} className={i < themSegments ? 'on' : ''} />
-          ))}
         </span>
         <span className="rlbl">{them}</span>
       </div>
