@@ -146,7 +146,9 @@ export function aiAnnouncement(s: Session, phase: 'idle' | 'thinking' | 'playing
   if (phase === 'thinking') return plain('cpu.sr.thinking', params);
   const last = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]!]! : null;
   if (phase === 'playing' && last) {
-    return plain('cpu.sr.played', { ...params, WORD: last.word.toUpperCase(), 'across/down': last.dir, r: last.row + 1, c: last.col + 1 });
+    const hexWay = game.rules.shape === 'hex' && (last.dir === 'down' || last.dir === 'up');
+    const way = plain(hexWay ? (`dir.hex.${last.dir}` as const) : (`dir.${last.dir}` as const));
+    return plain('cpu.sr.played', { ...params, WORD: last.word.toUpperCase(), 'across/down': way, r: last.row + 1, c: last.col + 1 });
   }
   if (phase === 'idle' && last && s.lastPlay && game.words[s.lastPlay.wordIndex] === last) {
     return plain('cpu.sr.yourturn', { letters: listLetters(letterChoices(game, match.human)) });

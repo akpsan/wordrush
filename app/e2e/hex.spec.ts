@@ -1,4 +1,4 @@
-/** Hex mode: the default board for new games. Words run across, down-right or down-left. */
+/** Hex mode: the default board for new games. Words run along all three lines, either way (two-way words). */
 import { expect, test } from '@playwright/test';
 import { keys, openApp } from './helpers';
 
@@ -51,8 +51,22 @@ test('Learn to play on the hexagon: TEA to the box-in win', async ({ page }) => 
   await keys(page, '\n');
   await page.getByRole('button', { name: 'Your turn' }).click();
   await keys(page, 'car\nsea');
-  await expect(page.getByRole('status').filter({ hasText: 'your own letters are in the way' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'your own C is in the way' })).toBeVisible();
   await page.getByRole('button', { name: 'Got it' }).click();
   await keys(page, 'race\n');
   await expect(page.getByText('Boxed in', { exact: true })).toBeVisible();
+});
+
+test('two-way words: SEA can come up onto your A, with an arrow showing the way', async ({ page }) => {
+  await openApp(page, 'returning', { board: 'hex' });
+  await page.getByRole('button', { name: /Play a friend/ }).click();
+  await keys(page, 'tea\n');
+  await keys(page, 'stone\n');
+  // One-way, nothing could end on TEA's A. Two-way, SEA reads right to left or upwards onto it.
+  await keys(page, 'sea');
+  await expect(page.getByRole('status').filter({ hasText: 'SEA fits · spot 1 of 3' })).toBeVisible();
+  await expect(page.locator('.ar').first()).toHaveText(/^[←↖↗]$/);
+  await keys(page, '\n');
+  await expect(page.getByLabel(/: S, Blue$/)).toBeVisible();
+  await expect(page.locator('.tnum')).toHaveText('4');
 });

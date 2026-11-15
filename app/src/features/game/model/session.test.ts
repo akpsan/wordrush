@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
 import { entryView } from './entry';
-import { CHIPS, feedbackFor } from './feedback';
-import { checkEntry } from '../../../engine';
+import { CHIPS, aiAnnouncement, feedbackFor } from './feedback';
+import { HEX_TWO_WAY_RULES, checkEntry, legalMoves, newGame, play } from '../../../engine';
 import type { Match } from './match';
 import { createSession, sessionReducer, type Session, type SessionAction } from './session';
 import { playerStatus } from './status';
@@ -134,5 +134,21 @@ describe('playing against the AI', () => {
     const s = createSession(undefined, undefined, { ...vsAi, human: 0 });
     const team = checkEntry(s.game, lex, 'team');
     expect(run([{ type: 'aiPlay', move: team.ok ? team.spots[0]! : (undefined as never) }], s)).toBe(s);
+  });
+});
+
+describe('screen reader', () => {
+  it('names the AI word\'s direction in words, also for backwards words on the hexagon', () => {
+    const vsAi: Match = { mode: 'ai', level: 'medium', human: 1, first: 'ai', seed: 1 };
+    const g0 = newGame(HEX_TWO_WAY_RULES);
+    const tea = legalMoves(g0, lex).find((m) => m.word === 'tea' && m.dir === 'across')!;
+    const announced = (dir: string) => {
+      let g = play(g0, lex, tea);
+      g = play(g, lex, legalMoves(g, lex)[0]!);
+      const m = legalMoves(g, lex).find((p) => p.dir === dir)!;
+      return aiAnnouncement(createSession(play(g, lex, m), undefined, vsAi), 'playing');
+    };
+    expect(announced('up')).toMatch(/going up to the left from row/);
+    expect(announced('left')).toMatch(/going right to left from row/);
   });
 });

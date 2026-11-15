@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../dictionary';
-import { checkEntry } from '../../engine';
+import { checkEntry, moveContext, playScripted, waysOut } from '../../engine';
 import { buildPositions, lessonReducer, lessonView, startLesson, type Lesson, type LessonAction } from './lesson';
 
 const lex = getLexicon();
@@ -70,7 +70,7 @@ describe('Learn to play on the hexagon', () => {
     expect(hview(l).step.kind).toBe('bump');
     l = hrun(type('sea'), l);
     expect(hview(l)).toMatchObject({ bumped: true, continueLabel: 'learn.7.button' });
-    expect(hview(l).feedback.text).toBe('No room: your own letters are in the way.');
+    expect(hview(l).feedback.text).toBe('No room this way: your own **C** is in the way.');
     l = hrun([{ type: 'next' }, ...type('race'), { type: 'play' }], l); // → boxed in
     expect(hview(l).game.result).toMatchObject({ winner: 0, reason: 'boxed-in' });
     expect(hview(l).coachLine).toContain('THEM has no room left');
@@ -78,8 +78,20 @@ describe('Learn to play on the hexagon', () => {
     expect(hview(l).step.kind).toBe('done');
   });
 
-  it('SEA has no spot anywhere: the real engine produces the bump', () => {
+  it('plays two-way hex rules, like new hex games', () => expect(hp.start.rules.twoWay).toBe(true));
+
+  it('SEA bumps into your C going across, as the lesson shows; with two-way words it still fits elsewhere', () => {
     const before = { ...hp.chain[5]!, toMove: 0 as const };
-    expect(checkEntry(before, lex, 'sea').ok).toBe(false);
+    const check = checkEntry(before, lex, 'sea');
+    expect(check.ok).toBe(true);
+    const spots = check.ok ? check.spots : [];
+    expect(spots.some((p) => p.dir === 'across')).toBe(false); // the attempted way is blocked
+    expect(before.board[1 * 11 + 5]?.letter).toBe('c'); // by your own C
+  });
+
+  it('THEM has exactly two ways out, and RACE closes both', () => {
+    expect(waysOut(moveContext(hp.boxIn, 1), lex)).toBe(2);
+    const done = playScripted(lex, [hp.script.boxInWord], hp.boxIn);
+    expect(done.result).toMatchObject({ winner: 0, reason: 'boxed-in' });
   });
 });

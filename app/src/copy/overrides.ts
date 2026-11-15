@@ -5,6 +5,15 @@
 
 /** Deck rows that describe several strings at once, split into one ID per string. */
 const composite = {
+  // The {across/down} slot of cpu.sr.played, one per direction (hex "down" runs down-right on screen).
+  'dir.across': 'across',
+  'dir.down': 'down',
+  'dir.hex.down': 'down to the right',
+  'dir.downLeft': 'down to the left',
+  'dir.left': 'right to left',
+  'dir.up': 'up',
+  'dir.hex.up': 'up to the left',
+  'dir.upRight': 'up to the right',
   'settings.theme.auto': 'Auto',
   'settings.theme.light': 'Light',
   'settings.theme.dark': 'Dark',
@@ -96,9 +105,9 @@ const missing = {
   'learn.hex.6.ready': '**CAR** ends on your R. Play it!',
   'learn.hex.7.coach': 'Every letter blocks the way, even yours. Try **SEA**, ending on your A.',
   'learn.hex.7.empty': 'Type **SEA**',
-  'learn.hex.7.bump.coach': 'Your C, E and A are in the way, so SEA has no way in to your A.',
-  'learn.hex.7.bump.line': 'No room: your own letters are in the way.',
-  'learn.hex.8.coach': "Your opponent's last word, THEM, has one way out left. Close it off with **RACE**.",
+  'learn.hex.7.bump.coach': "Your C is in the way, so SEA can't come across onto your A. Words can run any way, but never through a letter.",
+  'learn.hex.7.bump.line': 'No room this way: your own **C** is in the way.',
+  'learn.hex.8.coach': "Your opponent's last word, THEM, has two ways out left. **RACE** closes off both.",
   'learn.hex.8.ready': '**RACE** closes off THEM. Play it!',
   'learn.hex.8.won.coach': 'THEM has no room left: every gap is too small for a word. **You win!**',
   // Game screen redesign (docs/ui-decisions.md): the spot stepper and Play in the keyboard.
@@ -108,7 +117,7 @@ const missing = {
   'stepper.next.aria': 'Next spot',
   // Hex mode (docs/ui-decisions.md).
   'settings.board.label': 'Board',
-  'settings.board.help': 'For new games. On the hexagon, words also run down to the left.',
+  'settings.board.help': 'For new games. On the hexagon, words run along all three lines, either way.',
   'settings.board.hex': 'Hexagon',
   'settings.board.square': 'Square',
   // Results: share the outcome (no board, no words: nothing to spoil).
