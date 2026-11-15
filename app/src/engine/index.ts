@@ -11,6 +11,7 @@ export {
   giveUp,
   isLegal,
   legalMoves,
+  countLegalMoves,
   anchorsOf,
   moveContext,
   otherPlayer,

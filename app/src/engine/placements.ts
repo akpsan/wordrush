@@ -144,24 +144,56 @@ function walk(
   }
 }
 
-function moveGroups(ctx: MoveContext, lex: Lexicon): MoveGroup[] {
-  const groups: MoveGroup[] = [];
+/** Like walk, but only counts the words. */
+function countWalk(ctx: MoveContext, node: TrieNode, path: readonly CellIndex[], depth: number): number {
+  let n = depth >= ctx.minLen && node.word && !ctx.played.has(node.word) ? 1 : 0;
+  if (depth >= ctx.maxLen || depth >= path.length) return n;
+  const existing = ctx.board[path[depth]!];
+  if (!existing) {
+    for (const child of node.children.values()) n += countWalk(ctx, child, path, depth + 1);
+  } else if (depth === 0) {
+    const child = node.children.get(existing.letter);
+    if (child) n += countWalk(ctx, child, path, depth + 1);
+  }
+  return n;
+}
+
+/** The rays a player's words can follow: from each link cell, in each direction, as each mode. */
+function* rays(ctx: MoveContext): Generator<{ anchor: CellIndex; mode: AnchorMode; dir: Dir; path: CellIndex[] }> {
   for (const anchor of ctx.anchors) {
     for (const dir of ctx.geo.dirs) {
       for (const mode of anchor.modes) {
-        const forward = mode === 'start';
-        const path = ray(ctx.geo, anchor.cell, dir, forward ? 1 : -1, ctx.maxLen);
-        const words: string[] = [];
-        walk(ctx, forward ? lex.forward : lex.reverse, path, 0, words);
-        const step = stepOf(ctx.geo, dir);
-        const moves = words.map((word): Placement => {
-          const start = forward ? anchor.cell : anchor.cell - (word.length - 1) * step;
-          const { row, col } = toRowCol(ctx.geo.size, start);
-          return { word, row, col, dir, anchor: anchor.cell, anchorAt: mode };
-        });
-        groups.push({ anchor: anchor.cell, mode, dir, moves });
+        yield { anchor: anchor.cell, mode, dir, path: ray(ctx.geo, anchor.cell, dir, mode === 'start' ? 1 : -1, ctx.maxLen) };
       }
     }
+  }
+}
+
+/**
+ * The number of real-word moves: allMoves(ctx, lex).length, without building them (the AI counts
+ * moves for every position it looks at). No move is found twice: a start-on-letter move is fixed
+ * by its link cell, direction and word, and so is an end-on-letter move; and one move can't both
+ * start and end on letters of the last word, since only the link cell may hold a letter.
+ */
+export function countMoves(ctx: MoveContext, lex: Lexicon): number {
+  let n = 0;
+  for (const r of rays(ctx)) n += countWalk(ctx, r.mode === 'start' ? lex.forward : lex.reverse, r.path, 0);
+  return n;
+}
+
+function moveGroups(ctx: MoveContext, lex: Lexicon): MoveGroup[] {
+  const groups: MoveGroup[] = [];
+  for (const { anchor, mode, dir, path } of rays(ctx)) {
+    const forward = mode === 'start';
+    const words: string[] = [];
+    walk(ctx, forward ? lex.forward : lex.reverse, path, 0, words);
+    const step = stepOf(ctx.geo, dir);
+    const moves = words.map((word): Placement => {
+      const start = forward ? anchor : anchor - (word.length - 1) * step;
+      const { row, col } = toRowCol(ctx.geo.size, start);
+      return { word, row, col, dir, anchor, anchorAt: mode };
+    });
+    groups.push({ anchor, mode, dir, moves });
   }
   return groups;
 }
@@ -175,6 +207,10 @@ export function allMoves(ctx: MoveContext, lex: Lexicon): Placement[] {
   return [...found.values()];
 }
 
-/** True if at least one real word fits. */
-export const hasAnyMove = (ctx: MoveContext, lex: Lexicon): boolean =>
-  moveGroups(ctx, lex).some((g) => g.moves.length > 0);
+/** True if at least one real word fits. Stops at the first ray with a word. */
+export function hasAnyMove(ctx: MoveContext, lex: Lexicon): boolean {
+  for (const r of rays(ctx)) {
+    if (countWalk(ctx, r.mode === 'start' ? lex.forward : lex.reverse, r.path, 0) > 0) return true;
+  }
+  return false;
+}

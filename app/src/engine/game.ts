@@ -2,7 +2,7 @@
 
 import { emptyBoard, isFull, squaresOwned, writeWord, cellsFor } from './board';
 import type { Lexicon } from './lexicon';
-import { allMoves, hasAnyMove, placementKey, placementsForWord, type MoveContext } from './placements';
+import { allMoves, countMoves, hasAnyMove, placementKey, placementsForWord, type MoveContext } from './placements';
 import { geometryOf } from './geometry';
 import { STANDARD_RULES, type Rules } from './rules';
 import type { Anchor, Board, GameResult, Placement, PlayedWord, Player } from './types';
@@ -61,6 +61,10 @@ export function moveContext(state: GameState, player: Player = state.toMove): Mo
 /** Every real-word move for a player. */
 export const legalMoves = (state: GameState, lex: Lexicon, player: Player = state.toMove) =>
   allMoves(moveContext(state, player), lex);
+
+/** How many real-word moves a player has: legalMoves(...).length, faster. */
+export const countLegalMoves = (state: GameState, lex: Lexicon, player: Player = state.toMove): number =>
+  countMoves(moveContext(state, player), lex);
 
 /** True if the placement is a real, unplayed word in a legal spot for the player to move. */
 export function isLegal(state: GameState, lex: Lexicon, p: Placement): boolean {

@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 import everyday from '../../../../data/dictionaries/everyday-3to5.txt?raw';
-import { HEX_RULES, HEX_TWO_WAY_RULES, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Placement, type Rules } from '..';
+import { HEX_RULES, HEX_TWO_WAY_RULES, countLegalMoves, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Placement, type Rules } from '..';
 import fixture from './fixtures/sim-games.json';
 import hexFixture from './fixtures/sim-hex-games.json';
 import hex2Fixture from './fixtures/sim-hex2-games.json';
@@ -39,9 +39,10 @@ function replayAll(games: SimGame[], rules: Rules, lex: ReturnType<typeof create
     let state: GameState = newGame(rules);
     for (const [move, nLegal] of sim.plies) {
       if (move === 'STUCK') break;
-      if (nLegal !== null) {
-        expect(legalMoves(state, lex).length, `game ${g}, turn ${state.turn}`).toBe(nLegal);
-      }
+      const n = legalMoves(state, lex).length;
+      if (nLegal !== null) expect(n, `game ${g}, turn ${state.turn}`).toBe(nLegal);
+      // The AI's fast counter must agree with the full list, first moves included.
+      expect(countLegalMoves(state, lex), `count, game ${g}, turn ${state.turn}`).toBe(n);
       state = play(state, lex, decode(move, state.rules.size));
     }
     expect(state.result, `game ${g} should be over`).not.toBeNull();

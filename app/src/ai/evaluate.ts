@@ -6,7 +6,7 @@
  * What matters is room: how many moves each side would have.
  */
 
-import { cellsFor, geometryOf, legalMoves, squares, type GameState, type Lexicon, type Placement, type Player } from '../engine';
+import { cellsFor, countLegalMoves, geometryOf, squares, type GameState, type Lexicon, type Placement, type Player } from '../engine';
 
 export const WIN = 1_000_000;
 
@@ -20,7 +20,7 @@ export interface Weights {
 /** Moves a player would have on this board, or null before their first word. */
 export function mobility(state: GameState, lex: Lexicon, player: Player): number | null {
   if (state.lastWord[player] === null) return null;
-  return legalMoves(state, lex, player).length;
+  return countLegalMoves(state, lex, player);
 }
 
 function outcome(state: GameState, me: Player): number {

@@ -21,7 +21,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Two-way words: arrows and feedback | The arrows and the "would read backwards" line assume one-way words; the new directions (left, up, up-right) have no arrow yet | Arrows for all six directions (← ↖ ↗ on hex); under two-way rules drop the "reads backwards" message, since backwards fits | 3 | 4 | 2 | 6.0 | Shipped |
 | Two-way words: hex tutorial | The hex lessons' SEA bump and RACE-boxes-in-THEM positions break when words can run backwards | New bump and box-in positions that hold under `HEX_TWO_WAY_RULES`; check with the scripted-lesson tests | 3 | 3 | 3 | 3.0 | Shipped |
 | Two-way words: turn it on | The app still plays one-way hex | Make `HEX_TWO_WAY_RULES` the hex rules (after arrows and tutorial); recalibrate the AIs (small sample), since about 3× more legal moves could slow Hard past its 2.5s cap | 3 | 3 | 2 | 4.5 | Shipped |
-| AI thinking time on two-way hex | Uncapped, Hard's median move takes 2.6s (95th percentile 8.1s), so in the app most of its moves stop at the 2.5s cap and it plays below its calibrated strength; Medium has no cap and peaks at 3.1s | Calibrate with the app's cap; speed up move scoring, or cap Medium too. Check on a mid-range phone | 3 | 3 | 3 | 3.0 | Planned |
+| AI thinking time on two-way hex | Uncapped, Hard's median move takes 2.6s (95th percentile 8.1s), so in the app most of its moves stop at the 2.5s cap and it plays below its calibrated strength; Medium has no cap and peaks at 3.1s | Calibrate with the app's cap; speed up move scoring, or cap Medium too. Check on a mid-range phone | 3 | 3 | 3 | 3.0 | Shipped |
+| Hard on slow phones | On this server Hard's slowest move is now 1.7s (95th percentile 1.5s); a mid-range phone may be 2–4× slower, so the 2.5s cap may still cut some moves short | Time the AI on a real mid-range phone (or a throttled browser); if the cap bites, look one reply deeper only when time allows | 2 | 3 | 2 | 3.0 | Idea |
 | Connect-the-sides mode | The owner's mockup shows "cells to connect · top ↕ bottom / left ↔ right" | A second goal: connect your two sides of the hexagon (like the board game Hex). Simulate first: fairness, length, whether words still matter | 3 | 2 | 5 | 1.2 | Idea |
 | Redesign palette and font | The owner's mockup uses Lexend and a navy palette | Try them as theme tokens (bundled font), check contrast in both themes | 2 | 3 | 2 | 3.0 | Idea |
 
@@ -29,6 +30,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-15 | AI benchmark, 12 games with Hard on two-way hex | Most of the AI's time went into listing every legal move just to count them, and into listing all of the opponent's moves after each word to see whether they're boxed in. Counting without building the list, and stopping at the first move found, makes it about 5× faster with identical moves: Hard median 2.4s → 0.45s (max 11.5s → 1.7s), Medium 0.7s → 0.11s (max 2.7s → 0.27s). |
 | 2026-11-15 | AI calibration on two-way hex, 40 games per pairing | Easy < Medium < Hard holds: Medium beats Easy 60%, Hard beats Easy 65% and Medium 65% (one-way: 65%, 73%, 70%). Against a casual player 68% / 80% / 90%, so Hard is now clearly above Medium (one-way: Medium 93%, Hard 83%). Thinking time grew: Hard median 2.6s uncapped (max 10.9s), Medium median 0.6s (max 3.1s). |
 | 2026-11-15 | Tutorial check under two-way rules | No everyday word linked to CAR is blocked any more: early in a game, open cells surround every letter, so a full bump is rare. The lesson keeps SEA's bump, scoped to "this way". THEM has two ways out; RACE still closes both. |
 | 2026-11-14 | Conformance, 80 two-way hex games | The TS engine matches the simulator move for move under `HEX2`. Two-way words give far more choices: 2,835 legal moves at turn 3 of one game, against 975 with the same board one-way. Expect slower AI turns and a busier heatmap. |
@@ -43,6 +45,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-15 | AI thinking time: about 5× faster AI turns with identical moves (engine counts moves without listing them; the boxed-in check stops at the first move). Hard's median turn 2.4s → 0.45s, so it rarely hits the 2.5s cap now | akpsan/wordrush#28 |
 | 2026-11-15 | Two-way words on the hexagon: new hex games use `HEX_TWO_WAY_RULES` (words read either way along all three lines). Tutorial copy for the bump ("this way") and box-in ("two ways out"), Board setting help, screen-reader directions in words, AI levels recalibrated | akpsan/wordrush#26 |
 | 2026-11-15 | Two-way words, arrows and feedback: an arrow for all six directions (hex: → ↘ ↙ ← ↖ ↗), and no "would read backwards" line under two-way rules | akpsan/wordrush#25 |
 | 2026-11-14 | Any-direction words, slice 1 (engine only, no visible change): sim preset `HEX2`, `HEX_TWO_WAY_RULES` in the TS engine (directions left, up, up-right), and an 80-game two-way conformance fixture | akpsan/wordrush#24 |
@@ -66,4 +69,5 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
+| 2026-11-15 | Built the top Planned item, AI thinking time (effort 3): the engine counts moves for the AI without building them, and the boxed-in check stops early. Same moves, about 5× faster (Hard median 2.4s → 0.45s). 12 benchmark games; vs-ai and hex e2e specs. akpsan/wordrush#28 |
 | 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. akpsan/wordrush#24 |
