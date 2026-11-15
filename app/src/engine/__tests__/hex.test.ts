@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../dictionary';
-import { HEX_RULES, cellsFor, fitsOnlyBackwards, geometryOf, legalMoves, moveContext, newGame, play, waysOut, type Placement } from '..';
+import { HEX_RULES, HEX_TWO_WAY_RULES, cellsFor, fitsOnlyBackwards, geometryOf, legalMoves, moveContext, newGame, play, waysOut, type Placement } from '..';
 
 const lex = getLexicon();
 const g = geometryOf(HEX_RULES);
@@ -51,5 +51,21 @@ describe('reading direction', () => {
     const s = newGame(HEX_RULES);
     expect(fitsOnlyBackwards(s, 'tea')).toBe(false); // fits from the corner as typed
     expect(fitsOnlyBackwards(s, 'te')).toBe(false); // too short to judge
+  });
+
+  it('fitsOnlyBackwards: true for letters that only fit reversed, never with two-way words', () => {
+    const afterTea = (rules: typeof HEX_RULES) => {
+      let s = newGame(rules);
+      s = play(s, lex, legalMoves(s, lex).find((m) => m.word === 'tea' && m.dir === 'across')!);
+      return play(s, lex, legalMoves(s, lex)[0]!); // Orange's first word, far from TEA
+    };
+    // Nothing on the board can end on TEA's T, but "txx" can start on it and run down-right.
+    expect(fitsOnlyBackwards(afterTea(HEX_RULES), 'xxt')).toBe(true);
+    expect(fitsOnlyBackwards(afterTea(HEX_TWO_WAY_RULES), 'xxt')).toBe(false);
+  });
+
+  it('two-way words add the backward directions on hex', () => {
+    expect(geometryOf(HEX_RULES).dirs).toHaveLength(3);
+    expect(geometryOf(HEX_TWO_WAY_RULES).dirs).toEqual(['across', 'down', 'downLeft', 'left', 'up', 'upRight']);
   });
 });

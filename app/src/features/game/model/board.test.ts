@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
-import { giveUp, playScripted, type ScriptedMove } from '../../../engine';
-import { boardView, wordAges } from './board';
+import { giveUp, playScripted, type Dir, type ScriptedMove } from '../../../engine';
+import { arrowOf, boardView, wordAges } from './board';
 import { entryView } from './entry';
 import { createSession, type Session } from './session';
 
@@ -74,5 +74,12 @@ describe('fading the board', () => {
     expect(faded(classesOf(chain(), false))).toBe(false);
     const over = createSession(giveUp(playScripted(lex, CHAIN)));
     expect(faded(classesOf(over))).toBe(false);
+  });
+});
+
+describe('direction arrows', () => {
+  it('has an arrow for every direction, pointing the way the word reads', () => {
+    expect(['across', 'down', 'downLeft', 'left', 'up', 'upRight'].map((d) => arrowOf(d as Dir, 'hex')).join('')).toBe('→↘↙←↖↗');
+    expect(arrowOf('down', 'square')).toBe('↓');
   });
 });

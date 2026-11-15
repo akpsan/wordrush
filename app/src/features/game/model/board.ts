@@ -262,9 +262,13 @@ function cellLabel(index: number, size: number, letter: string, owner: Player | 
   return plain('cell.aria', { row: row + 1, col: col + 1, content });
 }
 
-/** The reading direction of a previewed word, drawn on its letters. On a hex board "down" runs down-right. */
-function arrowOf(dir: Dir, shape: Shape): string {
-  if (dir === 'across') return '→';
-  if (dir === 'downLeft') return '↙';
-  return shape === 'hex' ? '↘' : '↓';
-}
+/**
+ * The reading direction of a previewed word, drawn on its letters. On a hex board "down" runs
+ * down-right and "up" (its reverse, with two-way words) up-left.
+ */
+const ARROWS: Readonly<Record<Shape, Readonly<Record<Dir, string>>>> = {
+  square: { across: '→', down: '↓', downLeft: '↙', left: '←', up: '↑', upRight: '↗' },
+  hex: { across: '→', down: '↘', downLeft: '↙', left: '←', up: '↖', upRight: '↗' },
+};
+
+export const arrowOf = (dir: Dir, shape: Shape): string => ARROWS[shape][dir];
