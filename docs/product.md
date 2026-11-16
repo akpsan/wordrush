@@ -22,7 +22,8 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 | Two-way words: hex tutorial | The hex lessons' SEA bump and RACE-boxes-in-THEM positions break when words can run backwards | New bump and box-in positions that hold under `HEX_TWO_WAY_RULES`; check with the scripted-lesson tests | 3 | 3 | 3 | 3.0 | Shipped |
 | Two-way words: turn it on | The app still plays one-way hex | Make `HEX_TWO_WAY_RULES` the hex rules (after arrows and tutorial); recalibrate the AIs (small sample), since about 3× more legal moves could slow Hard past its 2.5s cap | 3 | 3 | 2 | 4.5 | Shipped |
 | AI thinking time on two-way hex | Uncapped, Hard's median move takes 2.6s (95th percentile 8.1s), so in the app most of its moves stop at the 2.5s cap and it plays below its calibrated strength; Medium has no cap and peaks at 3.1s | Calibrate with the app's cap; speed up move scoring, or cap Medium too. Check on a mid-range phone | 3 | 3 | 3 | 3.0 | Shipped |
-| Hard on slow phones | On this server Hard's slowest move is now 1.7s (95th percentile 1.5s); a mid-range phone may be 2–4× slower, so the 2.5s cap may still cut some moves short | Time the AI on a real mid-range phone (or a throttled browser); if the cap bites, look one reply deeper only when time allows | 2 | 3 | 2 | 3.0 | Idea |
+| Hard on slow phones | On this server Hard's slowest move is now 1.7s (95th percentile 1.5s); a mid-range phone may be 2–4× slower, so the 2.5s cap may still cut some moves short | Time the AI on a real mid-range phone (or a throttled browser); if the cap bites, look one reply deeper only when time allows | 2 | 3 | 2 | 3.0 | Shipped |
+| Snappier Hard on phones | On a mid-range phone Hard's turn takes 1.7s typically and up to 3.3s: the 2.5s budget is only checked between candidates, so it overshoots | Check the budget inside each candidate, and try a lower budget (e.g. 1.5s): capping cost no measurable strength at 2.5s | 2 | 3 | 1 | 6.0 | Idea |
 | Connect-the-sides mode | The owner's mockup shows "cells to connect · top ↕ bottom / left ↔ right" | A second goal: connect your two sides of the hexagon (like the board game Hex). **Owner, 2026-11-16: an extra mode alongside the box-in game, not a replacement**; the current rules and default stay. Simulate first: fairness, length, whether words still matter | 3 | 2 | 5 | 1.2 | Idea |
 | Redesign palette and font | The owner's mockup uses Lexend and a navy palette | Try them as theme tokens (bundled font), check contrast in both themes | 2 | 3 | 2 | 3.0 | Idea |
 
@@ -30,6 +31,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-16 | AI timing in a CPU-throttled browser (`time-ai-throttled.ts`, 101 positions) and capped calibration (`calibrate-ai.ts … 625`, 40 games per pairing) | On a 4× slower CPU (a mid-range phone) Hard's budget runs out on 31% of moves (50% at 6×); Hard's turn: median 1.7s, max 3.3s; Medium max 1.2s. Capping costs no measurable strength: capped Hard beats Novice 93%, Easy 73%, Medium 63% (uncapped: 90%, 65%, 65%). |
 | 2026-11-16 | Owner report, then every feedback message measured at 360–414px | The feedback line wrapped: "Orange played STONE. Start or end with" plus five letter chips never fit on one line, and four error lines and "No spot yet" wrapped at 360–375px. |
 | 2026-11-16 | Owner playtest, then measured at 390×844, 390×700 and 390×664 | The board jumped when the spot stepper appeared: up 4–6px when it showed (36px against a 20px feedback line), down again on an error line. |
 | 2026-11-16 | Owner playtest (iPhone, browser with toolbars) | "Touch areas for the keyboard is kind of awkward." In a phone browser the visible screen is under 680px tall, so keys are 33px (Apple suggests 44); the 4–6px gaps and the middle row's 16px insets didn't respond to taps; keys acted on click, which the browser drops when a fast tap slides. |
@@ -48,6 +50,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-16 | Hard on slow phones, measured: on a mid-range phone Hard's budget runs out on about a third of its moves, but that costs no measurable strength, so no change to the AI. New `scripts/time-ai-throttled.ts`; `calibrate-ai.ts` takes a budget | PR_LINK |
 | 2026-11-16 | Feedback line on one line: the opponent's word moves to the note row, shorter error lines, and an e2e guard that every feedback message fits at 360px | akpsan/wordrush#32 |
 | 2026-11-16 | No layout shift from the spot stepper: the feedback line and the stepper share one height, so the board stays put while typing | akpsan/wordrush#31 |
 | 2026-11-16 | Keyboard touch areas: taps in the gaps and the middle row's insets land on the nearest key, keys act on touch-down, a pressed state, no long-press selection | akpsan/wordrush#30 |
@@ -75,5 +78,6 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
+| 2026-11-16 | No Next/Planned item; took the top-scoring Idea that fits, Hard on slow phones (effort 2; tied with the palette, which would change the look the owner kept). Measured in a 4×/6× throttled browser and with a capped calibration (240 games): the cap bites on a third to half of Hard's moves but costs no strength, so no AI change. Follow-up: Snappier Hard on phones. The endgame findings (#33) are still unmerged after GitHub errors: not this run's PR. PR_LINK |
 | 2026-11-15 | Built the top Planned item, AI thinking time (effort 3): the engine counts moves for the AI without building them, and the boxed-in check stops early. Same moves, about 5× faster (Hard median 2.4s → 0.45s). 12 benchmark games; vs-ai and hex e2e specs. akpsan/wordrush#28 |
 | 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. akpsan/wordrush#24 |
