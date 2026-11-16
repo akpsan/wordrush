@@ -240,3 +240,15 @@ On the owner's request. Layout only; the rules are unchanged.
 | "N squares" on the cards | **Removed** too. Squares only decide a full board, which hasn't happened in simulation; the results screen still lists them, and "+n" still rises from the card after a play. |
 | What stays | The label ("3+ words to play", "1 word left!", "Boxed in"), with the warning icon now beside it at 1 word or fewer, and the card's pulsing alarm at exactly 1 word on your turn. The tutorial keeps its text ("Lots of room", "Boxed in"). |
 | Screen reader | Each card is a group named by the old meter label ("Rex, Hard: 3+ words to play"); the `meter` role is gone. |
+
+## Build decisions (keyboard touch areas, 2026-11-16)
+
+From the owner's phone playtest: "Touch areas for the keyboard is kind of awkward."
+
+| Topic | Decision |
+| --- | --- |
+| Gaps | Each key's touch area reaches halfway into the gaps around it (an invisible `::before`), so a tap between keys lands on the nearer key. Key sizes and spacing look the same, so the board keeps its room. |
+| Middle row | A and L also take the row's 16px side insets, like a phone keyboard. |
+| When a key acts | Touch and pen act on pointerdown, so a finger that slides a little while typing fast no longer drops the letter. Mouse and keyboard (Enter or Space on a focused key) still act on click; the click that follows a touch is skipped. |
+| Feedback | A pressed key brightens; long-press no longer selects key text or opens the callout. |
+

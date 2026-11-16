@@ -88,3 +88,31 @@ test('on-screen keys type and play', async ({ page }) => {
   await page.getByRole('button', { name: 'Play TEAM' }).click();
   await expect(page.locator('.tnum')).toHaveText('2');
 });
+
+test('on-screen keys: a tap types once, and taps in the gaps still land', async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.use.hasTouch, 'touch only');
+  await openApp(page);
+  await page.getByRole('button', { name: /Play a friend/ }).click();
+  const box = async (name: string) => (await page.locator('.kb').getByRole('button', { name, exact: true }).boundingBox())!;
+  const typed = page.getByRole('textbox');
+  // A plain tap on T: exactly one letter, not two (pointerdown plus the click that follows).
+  const t = await box('T');
+  await page.touchscreen.tap(t.x + t.width / 2, t.y + t.height / 2);
+  await expect(typed).toHaveAccessibleName('Your word: T');
+  // Between W and E, just right of W's edge: lands on W (the left half of the gap is W's).
+  const w = await box('W');
+  await page.touchscreen.tap(w.x + w.width + 1, w.y + w.height / 2);
+  await expect(typed).toHaveAccessibleName('Your word: TW');
+  // Left of A, in the middle row's inset: lands on A.
+  const a = await box('A');
+  await page.touchscreen.tap(a.x - 10, a.y + a.height / 2);
+  await expect(typed).toHaveAccessibleName('Your word: TWA');
+  // Just below E, in the gap between the top two rows: lands on E.
+  const e = await box('E');
+  await page.touchscreen.tap(e.x + e.width / 2, e.y + e.height + 1);
+  await expect(typed).toHaveAccessibleName('Your word: TWAE');
+  // Delete takes one letter per tap too.
+  const del = await box('Delete');
+  await page.touchscreen.tap(del.x + del.width / 2, del.y + del.height / 2);
+  await expect(typed).toHaveAccessibleName('Your word: TWA');
+});
