@@ -27,10 +27,16 @@
 .fb .ico{width:16px;height:16px}
 .fb.good{color:var(--text)}.fb.good .ico{color:var(--pText)}
 .fb.err{color:var(--text);font-weight:700}
-.kb{display:flex;flex-direction:column;gap:6px}
+.kb{--kb-vgap:6px;--kb-hgap:5px;display:flex;flex-direction:column;gap:var(--kb-vgap);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .kb.off{opacity:.42;pointer-events:none}
-.krow{display:flex;gap:5px;justify-content:center}
-.krow.mid{padding:0 16px}
+.krow{display:flex;gap:var(--kb-hgap);justify-content:center}
+.krow.mid{--kb-inset:16px;padding:0 var(--kb-inset)}
+/* Touch areas: each key reaches halfway into the gaps around it, so a tap between keys still lands on one.
+   The middle row's end keys also take its side insets, like a phone keyboard's A and L. */
+.key::before{content:'';position:absolute;inset:calc(var(--kb-vgap) / -2) calc(var(--kb-hgap) / -2)}
+.krow.mid .key:first-child::before{left:calc(-1 * var(--kb-inset))}
+.krow.mid .key:last-child::before{right:calc(-1 * var(--kb-inset))}
+.key:active{filter:brightness(1.3)}
 .key{flex:1 1 0;min-width:0;height:42px;border:0;border-radius:8px;background:var(--key);color:var(--text);font-weight:800;font-size:15px;display:grid;place-items:center;position:relative;padding:0}
 .key.anc{background:var(--pTint);color:var(--pText);box-shadow:inset 0 0 0 2px var(--p)}
 .key.anc::after{content:'';position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--p)}

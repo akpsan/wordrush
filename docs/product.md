@@ -30,6 +30,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-16 | Owner playtest (iPhone, browser with toolbars) | "Touch areas for the keyboard is kind of awkward." In a phone browser the visible screen is under 680px tall, so keys are 33px (Apple suggests 44); the 4–6px gaps and the middle row's 16px insets didn't respond to taps; keys acted on click, which the browser drops when a fast tap slides. |
 | 2026-11-15 | AI benchmark, 12 games with Hard on two-way hex | Most of the AI's time went into listing every legal move just to count them, and into listing all of the opponent's moves after each word to see whether they're boxed in. Counting without building the list, and stopping at the first move found, makes it about 5× faster with identical moves: Hard median 2.4s → 0.45s (max 11.5s → 1.7s), Medium 0.7s → 0.11s (max 2.7s → 0.27s). |
 | 2026-11-15 | AI calibration on two-way hex, 40 games per pairing | Easy < Medium < Hard holds: Medium beats Easy 60%, Hard beats Easy 65% and Medium 65% (one-way: 65%, 73%, 70%). Against a casual player 68% / 80% / 90%, so Hard is now clearly above Medium (one-way: Medium 93%, Hard 83%). Thinking time grew: Hard median 2.6s uncapped (max 10.9s), Medium median 0.6s (max 3.1s). |
 | 2026-11-15 | Tutorial check under two-way rules | No everyday word linked to CAR is blocked any more: early in a game, open cells surround every letter, so a full bump is rare. The lesson keeps SEA's bump, scoped to "this way". THEM has two ways out; RACE still closes both. |
@@ -45,6 +46,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-16 | Keyboard touch areas: taps in the gaps and the middle row's insets land on the nearest key, keys act on touch-down, a pressed state, no long-press selection | akpsan/wordrush#30 |
 | 2026-11-15 | AI thinking time: about 5× faster AI turns with identical moves (engine counts moves without listing them; the boxed-in check stops at the first move). Hard's median turn 2.4s → 0.45s, so it rarely hits the 2.5s cap now | akpsan/wordrush#28 |
 | 2026-11-15 | Two-way words on the hexagon: new hex games use `HEX_TWO_WAY_RULES` (words read either way along all three lines). Tutorial copy for the bump ("this way") and box-in ("two ways out"), Board setting help, screen-reader directions in words, AI levels recalibrated | akpsan/wordrush#26 |
 | 2026-11-15 | Two-way words, arrows and feedback: an arrow for all six directions (hex: → ↘ ↙ ← ↖ ↗), and no "would read backwards" line under two-way rules | akpsan/wordrush#25 |

@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { useRef, type MouseEvent, type PointerEvent } from 'react';
 import { plain } from '../../../copy';
 import { Icon } from '../../../ui/Icon';
 import '../styles/entry.css';
@@ -26,7 +26,26 @@ export interface KeyboardProps {
  */
 const keepFocus = (e: MouseEvent) => e.preventDefault();
 
+/** A touch's click arrives after its pointerdown; within this long, a click after a touch is that touch's. */
+const CLICK_AFTER_TOUCH_MS = 1000;
+
 export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis, play }: KeyboardProps) {
+  // Touch and pen keys act on pointerdown, like a phone keyboard: fast typing often slides the finger a
+  // little, and the browser then drops the click. Mouse and keyboard (Enter or Space on a focused key)
+  // still act on click; the click that follows a touch is skipped.
+  const lastTouch = useRef(-Infinity);
+  const press = (act: () => void) => ({
+    onMouseDown: keepFocus,
+    onPointerDown: (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      lastTouch.current = e.timeStamp;
+      if (enabled) act();
+    },
+    onClick: (e: MouseEvent) => {
+      if (e.timeStamp - lastTouch.current < CLICK_AFTER_TOUCH_MS) return;
+      if (enabled) act();
+    },
+  });
   const extra = (key: string) => {
     const e = emphasis?.(key);
     return e ? ` ${e}` : '';
@@ -41,8 +60,7 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis, pla
               className={play.ready ? (play.losing ? 'key play ready losing' : 'key play ready') : 'key play'}
               aria-label={play.label}
               aria-disabled={!enabled || !play.ready}
-              onMouseDown={keepFocus}
-              onClick={() => enabled && play.onPlay()}
+              {...press(play.onPlay)}
             >
               {plain('btn.play')}
             </button>
@@ -56,8 +74,7 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis, pla
                 className={(mine ? 'key anc' : 'key') + extra(letter)}
                 aria-label={mine ? plain('key.letter.aria', { L: letter.toUpperCase() }) : letter.toUpperCase()}
                 aria-disabled={!enabled}
-                onMouseDown={keepFocus}
-                onClick={() => enabled && onLetter(letter)}
+                {...press(() => onLetter(letter))}
               >
                 {letter.toUpperCase()}
               </button>
@@ -69,8 +86,7 @@ export function Keyboard({ enabled, highlight, onLetter, onDelete, emphasis, pla
               className={'key wide' + extra('delete')}
               aria-label={plain('key.delete.aria')}
               aria-disabled={!enabled}
-              onMouseDown={keepFocus}
-              onClick={() => enabled && onDelete()}
+              {...press(onDelete)}
             >
               <Icon name="backspace" />
             </button>
