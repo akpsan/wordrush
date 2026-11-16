@@ -251,4 +251,5 @@ From the owner's phone playtest: "Touch areas for the keyboard is kind of awkwar
 | Middle row | A and L also take the row's 16px side insets, like a phone keyboard. |
 | When a key acts | Touch and pen act on pointerdown, so a finger that slides a little while typing fast no longer drops the letter. Mouse and keyboard (Enter or Space on a focused key) still act on click; the click that follows a touch is skipped. |
 | Feedback | A pressed key brightens; long-press no longer selects key text or opens the callout. |
+| Stepper height | The feedback line and the spot stepper share one height (`--fbh`: 36px, 32px on screens 720px tall or less, 28px at 680px or less), so nothing moves when the stepper appears or an error shows. Before, the board jumped 4–8px. On the shortest screens the stepper buttons are 28px tall, with a 36px touch area. |
 
