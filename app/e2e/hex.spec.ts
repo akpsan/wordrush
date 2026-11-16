@@ -70,3 +70,23 @@ test('two-way words: SEA can come up onto your A, with an arrow showing the way'
   await expect(page.getByLabel(/: S, Blue$/)).toBeVisible();
   await expect(page.locator('.tnum')).toHaveText('4');
 });
+
+test('the board stays put while typing: stepper, next spot and errors', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'phone', 'phone layout');
+  await page.setViewportSize({ width: 390, height: 664 }); // a phone browser with its toolbars showing
+  await openApp(page, 'returning', { board: 'hex' });
+  await page.getByRole('button', { name: /Play a friend/ }).click();
+  await keys(page, 'tea\n');
+  await keys(page, 'stone\n');
+  const top = async () => (await page.locator('.board').first().boundingBox())!.y;
+  const start = await top();
+  await keys(page, 'sea'); // three spots: the stepper replaces the feedback line
+  await expect(page.locator('.stepper')).toBeVisible();
+  expect(await top()).toBe(start);
+  await keys(page, ' ');
+  expect(await top()).toBe(start);
+  for (let i = 0; i < 3; i++) await page.keyboard.press('Backspace');
+  await keys(page, 'zzz\n'); // an error line
+  await expect(page.locator('.fb.err')).toBeVisible();
+  expect(await top()).toBe(start);
+});

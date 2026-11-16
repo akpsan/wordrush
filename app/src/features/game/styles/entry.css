@@ -22,7 +22,7 @@
 .slot.cap{opacity:.35;border-style:dashed}
 @keyframes blink{50%{opacity:0}}
 .typing{display:flex;align-items:center;justify-content:center;gap:10px;height:46px;font-size:14px;font-weight:700;color:var(--muted)}
-.fb{display:flex;align-items:center;justify-content:center;gap:6px;min-height:20px;font-size:13px;font-weight:600;color:var(--muted);text-align:center}
+.fb{display:flex;align-items:center;justify-content:center;gap:6px;min-height:var(--fbh,36px);font-size:13px;font-weight:600;color:var(--muted);text-align:center}
 .fb b{color:var(--text);font-weight:800;letter-spacing:.03em}
 .fb .ico{width:16px;height:16px}
 .fb.good{color:var(--text)}.fb.good .ico{color:var(--pText)}
@@ -76,8 +76,12 @@
 .key.play.ready{background:var(--p);color:var(--pInk);box-shadow:0 4px 12px var(--pGlow)}
 .key.play.ready.losing{background:transparent;color:var(--text);box-shadow:inset 0 0 0 2px var(--text)}
 /* The spot stepper replaces the Flip button: previous, "spot i of n", next. */
-.stepper{display:flex;align-items:center;justify-content:center;gap:8px;min-height:36px}
-.stepbtn{width:44px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center;padding:0}
+/* The feedback line and the stepper share one height (--fbh), so the controls and board don't move when
+   the stepper appears. */
+.stepper{display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--fbh,36px)}
+.stepbtn{width:44px;height:var(--fbh,36px);border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center;padding:0;position:relative}
+/* Slim buttons on short screens keep a 36px touch area. */
+.stepbtn::before{content:'';position:absolute;left:0;right:0;top:calc((36px - var(--fbh,36px)) / -2);bottom:calc((36px - var(--fbh,36px)) / -2)}
 .stepbtn .ico{width:18px;height:18px}
 .steplabel{min-width:140px;margin:0;text-align:center;font-size:13px;font-weight:700;color:var(--text)}
 /* The mover's letters as chips in "Start or end with". */
@@ -86,5 +90,5 @@
 /* Bigger letter slots: they share the row. */
 .wr.phone .entry{gap:8px}
 .wr.phone .slot{flex:1 1 0;max-width:62px;width:auto;height:50px;font-size:24px}
-@media (max-height:720px){.wr.phone .slot{height:42px;font-size:20px}.stepper{min-height:32px}.stepbtn{height:32px}}
-@media (max-height:680px){.wr.phone .slot{height:38px;font-size:18px}}
+@media (max-height:720px){.wr.phone .slot{height:42px;font-size:20px}.wr.phone{--fbh:32px}}
+@media (max-height:680px){.wr.phone .slot{height:38px;font-size:18px}.wr.phone{--fbh:28px}}
