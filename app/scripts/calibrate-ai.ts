@@ -3,8 +3,10 @@
  * person with a small vocabulary (a random everyday word each turn). Pairs of games share a seed
  * with sides swapped, so neither side gets the first-move edge. Also reports thinking time.
  *
- * Usage (from app/): npx vite-node scripts/calibrate-ai.ts [gamesPerPairing=100] [level|all] [square|hex]
+ * Usage (from app/): npx vite-node scripts/calibrate-ai.ts [gamesPerPairing=100] [level|all] [square|hex] [budgetMs]
  * With a level, only the pairings that include it are played. The board defaults to square.
+ * With budgetMs, Hard stops looking after that long, like the app's worker (2500ms there). To mimic a phone
+ * N times slower than this machine, pass 2500 / N (625 for a mid-range phone, about 4x slower).
  */
 
 import { chooseMove, createRng, type Level, type Rng } from '../src/ai';
@@ -19,6 +21,7 @@ const games = Number(process.argv[2] ?? 100);
 const onlyArg = process.argv[3];
 const only = onlyArg && onlyArg !== 'all' ? (onlyArg as Side) : undefined;
 const shape = process.argv[4] === 'hex' ? 'hex' : 'square';
+const budgetMs = process.argv[5] ? Number(process.argv[5]) : undefined;
 const times: Record<Side, number[]> = { novice: [], easy: [], medium: [], hard: [] };
 
 function novice(state: GameState, rng: Rng): Placement | null {
@@ -34,7 +37,8 @@ function playGame(blue: Side, orange: Side, seed: number): { winner: 0 | 1; turn
   while (!state.result) {
     const side = state.toMove === 0 ? blue : orange;
     const t0 = performance.now();
-    const move = side === 'novice' ? novice(state, rng) : chooseMove(side, state, { lex, familiar, rng });
+    const outOfTime = budgetMs === undefined ? undefined : () => performance.now() - t0 > budgetMs;
+    const move = side === 'novice' ? novice(state, rng) : chooseMove(side, state, { lex, familiar, rng, outOfTime });
     times[side].push(performance.now() - t0);
     if (!move) throw new Error('no move but the game is not over');
     state = play(state, lex, move);
