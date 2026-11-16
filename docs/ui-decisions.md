@@ -253,3 +253,14 @@ From the owner's phone playtest: "Touch areas for the keyboard is kind of awkwar
 | Feedback | A pressed key brightens; long-press no longer selects key text or opens the callout. |
 | Stepper height | The feedback line and the spot stepper share one height (`--fbh`: 36px, 32px on screens 720px tall or less, 28px at 680px or less), so nothing moves when the stepper appears or an error shows. Before, the board jumped 4–8px. On the shortest screens the stepper buttons are 28px tall, with a 36px touch area. |
 
+## Build decisions (feedback line on one line, 2026-11-16)
+
+From the owner: the feedback line still wrapped in some cases, which moves the board. Measured every message at 360–414px with five letter chips.
+
+| Topic | Decision |
+| --- | --- |
+| Opponent's word | "Orange played **STONE**" (or "Juno played **STONE**") moves to the note row above the slots, with the player's pip, when that row is free (impact and hint win it, as before). The feedback line says only "Start or end with [chips]". Screen readers still hear "Orange played STONE." at the start of the line. `type.start.afterOpp` and `cpu.played` are no longer used. |
+| Shorter lines | `type.nospot`: "No spot. Start or end with **{letters}**". `oops.played`: "**{WORD}** was already played. Try another?". `oops.notword`: drops "Hmm,". `oops.noroom`: "No room for **{WORD}**. Try a shorter word?". `oops.notyourletter`: "Start or end with **{letters}**". `type.backwards` (square board only): "**{WORD}** would read backwards. Words go → or ↓". |
+| Note row | At least 15px tall, so a text-only note doesn't change its height. |
+| Guard | `e2e/copy-fit.spec.ts` renders every feedback-line message with worst-case values at 360px and fails if one wraps. |
+

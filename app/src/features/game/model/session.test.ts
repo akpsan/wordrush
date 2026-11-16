@@ -72,20 +72,21 @@ describe('playing', () => {
   it('explains a failed play and replays the shake on each attempt', () => {
     let s = run([...playWord('team'), ...playWord('stone'), ...playWord('rqx')]);
     expect(s.problem).toEqual({ kind: 'not-a-word', id: 1 });
-    expect(feedbackFor(s, entryView(s, lex), lex).text).toBe("Hmm, **RQX** isn't a word we know. Try another?");
+    expect(feedbackFor(s, entryView(s, lex), lex).text).toBe("**RQX** isn't a word we know. Try another?");
     s = run([{ type: 'play' }], s);
     expect(s.problem?.id).toBe(2);
     s = run([{ type: 'delete' }], s);
     expect(s.problem).toBeNull();
   });
 
-  it('tells the next player what was just played', () => {
+  it('tells the next player what was just played, in the note row so the feedback line stays one line', () => {
     const s = run([...playWord('team'), ...playWord('stone')]);
     expect(feedbackFor(s, entryView(s, lex), lex)).toEqual({
       tone: 'neutral',
-      text: `Orange played STONE. Start or end with **${CHIPS}**`,
-      pip: 1,
+      text: `Start or end with **${CHIPS}**`,
+      pip: null,
       letters: ['T', 'E', 'A', 'M'],
+      played: { text: 'Orange played **STONE**', pip: 1 },
     });
   });
 });

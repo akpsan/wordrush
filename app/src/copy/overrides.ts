@@ -47,6 +47,12 @@ const opponents = {
 const changed = {
   // Tab stays reserved for focus; Space flips.
   'desk.keys': 'Just type! **Enter** to play · **Space** to flip · **⌫** to delete',
+  // One line on a 360px phone with five letter chips (docs/ui-decisions.md, feedback line on one line).
+  'type.nospot': 'No spot. Start or end with **{letters}**',
+  'oops.played': '**{WORD}** was already played. Try another?',
+  'oops.notword': "**{WORD}** isn't a word we know. Try another?",
+  'oops.noroom': 'No room for **{WORD}**. Try a shorter word?',
+  'oops.notyourletter': 'Start or end with **{letters}**',
 } as const;
 
 /**
@@ -92,7 +98,7 @@ const missing = {
   'settings.heatmap.help': 'Empty squares glow where more of your words could go.',
   'settings.heatmap.aria': 'Show where words fit: {on/off}',
   // Direction marks: words only read left to right or downwards (docs/ui-decisions.md).
-  'type.backwards': '**{WORD}** would read backwards here. Words go left to right or downwards',
+  'type.backwards': '**{WORD}** would read backwards. Words go → or ↓',
   // Learn to play on the hexagon (docs/ui-decisions.md): the steps whose words differ from the square board.
   'learn.hex.2.coach': 'Start in the top-left corner. Type **TEA**!',
   'learn.hex.2.note': 'First word: 3 letters max',

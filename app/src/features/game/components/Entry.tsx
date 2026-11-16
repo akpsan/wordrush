@@ -120,6 +120,13 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
         </p>
       ) : hint ? (
         <HintChip hint={hint} />
+      ) : typingFeedback.played && !showNote && !aiTurn ? (
+        <p className="tnote played">
+          <span className={typingFeedback.played.pip === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />
+          <span>
+            <RichText text={typingFeedback.played.text} />
+          </span>
+        </p>
       ) : (
         <p className={showNote ? 'tnote' : 'tnote off'} aria-hidden={!showNote}>
           <Icon name="note" />
@@ -168,6 +175,8 @@ export function Entry({ entry, feedback: typingFeedback, problemId, firstWordNot
           {feedback.tone === 'warn' && <Icon name="warn" />}
           {feedback.tone === 'steer' && <Icon name="note" />}
           {feedback.pip !== null && <span className={feedback.pip === 0 ? 'mini a' : 'mini b'} aria-hidden="true" />}
+          {/* The opponent's word sits in the note row for the eye; screen readers hear it here, with the line. */}
+          {feedback.played && <span className="sr">{feedback.played.text.replace(/\*\*/g, '')}. </span>}
           <span>
             <RichText text={feedback.text} renderBold={boldOrChips(feedback.letters)} />
           </span>
