@@ -19,6 +19,11 @@ export interface Feedback {
   readonly pip: Player | null;
   /** The mover's letters, drawn as chips where the text holds CHIPS (in bold markers). */
   readonly letters?: readonly string[];
+  /**
+   * The opponent's last word ("Orange played STONE"), for the note row above the slots when it's free.
+   * It used to open the feedback line, which then wrapped on phones next to the letter chips.
+   */
+  readonly played?: { readonly text: string; readonly pip: Player };
 }
 
 /** Placeholder for the mover's letters in feedback text; the entry draws them as chips. */
@@ -76,11 +81,8 @@ function feedbackText(s: Session, entry: EntryView, lex: Lexicon): Feedback {
   const last = game.words[game.words.length - 1];
   if (s.lastPlay && last && last.player === opponent) {
     const WORD = last.word.toUpperCase();
-    const text =
-      match.mode === 'ai'
-        ? t('cpu.played', { ...aiParams(match), WORD, letters })
-        : t('type.start.afterOpp', { opponent: nameOf(match, opponent), WORD, letters });
-    return neutral(text, last.player);
+    const played = { text: t('wait.theyPlayed', { player: nameOf(match, opponent), WORD }), pip: last.player };
+    return { ...neutral(t('type.start', { letters })), played };
   }
   return neutral(t('type.start', { letters }));
 }

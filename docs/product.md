@@ -30,6 +30,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | Source | Finding |
 | --- | --- | --- |
+| 2026-11-16 | Owner report, then every feedback message measured at 360–414px | The feedback line wrapped: "Orange played STONE. Start or end with" plus five letter chips never fit on one line, and four error lines and "No spot yet" wrapped at 360–375px. |
 | 2026-11-16 | Owner playtest, then measured at 390×844, 390×700 and 390×664 | The board jumped when the spot stepper appeared: up 4–6px when it showed (36px against a 20px feedback line), down again on an error line. |
 | 2026-11-16 | Owner playtest (iPhone, browser with toolbars) | "Touch areas for the keyboard is kind of awkward." In a phone browser the visible screen is under 680px tall, so keys are 33px (Apple suggests 44); the 4–6px gaps and the middle row's 16px insets didn't respond to taps; keys acted on click, which the browser drops when a fast tap slides. |
 | 2026-11-15 | AI benchmark, 12 games with Hard on two-way hex | Most of the AI's time went into listing every legal move just to count them, and into listing all of the opponent's moves after each word to see whether they're boxed in. Counting without building the list, and stopping at the first move found, makes it about 5× faster with identical moves: Hard median 2.4s → 0.45s (max 11.5s → 1.7s), Medium 0.7s → 0.11s (max 2.7s → 0.27s). |
@@ -47,6 +48,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
+| 2026-11-16 | Feedback line on one line: the opponent's word moves to the note row, shorter error lines, and an e2e guard that every feedback message fits at 360px | akpsan/wordrush#32 |
 | 2026-11-16 | No layout shift from the spot stepper: the feedback line and the stepper share one height, so the board stays put while typing | akpsan/wordrush#31 |
 | 2026-11-16 | Keyboard touch areas: taps in the gaps and the middle row's insets land on the nearest key, keys act on touch-down, a pressed state, no long-press selection | akpsan/wordrush#30 |
 | 2026-11-15 | AI thinking time: about 5× faster AI turns with identical moves (engine counts moves without listing them; the boxed-in check stops at the first move). Hard's median turn 2.4s → 0.45s, so it rarely hits the 2.5s cap now | akpsan/wordrush#28 |
