@@ -264,3 +264,13 @@ From the owner: the feedback line still wrapped in some cases, which moves the b
 | Note row | At least 15px tall, so a text-only note doesn't change its height. |
 | Guard | `e2e/copy-fit.spec.ts` renders every feedback-line message with worst-case values at 360px and fails if one wraps. |
 
+## Build decisions (dead-end warning, 2026-11-17)
+
+From the endgame analysis (docs/findings.md, Decided before the end): a word could leave "3+ words" to play that all lead into the same dead end.
+
+| Topic | Decision |
+| --- | --- |
+| Room | The engine's `roomOf` counts how many words the mover could still chain alone, as if the opponent never moved (up to 3). The opponent can only take room away, so room 1 or 2 is a dead end whatever happens. The search stops after 400 positions and then counts as open, so a warning is never wrong; on game positions 400 found every dead end that 1,000 did. |
+| Impact line | For a ready word with room 1 or 2 (and not a winning or losing word): "**ABLE** is a dead end: room for 1 more word" (or "2 more words"), warning tone. Otherwise unchanged. |
+| Speed | The impact line follows the typing (`useDeferredValue`): on this server it takes a median 14ms and at most 142ms, so a slow phone could lag a little behind a key press. The word counts use the fast counter. |
+

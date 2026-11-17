@@ -11,7 +11,7 @@ import { openApp } from './helpers';
 
 const copy: Record<string, string> = { ...deck, ...overrides };
 // The game's feedback line. Not the tutorial's coach lines, the setup sheet or other screens.
-const LINE = /^(type|oops|first|stepper|wait)\.|^(cpu|opp)\.(danger|random|thinking|playing)/;
+const LINE = /^(type|oops|first|stepper|wait|impact)\.|^(cpu|opp)\.(danger|random|thinking|playing)/; // impact: the note row, 12px there
 const RETIRED = new Set(['type.start.afterOpp']); // its opponent's-word part moved to the note row (2026-11-16)
 const PARAMS: Record<string, string> = { WORD: 'WWWWW', ai: 'Juno', opponent: 'Orange', player: 'Orange', n: '5', i: '5', L: 'W' };
 
