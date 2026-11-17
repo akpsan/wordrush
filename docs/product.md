@@ -56,7 +56,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-17 | Dead-end warning: the impact line says "**WORD** is a dead end: room for 1 more word" when a ready word leaves only 1 or 2 words you could chain, even with words to play left. New engine `roomOf` | PR_LINK |
+| 2026-11-17 | Dead-end warning: the impact line says "**WORD** is a dead end: room for 1 more word" when a ready word leaves only 1 or 2 words you could chain, even with words to play left. New engine `roomOf` | akpsan/wordrush#36 |
 | 2026-11-16 | Hard on slow phones, measured: on a mid-range phone Hard's budget runs out on about a third of its moves, but that costs no measurable strength, so no change to the AI. New `scripts/time-ai-throttled.ts`; `calibrate-ai.ts` takes a budget | akpsan/wordrush#34 |
 | 2026-11-16 | Feedback line on one line: the opponent's word moves to the note row, shorter error lines, and an e2e guard that every feedback message fits at 360px | akpsan/wordrush#32 |
 | 2026-11-16 | No layout shift from the spot stepper: the feedback line and the stepper share one height, so the board stays put while typing | akpsan/wordrush#31 |
@@ -85,7 +85,7 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
-| 2026-11-17 | Built the Next item (owner's pick), Dead-end warning (effort 3): engine `roomOf`, the impact line warns about dead ends, computed off the typing path. Unit tests pin a real position (ABLE showed 3+ words with room for 1); copy-fit, hex, flows and vs-ai specs. Follow-up: Room on the player cards. PR_LINK |
+| 2026-11-17 | Built the Next item (owner's pick), Dead-end warning (effort 3): engine `roomOf`, the impact line warns about dead ends, computed off the typing path. Unit tests pin a real position (ABLE showed 3+ words with room for 1); copy-fit, hex, flows and vs-ai specs. Follow-up: Room on the player cards. akpsan/wordrush#36 |
 | 2026-11-16 | No Next/Planned item; took the top-scoring Idea that fits, Hard on slow phones (effort 2; tied with the palette, which would change the look the owner kept). Measured in a 4×/6× throttled browser and with a capped calibration (240 games): the cap bites on a third to half of Hard's moves but costs no strength, so no AI change. Follow-up: Snappier Hard on phones. The endgame findings (#33) are still unmerged after GitHub errors: not this run's PR. akpsan/wordrush#34 |
 | 2026-11-15 | Built the top Planned item, AI thinking time (effort 3): the engine counts moves for the AI without building them, and the boxed-in check stops early. Same moves, about 5× faster (Hard median 2.4s → 0.45s). 12 benchmark games; vs-ai and hex e2e specs. akpsan/wordrush#28 |
 | 2026-11-14 | No Next/Planned item of effort 3 or less, so built slice 1 of Any-direction words (engine, sim preset, conformance; 240 sim games for fixtures). Split the rest into three rows. No UI change, so no e2e specs or screenshots. akpsan/wordrush#24 |
