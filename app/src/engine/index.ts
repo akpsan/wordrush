@@ -2,6 +2,7 @@
 
 export type * from './types';
 export { STANDARD_RULES, HEX_RULES, HEX_TWO_WAY_RULES, rulesFor, type Rules } from './rules';
+export { roomOf } from './room';
 export { geometryOf, DELTA, type Geometry, type Shape } from './geometry';
 export { createLexicon, parseWordList, type Lexicon } from './lexicon';
 export { toIndex, toRowCol, cellsFor } from './board';

@@ -91,6 +91,9 @@ const missing = {
   'impact.you': 'After **{WORD}**: you {you} to play',
   'impact.boxes': '**{WORD}** boxes {opp} in!',
   'impact.lose': '**{WORD}** leaves you no words. You would lose!',
+  // Dead ends: room for at most 1 or 2 more words, even if the opponent never moved again.
+  'impact.deadend.one': '**{WORD}** is a dead end: room for 1 more word',
+  'impact.deadend.two': '**{WORD}** leads to a dead end: room for 2 more words',
   'impact.n': '{n} words',
   'impact.one': '1 word',
   // Heatmap and words to play (docs/ui-decisions.md).
