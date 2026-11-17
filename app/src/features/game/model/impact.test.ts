@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
-import { legalMoves, newGame, play } from '../../../engine';
+import { HEX_TWO_WAY_RULES, legalMoves, newGame, play, type Dir } from '../../../engine';
 import { impactOf, impactLine } from './impact';
 import { FRIEND } from './match';
 
@@ -32,5 +32,26 @@ describe('word impact', () => {
     const line = impactLine({ game: g, match: FRIEND }, { ready: true, current: plant! }, lex)!;
     expect(line.text).toBe('**PLANT** boxes Orange in!');
   });
-});
 
+  it('warns about a dead end that the word counts would hide', () => {
+    // Turn 10 of a Medium-vs-Hard game on two-way hex: ABLE leaves Blue 3+ words to play, but they all
+    // lead into the same pocket, with room for just 1 more word.
+    const MOVES: [string, number, number, Dir][] = [
+      ['abs', 0, 5, 'down'], ['close', 6, 5, 'down'], ['bass', 5, 5, 'up'], ['cargo', 6, 5, 'upRight'],
+      ['bases', 5, 5, 'downLeft'], ['cells', 6, 5, 'across'], ['sans', 7, 3, 'left'], ['cakes', 6, 5, 'downLeft'],
+      ['see', 7, 0, 'up'],
+    ];
+    const g = MOVES.reduce(
+      (s, [word, row, col, dir]) => play(s, lex, { word, row, col, dir, anchor: 0, anchorAt: 'start' }),
+      newGame(HEX_TWO_WAY_RULES),
+    );
+    const able = legalMoves(g, lex).find((m) => m.word === 'able' && m.row === 7 && m.col === 4 && m.dir === 'down')!;
+    const i = impactOf(g, lex, able)!;
+    expect(i.you.after).toBe(3); // the old line said "you 3+ words"
+    expect(i.room).toBe(1);
+    expect(impactLine({ game: g, match: FRIEND }, { ready: true, current: able }, lex)).toEqual({
+      text: '**ABLE** is a dead end: room for 1 more word',
+      tone: 'warn',
+    });
+  });
+});

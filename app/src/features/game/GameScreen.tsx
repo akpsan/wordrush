@@ -1,6 +1,6 @@
 /** The game screen: assembles the header, status bar, board and controls for one game. */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { plain, t } from '../../copy';
 import { geometryOf, otherPlayer, type GameResult, type GameState, type Lexicon } from '../../engine';
 import { useIsDesktop, usePrefersReducedMotion } from '../../platform/media';
@@ -91,8 +91,14 @@ export function GameScreen(props: GameScreenProps) {
   const aiTurn = useMemo(() => (phase === 'idle' ? null : aiTurnView(session, lex, phase)), [session, lex, phase]);
   const hint = useMemo(() => hintView(session), [session]);
   const left = session.hints.perGame > 0 ? hintsLeft(session) : null;
-  // What the ready word does to both players' ways out (docs/ui-decisions.md, word impact).
-  const impact = useMemo(() => (yourTurn ? impactLine(session, entry, lex) : null), [yourTurn, session, entry, lex]);
+  // What the ready word does to both players' ways out (docs/ui-decisions.md, word impact). It also checks
+  // for a dead end, which can take a moment on a phone, so it follows the typing instead of holding it up.
+  const deferredSession = useDeferredValue(session);
+  const deferredEntry = useDeferredValue(entry);
+  const impact = useMemo(
+    () => (yourTurn && deferredSession === session ? impactLine(deferredSession, deferredEntry, lex) : null),
+    [yourTurn, session, deferredSession, deferredEntry, lex],
+  );
   const highlight = useMemo(
     () => new Set(yourTurn && settings.highlightLetters ? letterChoices(game, game.toMove) : []),
     [yourTurn, settings.highlightLetters, game],
