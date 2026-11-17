@@ -252,6 +252,22 @@ From [two_way.md](../sim/reports/two_way.md) (Nov 13): 200 games per row, hex mo
 - **Why:** a word may already start *or end* on your letter, so a backwards word covers exactly the cells a forward word ending there would. Two-way words add spellings that fit, not new places to go. Bots that already see every word gain little; players who know fewer words would gain more options in the same spots.
 - **So the rule is safe to adopt** for clarity if the owner wants it (owner playtest: one-way words confused players). It would need the TypeScript engine, the conformance fixture and the preview's arrows to follow. Not adopted yet: rule changes are the owner's call.
 
+## Decided before the end (two-way hex, Nov 16)
+
+Owner playtest: games against Medium and Hard are often decided by one move that boxes the mover in, and the next few moves are decorative. Checked with `app/scripts/analyze-endgames.ts` on 80 simulated two-way hex games (the conformance fixture) and 60 games between the app's AIs. A player counts as **doomed** when, even if the opponent never moved again, they could play at most 2 more words. The opponent can only take room away, so from there the loss is certain.
+
+| Games | n | Avg moves | Moves after doomed (avg, median) | ≥2 decorative moves | Doomed by own word | With a way out |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sim balanced vs balanced | 20 | 16.3 | 3.5, 3 | 95% | 95% | 30% |
+| App Medium vs Medium | 20 | 17.2 | 3.1, 3 | 90% | 90% | 25% |
+| App Hard vs Hard | 20 | 16.3 | 3.1, 3 | 90% | 95% | 20% |
+| App Medium vs Hard | 20 | 15.7 | 2.6, 3 | 85% | 85% | 35% |
+
+- **Confirmed.** In about 9 games in 10 the loser's own word sealed the game, typically leaving room for 1 more word. Then 3 moves follow (the opponent, the loser's last word, the opponent) before the loser is boxed in: about a fifth of a 16-move game is decorative.
+- **Usually the trap was set earlier.** In most self-boxed games none of 30 sampled alternatives kept the loser's room open either, so they were already doomed a turn before; the 2-word horizon just can't prove it yet.
+- **Sometimes it's a mistake.** In 20–35% of the AI games the loser had a way out (7–20% of its moves) and still walked into the dead end. The AIs judge room by counting legal words, and a pocket can hold many words that all lead nowhere. The game's own numbers ("3+ words to play", the impact line) count words the same way, so a player can't see the trap coming either.
+- Caveats: small samples; "doomed" is a proof only up to the 2-word horizon; alternatives are a sample of 30 moves per turn.
+
 ## Still to test
 
 - **A rule-agnostic MCTS bot,** to confirm the "cornered loses" results with a stronger player that wasn't hand-tuned for the rule.
