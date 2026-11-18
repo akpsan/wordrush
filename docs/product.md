@@ -57,7 +57,7 @@ Score = impact × confidence ÷ effort (each 1–5). Highest first. Status: Idea
 
 | Date | What | PR |
 | --- | --- | --- |
-| 2026-11-18 | Snappier Hard on phones: Hard checks its 2.5s budget inside each step, not only between candidates. On a 4× slower CPU its slowest turn drops from 3.3s to 2.8s (90th percentile 2.9s → 2.6s, median 1.7s → 1.5s); without a budget it plays exactly the same moves | PR_LINK |
+| 2026-11-18 | Snappier Hard on phones: Hard checks its 2.5s budget inside each step, not only between candidates. On a 4× slower CPU its slowest turn drops from 3.3s to 2.8s (90th percentile 2.9s → 2.6s, median 1.7s → 1.5s); without a budget it plays exactly the same moves | akpsan/wordrush#37 |
 | 2026-11-17 | Dead-end warning: the impact line says "**WORD** is a dead end: room for 1 more word" when a ready word leaves only 1 or 2 words you could chain, even with words to play left. New engine `roomOf` | akpsan/wordrush#36 |
 | 2026-11-16 | Hard on slow phones, measured: on a mid-range phone Hard's budget runs out on about a third of its moves, but that costs no measurable strength, so no change to the AI. New `scripts/time-ai-throttled.ts`; `calibrate-ai.ts` takes a budget | akpsan/wordrush#34 |
 | 2026-11-16 | Feedback line on one line: the opponent's word moves to the note row, shorter error lines, and an e2e guard that every feedback message fits at 360px | akpsan/wordrush#32 |
@@ -87,7 +87,7 @@ One line per scheduled run: date, what happened, PR or stop reason. Newest first
 
 | Date | Result |
 | --- | --- |
-| 2026-11-18 | No Next/Planned item; took the top-scoring Idea that fits, Snappier Hard on phones (score 6.0, effort 1). Budget checks inside each step: slowest Hard turn on a 4× slower CPU 3.3s → 2.8s, same moves uncapped. Tried a 1.5s budget: Hard fell to 50% against Medium, so kept 2.5s. 132 calibration games; vs-ai and hex specs. PR_LINK |
+| 2026-11-18 | No Next/Planned item; took the top-scoring Idea that fits, Snappier Hard on phones (score 6.0, effort 1). Budget checks inside each step: slowest Hard turn on a 4× slower CPU 3.3s → 2.8s, same moves uncapped. Tried a 1.5s budget: Hard fell to 50% against Medium, so kept 2.5s. 132 calibration games; vs-ai and hex specs. akpsan/wordrush#37 |
 | 2026-11-17 | Built the Next item (owner's pick), Dead-end warning (effort 3): engine `roomOf`, the impact line warns about dead ends, computed off the typing path. Unit tests pin a real position (ABLE showed 3+ words with room for 1); copy-fit, hex, flows and vs-ai specs. Follow-up: Room on the player cards. akpsan/wordrush#36 |
 | 2026-11-16 | No Next/Planned item; took the top-scoring Idea that fits, Hard on slow phones (effort 2; tied with the palette, which would change the look the owner kept). Measured in a 4×/6× throttled browser and with a capped calibration (240 games): the cap bites on a third to half of Hard's moves but costs no strength, so no AI change. Follow-up: Snappier Hard on phones. The endgame findings (#33) are still unmerged after GitHub errors: not this run's PR. akpsan/wordrush#34 |
 | 2026-11-15 | Built the top Planned item, AI thinking time (effort 3): the engine counts moves for the AI without building them, and the boxed-in check stops early. Same moves, about 5× faster (Hard median 2.4s → 0.45s). 12 benchmark games; vs-ai and hex e2e specs. akpsan/wordrush#28 |
