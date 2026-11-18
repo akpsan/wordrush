@@ -4,7 +4,7 @@
  * throttling and times each level's move on them, with Hard's 2.5s budget as in the app's worker.
  * Reports how often Hard's budget runs out (it then plays the best move found so far).
  *
- * Usage (from app/): npx vite-node scripts/time-ai-throttled.ts [throttle=4] [games=6]
+ * Usage (from app/): npx vite-node scripts/time-ai-throttled.ts [throttle=4] [games=6] [budgetMs=the worker's]
  * Uses Chromium from Playwright (PW_CHROMIUM sets its path).
  */
 
@@ -13,7 +13,7 @@ import { createServer } from 'vite';
 
 const throttle = Number(process.argv[2] ?? 4);
 const games = Number(process.argv[3] ?? 6);
-const BUDGET_MS = 2500; // keep in step with src/ai/worker.ts
+const BUDGET_MS = Number(process.argv[4] ?? 2500); // default: keep in step with src/ai/worker.ts
 
 const server = await createServer({ root: new URL('..', import.meta.url).pathname, server: { port: 5299, strictPort: true }, logLevel: 'error' });
 await server.listen();
