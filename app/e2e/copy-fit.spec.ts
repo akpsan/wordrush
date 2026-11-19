@@ -43,3 +43,24 @@ test('every feedback-line message fits on one line at 360px', async ({ page }, t
   }, messages);
   expect(wrapped).toEqual([]);
 });
+
+test('every player-card label fits on one line at 360px', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'phone', 'phone widths');
+  await page.setViewportSize({ width: 360, height: 664 });
+  await openApp(page, 'returning', { board: 'hex' });
+  await page.getByRole('button', { name: /Play a friend/ }).click();
+  const labels = Object.entries(copy)
+    .filter(([id]) => id.startsWith('ways.') && !id.endsWith('.aria'))
+    .map(([id, s]) => [id, s.replace('{n}', '3+')] as const);
+  expect(labels.length).toBeGreaterThan(4);
+  const wrapped = await page.evaluate((list) => {
+    const span = document.querySelector('.pfoot .rlbl') as HTMLElement;
+    span.innerHTML = '<svg class="ico"></svg>x'; // with the warning icon, the widest case
+    const one = span.getBoundingClientRect().height;
+    return list.filter(([, s]) => {
+      span.innerHTML = `<svg class="ico"></svg>${s}`;
+      return span.getBoundingClientRect().height > one + 1 || span.scrollWidth > span.clientWidth + 1;
+    });
+  }, labels);
+  expect(wrapped).toEqual([]);
+});

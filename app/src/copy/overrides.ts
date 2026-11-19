@@ -92,6 +92,9 @@ const missing = {
   'impact.boxes': '**{WORD}** boxes {opp} in!',
   'impact.lose': '**{WORD}** leaves you no words. You would lose!',
   // Dead ends: room for at most 1 or 2 more words, even if the opponent never moved again.
+  // Player cards: words to play, but all into a dead end (docs/ui-decisions.md, dead end on the cards).
+  'ways.deadend.one': 'Dead end: 1 word left',
+  'ways.deadend.two': 'Dead end: 2 words left',
   'impact.deadend.one': '**{WORD}** is a dead end: room for 1 more word',
   'impact.deadend.two': '**{WORD}** is a dead end: room for 2 more words',
   'impact.n': '{n} words',
