@@ -274,3 +274,12 @@ From the endgame analysis (docs/findings.md, Decided before the end): a word cou
 | Impact line | For a ready word with room 1 or 2 (and not a winning or losing word): "**ABLE** is a dead end: room for 1 more word" (or "2 more words"), warning tone. Otherwise unchanged. |
 | Speed | The impact line follows the typing (`useDeferredValue`): on this server it takes a median 14ms and at most 142ms, so a slow phone could lag a little behind a key press. The word counts use the fast counter. |
 
+## Build decisions (dead end on the player cards, 2026-11-19)
+
+| Topic | Decision |
+| --- | --- |
+| Label | When a player has words to play but their room (engine `roomOf`) is 1 or 2, their card reads "Dead end: 1 word left" or "Dead end: 2 words left" instead of "3+ words to play". |
+| Warning | It warns like the word count would: room 1 like "1 word left!" (warning icon; the pulsing alarm only for the player about to move), room 2 like 2 words. |
+| Cost | Room is searched once per position and player (cached), not on every keystroke. |
+| Guard | `e2e/copy-fit.spec.ts` also checks every card label fits on one line at 360px. |
+
