@@ -13,7 +13,7 @@ import everyday from '../../data/dictionaries/everyday-3to5.txt?raw';
 import fixture from '../src/engine/__tests__/fixtures/sim-hex2-games.json';
 import { chooseMove, createRng, type Level } from '../src/ai';
 import { getHintWords, getLexicon } from '../src/dictionary';
-import { HEX_TWO_WAY_RULES, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Lexicon, type Placement, type Player } from '../src/engine';
+import { HEX_TWO_WAY_RULES, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Lexicon, type MoveLike, type Placement, type Player } from '../src/engine';
 
 const HORIZON = 3;
 /** At a self-box, how many of the loser's other moves to check for one that kept their room open. */
@@ -56,7 +56,7 @@ interface Analysis {
   wordsLeft: number;
 }
 
-function analyze(moves: Placement[], lex: Lexicon): Analysis {
+function analyze(moves: MoveLike[], lex: Lexicon): Analysis {
   const states: GameState[] = [newGame(HEX_TWO_WAY_RULES)];
   for (const m of moves) states.push(play(states.at(-1)!, lex, m));
   const end = states.at(-1)!;
@@ -88,10 +88,10 @@ function analyze(moves: Placement[], lex: Lexicon): Analysis {
   return { ...base, decorative, cause: 'self', openAlternatives: open, movesAtThatTurn: sampled.length, wordsLeft };
 }
 
-function decode(text: string, size: number): Placement {
+function decode(text: string): MoveLike {
   const [word, pos] = text.split('@') as [string, string];
   const [r, c, d] = pos.split(',') as [string, string, string];
-  return { word, row: Number(r), col: Number(c), dir: SIM_DIRS[d]!, anchor: Number(r) * size + Number(c), anchorAt: 'start' };
+  return { word, row: Number(r), col: Number(c), dir: SIM_DIRS[d]! };
 }
 
 function aiGame(a: Level, b: Level, seed: number, lex: Lexicon, familiar: ReadonlySet<string>): Placement[] {
@@ -130,7 +130,7 @@ for (const pair of ['balanced,balanced', 'greedy,aggressive', 'aggressive,random
   const games = sim.filter((g) => g.agents.join(',') === pair);
   const rows = games.map((g, k) => {
     memo.clear();
-    const r = analyze(g.plies.filter(([m]) => m !== 'STUCK').map(([m]) => decode(m, HEX_TWO_WAY_RULES.size)), simLex);
+    const r = analyze(g.plies.filter(([m]) => m !== 'STUCK').map(([m]) => decode(m)), simLex);
     console.error(`  sim ${pair} #${k}: ${JSON.stringify(r)}`);
     return r;
   });

@@ -9,9 +9,10 @@ import {
   newGame,
   play,
   previewEntry,
+  replayMoves,
   waysOut,
   type GameState,
-  type Placement,
+  type MoveLike,
 } from '..';
 
 const lex = getLexicon();
@@ -170,7 +171,29 @@ describe('ways out and giving up', () => {
   });
 
   it('rejects illegal moves', () => {
-    const bad: Placement = { word: 'zzz', row: 0, col: 0, dir: 'across', anchor: 0, anchorAt: 'start' };
+    const bad: MoveLike = { word: 'zzz', row: 0, col: 0, dir: 'across' };
     expect(() => play(newGame(), lex, bad)).toThrow(/Illegal/);
+  });
+});
+
+describe('replayMoves', () => {
+  const rules = newGame().rules;
+  const first = legalMoves(newGame(rules), lex)[0]!;
+  const second = legalMoves(play(newGame(rules), lex, first), lex)[0]!;
+  const moves: MoveLike[] = [first, second].map(({ word, row, col, dir }) => ({ word, row, col, dir }));
+
+  it('gives the state of playing the moves one by one', () => {
+    const byHand = play(play(newGame(rules), lex, first), lex, second);
+    expect(replayMoves(rules, lex, moves)).toEqual(byHand);
+  });
+
+  it('gives a new game for an empty list', () => {
+    expect(replayMoves(rules, lex, [])).toEqual(newGame(rules));
+  });
+
+  it('throws on an illegal move, as play does', () => {
+    const bad: MoveLike = { word: 'zzz', row: 0, col: 0, dir: 'across' };
+    expect(() => replayMoves(rules, lex, [...moves, bad])).toThrow(/Illegal move/);
+    expect(() => replayMoves(rules, lex, [moves[0]!, moves[0]!])).toThrow(/Illegal move/);
   });
 });
