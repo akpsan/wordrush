@@ -187,7 +187,7 @@ function EndLinks({ title, onMenu }: { title: string; onMenu?: () => void }) {
   const label = outcome === 'copied' ? t('over.share.copied') : outcome === 'failed' ? t('over.share.failed') : t('over.share');
   return (
     <div className="olinks">
-      <button type="button" className="linkbtn" onClick={share} aria-live="polite">
+      <button type="button" className="linkbtn" onClick={() => void share()} aria-live="polite">
         {label}
       </button>
       {onMenu && (

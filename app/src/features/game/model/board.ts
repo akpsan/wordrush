@@ -91,7 +91,7 @@ export type WordAge = 0 | 1 | 2;
  */
 export function wordAges(words: readonly { readonly player: Player }[]): WordAge[] {
   const later = [0, 0];
-  const ages: WordAge[] = new Array(words.length);
+  const ages: WordAge[] = new Array<WordAge>(words.length);
   for (let i = words.length - 1; i >= 0; i--) {
     const p = words[i]!.player;
     ages[i] = Math.min(later[p]!, 2) as WordAge;

@@ -28,6 +28,7 @@ app/src/
 - **The AI is a player, not a rule.** It picks from the engine's legal moves, and its move reaches the game as an ordinary session action (`aiPlay`). The game's `Match` (pass and play, or vs AI) is the only place that knows who is a person; names go through `nameOf`.
 - **Pre-made positions go through the engine** (`playScripted`). The menu board and the tutorial can never show an illegal position, and tests fail if a scripted word stops being valid.
 - **Copy and tokens are data.** Changing wording or colors never touches logic.
+- **The layer rules are enforced by ESLint.** `app/eslint.config.js` sets `no-restricted-imports` per folder, so `npm run lint` fails on an import that breaks the layering or reaches into another feature's internals.
 - **Removing a feature** (for example hints) means deleting its folder and its one registration line in `app/`.
 
 ## Testing
