@@ -79,9 +79,25 @@ export function isLegal(state: GameState, lex: Lexicon, p: MoveLike): boolean {
  * Play a word. Throws on an illegal move: the UI must check first (see checkWord).
  * After the move: a full board ends the game on squares; otherwise, if the next
  * player has no move, they're boxed in and the mover wins.
+ *
+ * The only entry point for moves that come from a player (and the session reducer): it checks legality.
  */
 export function play(state: GameState, lex: Lexicon, p: MoveLike): GameState {
   if (!isLegal(state, lex, p)) throw new Error(`Illegal move: ${placementKey(p)}`);
+  return applyMove(state, lex, p);
+}
+
+/**
+ * Play a move that is already known to be legal, skipping the legality check `play` does.
+ * ONLY for moves taken from `legalMoves()` (or `allMoves`) for this exact state, as the AI's search does:
+ * an illegal move here corrupts the game instead of throwing. Anything from player input goes through `play`.
+ */
+export function playLegal(state: GameState, lex: Lexicon, p: MoveLike): GameState {
+  return applyMove(state, lex, p);
+}
+
+/** Apply a move without checking it: write the word, hand over the turn, work out the result. */
+function applyMove(state: GameState, lex: Lexicon, p: MoveLike): GameState {
   const { rules } = state;
   const mover = state.toMove;
   const cells = cellsFor(geometryOf(rules), p.row, p.col, p.dir, p.word.length)!;

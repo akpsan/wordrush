@@ -6,7 +6,7 @@
  */
 
 import { hasAnyMove, allMoves, type MoveContext } from './placements';
-import { moveContext, play, type GameState } from './game';
+import { moveContext, playLegal, type GameState } from './game';
 import type { Lexicon } from './lexicon';
 import type { Player } from './types';
 
@@ -29,7 +29,7 @@ export function roomOf(state: GameState, lex: Lexicon, player: Player, horizon =
     const moves = allMoves(ctx, lex).sort((a, b) => b.word.length - a.word.length);
     let best = 0;
     for (const m of moves) {
-      best = Math.max(best, 1 + search(solo(play(s, lex, m)), depth + 1));
+      best = Math.max(best, 1 + search(solo(playLegal(s, lex, m)), depth + 1));
       if (best >= horizon - depth) break;
     }
     return best;

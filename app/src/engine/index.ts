@@ -9,6 +9,7 @@ export { toIndex, toRowCol, cellsFor } from './board';
 export {
   newGame,
   play,
+  playLegal,
   replayMoves,
   giveUp,
   isLegal,

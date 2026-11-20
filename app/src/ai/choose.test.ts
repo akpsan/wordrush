@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { getHintWords, getLexicon } from '../dictionary';
-import { isLegal, newGame, play, playScripted, type GameState } from '../engine';
+import { isLegal, newGame, play, playScripted, STANDARD_RULES, type GameState } from '../engine';
 import { chooseMove, LEVELS, type Level } from './choose';
 import { createRng } from './random';
+import pinnedGames from './__tests__/fixtures/pinned-games.json';
 
 const lex = getLexicon();
 const familiar = getHintWords();
@@ -63,4 +64,24 @@ describe('the AI opponents', () => {
     const state = { ...newGame(), result: { winner: 0 as const, reason: 'gave-up' as const } };
     expect(chooseMove('medium', state, ctx(0))).toBeNull();
   });
+});
+
+/**
+ * Pinned decisions on the square board: seeded games between all level pairings, recorded as
+ * `word@row,col,dir`. A speed-up or refactor of the AI must not change a single choice.
+ * Regenerate only when the AI's choices are meant to change.
+ */
+describe('pinned AI games (square board)', () => {
+  it.each(pinnedGames.map((g) => [`${g.blue} vs ${g.orange}, seed ${g.seed}`, g] as const))('%s', (_name, g) => {
+    let state = newGame(STANDARD_RULES);
+    const rng = createRng(g.seed);
+    const moves: string[] = [];
+    while (!state.result) {
+      const move = chooseMove(state.toMove === 0 ? g.blue as Level : g.orange as Level, state, { lex, familiar, rng });
+      expect(move).not.toBeNull();
+      moves.push(`${move!.word}@${move!.row},${move!.col},${move!.dir}`);
+      state = play(state, lex, move!);
+    }
+    expect(moves).toEqual(g.moves);
+  }, 120_000);
 });

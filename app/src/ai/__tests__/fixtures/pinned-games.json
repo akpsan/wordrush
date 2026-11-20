@@ -1,0 +1,114 @@
+[
+ {
+  "blue": "easy",
+  "orange": "medium",
+  "seed": 1,
+  "moves": [
+   "acts@0,0,across",
+   "seats@3,7,down",
+   "caps@0,1,down",
+   "buses@3,3,across",
+   "safe@3,1,down",
+   "badly@3,3,down"
+  ]
+ },
+ {
+  "blue": "medium",
+  "orange": "hard",
+  "seed": 2,
+  "moves": [
+   "acts@0,0,across",
+   "some@7,4,across",
+   "spas@0,3,down",
+   "sells@7,0,across",
+   "star@3,3,down",
+   "swiss@3,4,down",
+   "sea@5,1,across",
+   "seas@6,4,across",
+   "elite@1,2,down",
+   "save@3,5,down",
+   "she@1,0,across",
+   "aye@4,5,across",
+   "sit@1,0,down",
+   "slave@0,7,down",
+   "temp@3,0,down",
+   "loss@0,4,across",
+   "pal@6,0,across",
+   "lab@0,4,down"
+  ]
+ },
+ {
+  "blue": "hard",
+  "orange": "easy",
+  "seed": 3,
+  "moves": [
+   "arms@0,0,across",
+   "peer@4,7,down",
+   "sent@0,3,down",
+   "base@5,4,across",
+   "tapes@3,3,across",
+   "herb@5,1,across",
+   "slot@3,0,across",
+   "has@5,1,down",
+   "gas@1,0,down",
+   "ads@6,1,across",
+   "score@3,0,down",
+   "song@6,3,across",
+   "cab@4,0,across"
+  ]
+ },
+ {
+  "blue": "medium",
+  "orange": "easy",
+  "seed": 4,
+  "moves": [
+   "acts@0,0,across",
+   "stat@4,7,down",
+   "swiss@0,3,down",
+   "seas@4,4,across",
+   "stars@3,3,across",
+   "eyes@4,5,down",
+   "spas@3,0,across",
+   "lips@7,2,across",
+   "samba@3,0,down",
+   "carl@4,2,down",
+   "pas@1,0,down",
+   "rip@6,2,across",
+   "aye@2,0,across"
+  ]
+ },
+ {
+  "blue": "hard",
+  "orange": "medium",
+  "seed": 5,
+  "moves": [
+   "mars@0,0,across",
+   "safe@4,7,down",
+   "stars@0,3,down",
+   "pass@4,4,across",
+   "realm@3,3,across",
+   "pest@4,4,down",
+   "tear@3,0,across",
+   "sap@6,4,across",
+   "aahed@3,2,down"
+  ]
+ },
+ {
+  "blue": "hard",
+  "orange": "hard",
+  "seed": 6,
+  "moves": [
+   "acts@0,0,across",
+   "sat@5,7,down",
+   "swiss@0,3,down",
+   "sizes@1,7,down",
+   "seem@4,3,across",
+   "stars@5,3,across",
+   "lets@4,0,across",
+   "spa@5,3,down",
+   "echo@4,1,down",
+   "aye@7,3,across",
+   "base@1,1,down"
+  ]
+ }
+]
