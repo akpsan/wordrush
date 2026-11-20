@@ -17,7 +17,7 @@ import {
   exitsOf,
   legalMoves,
   moveContext,
-  play,
+  playLegal,
   type GameState,
   type Lexicon,
   type Placement,
@@ -82,13 +82,13 @@ function hard(state: GameState, moves: Placement[], ctx: AiContext): Placement {
   let best: Placement = shortlist[0]!.move; // the one-ply best, if time runs out before any look-ahead
   let bestValue = -Infinity;
   for (const { move, value: firstValue } of shortlist) {
-    const after = play(state, ctx.lex, move);
+    const after = playLegal(state, ctx.lex, move);
     let value = firstValue;
     if (!after.result) {
       const replies = legalMoves(after, ctx.lex);
       const reply = ranked(after, replies, ctx, HARD, 30, stop)[0]!.move;
       if (stop?.()) break;
-      value = evaluateMyTurn(play(after, ctx.lex, reply), ctx.lex, me, HARD);
+      value = evaluateMyTurn(playLegal(after, ctx.lex, reply), ctx.lex, me, HARD);
     }
     if (value >= WIN) return move;
     if (value > bestValue) {
@@ -115,7 +115,7 @@ function boxInMove(state: GameState, lex: Lexicon): Placement | null {
     const cells = new Set(cellsFor(g, m.row, m.col, m.dir, m.word.length) ?? []);
     return live.every((e) => e.cells.some((c) => cells.has(c)));
   };
-  return legalMoves(state, lex).filter(touchesAll).find((m) => play(state, lex, m).result?.winner === me) ?? null;
+  return legalMoves(state, lex).filter(touchesAll).find((m) => playLegal(state, lex, m).result?.winner === me) ?? null;
 }
 
 interface Scored {
@@ -133,7 +133,7 @@ function ranked(state: GameState, moves: readonly Placement[], ctx: AiContext, w
   const scored: Scored[] = [];
   for (const move of candidates(state, moves, ctx.rng, cap)) {
     if (stop && scored.length > 0 && stop()) break;
-    scored.push({ move, value: evaluate(play(state, ctx.lex, move), ctx.lex, me, w), tie: ctx.rng() });
+    scored.push({ move, value: evaluate(playLegal(state, ctx.lex, move), ctx.lex, me, w), tie: ctx.rng() });
   }
   return scored.sort((a, b) => b.value - a.value || b.tie - a.tie);
 }
