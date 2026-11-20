@@ -30,7 +30,7 @@ function OpponentCards({ level, onPick }: { level: Level; onPick: (l: Level) => 
   const refs = useRef<Partial<Record<Level, HTMLButtonElement | null>>>({});
   const move = (e: KeyboardEvent, step: number) => {
     e.preventDefault();
-    const next = LEVELS[(LEVELS.indexOf(level) + step + LEVELS.length) % LEVELS.length];
+    const next = LEVELS[(LEVELS.indexOf(level) + step + LEVELS.length) % LEVELS.length]!;
     onPick(next);
     refs.current[next]?.focus();
   };
@@ -83,7 +83,7 @@ export function SetupSheet({ initial, records, onStart, onClose }: SetupSheetPro
   useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => {
       const i = ['1', '2', '3'].indexOf(e.key);
-      if (i >= 0) setLevel(LEVELS[i]);
+      if (i >= 0) setLevel(LEVELS[i]!);
       const target = e.target as HTMLElement | null;
       const onOtherButton = target?.tagName === 'BUTTON' && target.getAttribute('role') !== 'radio';
       if (e.key === 'Enter' && !onOtherButton) {

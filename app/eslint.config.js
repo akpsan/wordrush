@@ -58,6 +58,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // The code writes `arr[i]!` on purpose: it documents "this index exists", as it would have to
+      // read under `noUncheckedIndexedAccess`. That compiler flag is off, so the rule would call
+      // every such `!` unnecessary. Whether to turn the flag on is left to the owner.
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

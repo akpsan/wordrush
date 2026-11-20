@@ -61,19 +61,19 @@ function positionFor(step: number, lesson: Lesson, p: Positions, lex: Lexicon): 
   const last = (g: GameState) => g.words.length - 1;
   switch (step) {
     case 0: // intro: the chain the tutorial will build
-      return { game: p.chain[5], popped: null };
+      return { game: p.chain[5]!, popped: null };
     case 1:
-      return { game: p.chain[0], popped: null };
+      return { game: p.chain[0]!, popped: null };
     case 2:
-      return { game: p.chain[2], popped: last(p.chain[2]) };
+      return { game: p.chain[2]!, popped: last(p.chain[2]!) };
     case 3:
-      return { game: p.chain[2], popped: null };
+      return { game: p.chain[2]!, popped: null };
     case 4:
-      return { game: p.chain[4], popped: last(p.chain[4]) };
+      return { game: p.chain[4]!, popped: last(p.chain[4]!) };
     case 5:
-      return { game: p.chain[4], popped: null };
+      return { game: p.chain[4]!, popped: null };
     case 6: // the opponent doesn't reply between steps 6 and 7
-      return { game: { ...p.chain[5], toMove: 0 }, popped: null };
+      return { game: { ...p.chain[5]!, toMove: 0 }, popped: null };
     case 7: {
       if (!lesson.won) return { game: p.boxIn, popped: null };
       const won = playScripted(lex, [p.script.boxInWord], p.boxIn);
@@ -118,7 +118,7 @@ const lessonSession = (game: GameState, lesson: Lesson, popped: number | null): 
 });
 
 export function lessonView(lesson: Lesson, positions: Positions, lex: Lexicon): LessonView {
-  const step = positions.script.steps[lesson.step];
+  const step = positions.script.steps[lesson.step]!;
   const { game, popped } = positionFor(lesson.step, lesson, positions, lex);
   const session = lessonSession(game, lesson, popped);
   const base = entryView(session, lex);
@@ -256,11 +256,11 @@ function withAttempt(cells: readonly CellView[], game: GameState, attempt: { row
   for (let k = 0; k < typed.length; k++) {
     const cell = toIndex(n, attempt.row + k * DELTA[attempt.dir][0], attempt.col + k * DELTA[attempt.dir][1]);
     const existing = game.board[cell];
-    const base = { ...out[cell], className: out[cell].className.replace(' dim', '') };
+    const base = { ...out[cell]!, className: out[cell]!.className.replace(' dim', '') };
     const isLink = k === typed.length - 1 && existing?.letter === typed[k];
     if (isLink) out[cell] = { ...base, className: `${base.className} gring weak` };
     else if (existing) out[cell] = { ...base, className: `${base.className} bump` };
-    else out[cell] = { ...base, letter: typed[k], className: `${base.className} gpart`, delay: k * 30 };
+    else out[cell] = { ...base, letter: typed[k]!, className: `${base.className} gpart`, delay: k * 30 };
   }
   return out;
 }
@@ -278,7 +278,7 @@ export function lessonReducer(positions: Positions, lex: Lexicon) {
       case 'flip': {
         const { spots, index } = view.entry;
         if (spots.length < 2) return lesson;
-        const next = spots[(index + 1) % spots.length];
+        const next = spots[(index + 1) % spots.length]!;
         return { ...lesson, preferred: { anchor: next.anchor, anchorAt: next.anchorAt, dir: next.dir } };
       }
       case 'play':

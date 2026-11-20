@@ -46,7 +46,7 @@ function HeroBoard({ cells, geo }: { cells: readonly HeroCell[]; geo: Geometry }
   const shown = cells.map((c, i) => [c, i] as const).filter(([, i]) => geo.valid[i]);
   return (
     <div className={hex ? 'board mboard hex' : 'board mboard'} style={hex?.style} aria-hidden="true">
-      {hex && shown.map(([, i]) => <i key={`s${i}`} className={`hexslot ${cells[i].className.replace(/^cell ?/, '')}`.trim()} style={{ ...hex.slot(i), ...(cells[i].delay ? { animationDelay: `${cells[i].delay}ms` } : undefined) }} />)}
+      {hex && shown.map(([, i]) => <i key={`s${i}`} className={`hexslot ${cells[i]!.className.replace(/^cell ?/, '')}`.trim()} style={{ ...hex.slot(i), ...(cells[i]!.delay ? { animationDelay: `${cells[i]!.delay}ms` } : undefined) }} />)}
       {shown.map(([c, i]) => {
         const anim = c.delay ? { animationDelay: `${c.delay}ms` } : undefined;
         return (

@@ -93,15 +93,15 @@ export function wordAges(words: readonly { readonly player: Player }[]): WordAge
   const later = [0, 0];
   const ages: WordAge[] = new Array<WordAge>(words.length);
   for (let i = words.length - 1; i >= 0; i--) {
-    const p = words[i].player;
-    ages[i] = Math.min(later[p], 2) as WordAge;
-    later[p]++;
+    const p = words[i]!.player;
+    ages[i] = Math.min(later[p]!, 2) as WordAge;
+    later[p]!++;
   }
   return ages;
 }
 
 const cellAge = (ages: readonly WordAge[], wordsUsingCell: readonly number[]): WordAge =>
-  Math.min(...wordsUsingCell.map((w) => ages[w])) as WordAge;
+  Math.min(...wordsUsingCell.map((w) => ages[w]!)) as WordAge;
 
 const AGE_CLASS = ['', 'prev', 'old'] as const;
 
@@ -117,7 +117,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   const fullBoardEnd = game.result?.reason === 'full-board';
 
   // Cells of each player's last word ("recent"), and the mover's letters to build from.
-  const recentOf = (p: Player) => new Set(game.lastWord[p] === null ? [] : game.words[game.lastWord[p]].cells);
+  const recentOf = (p: Player) => new Set(game.lastWord[p] === null ? [] : game.words[game.lastWord[p]!]!.cells);
   const recent: [Set<CellIndex>, Set<CellIndex>] = [recentOf(0), recentOf(1)];
   const showAnchors = opts.showAnchors ?? true;
   const anchors = showAnchors && myTurn && !firstMove ? recent[mover] : new Set<CellIndex>();
@@ -127,18 +127,18 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   if (entry.current) {
     const c = entry.current;
     (cellsFor(geometryOf(game.rules), c.row, c.col, c.dir, c.word.length) ?? []).forEach((cell, k) => {
-      ghost.set(cell, { letter: c.word[k], k, link: cell === c.anchor });
+      ghost.set(cell, { letter: c.word[k]!, k, link: cell === c.anchor });
     });
   }
 
   // The most recent word, flashed for the next player until they start typing.
   const lastWord = game.words[game.words.length - 1];
   const flash = new Set(lastWord && !s.typed && !over ? lastWord.cells : []);
-  const popCells = s.lastPlay ? game.words[s.lastPlay.wordIndex].cells : [];
+  const popCells = s.lastPlay ? game.words[s.lastPlay.wordIndex]!.cells : [];
   const revealing = opts.aiReveal !== undefined;
   const popOrder = revealing ? popCells.filter((c) => game.board[c]!.words.length === 1) : popCells;
   const pop = new Map<CellIndex, number>(popOrder.map((c, k) => [c, k] as const));
-  const stagger = revealing ? opts.aiReveal : 60;
+  const stagger = revealing ? opts.aiReveal! : 60;
 
   // Escape-route dots when the mover is running out of room.
   const routes = new Set<CellIndex>();
@@ -168,7 +168,7 @@ export function boardView(s: Session, entry: EntryView, lex: Lexicon, opts: Boar
   // The boxed-in explanation.
   const boxed = game.result?.reason === 'boxed-in' ? game.result : null;
   const loser = boxed ? (boxed.winner === 0 ? 1 : 0) : null;
-  const sealed = new Set(boxed && boxed.boxedWord !== undefined ? game.words[boxed.boxedWord].cells : []);
+  const sealed = new Set(boxed && boxed.boxedWord !== undefined ? game.words[boxed.boxedWord]!.cells : []);
   const explain =
     boxed && loser !== null
       ? boxedInExplanation(exitsOf(moveContext(game, loser), lex), [...sealed])

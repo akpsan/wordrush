@@ -57,7 +57,7 @@ describe('reading direction', () => {
     const afterTea = (rules: typeof HEX_RULES) => {
       let s = newGame(rules);
       s = play(s, lex, legalMoves(s, lex).find((m) => m.word === 'tea' && m.dir === 'across')!);
-      return play(s, lex, legalMoves(s, lex)[0]); // Orange's first word, far from TEA
+      return play(s, lex, legalMoves(s, lex)[0]!); // Orange's first word, far from TEA
     };
     // Nothing on the board can end on TEA's T, but "txx" can start on it and run down-right.
     expect(fitsOnlyBackwards(afterTea(HEX_RULES), 'xxt')).toBe(true);

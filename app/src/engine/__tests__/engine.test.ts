@@ -116,7 +116,7 @@ describe('the Learn to play script', () => {
     expect(legalMoves(s, lex, 1).length).toBeGreaterThan(1000);
     const plant = checkEntry(s, lex, 'plant');
     expect(plant.ok && plant.spots.map((p) => [p.row, p.col, p.dir])).toEqual([[0, 5, 'down']]);
-    s = play(s, lex, plant.ok ? plant.spots[0] : (undefined as never));
+    s = play(s, lex, plant.ok ? plant.spots[0]! : (undefined as never));
     expect(s.result).toEqual({ winner: 0, reason: 'boxed-in', boxedWord: 3 });
   });
 });

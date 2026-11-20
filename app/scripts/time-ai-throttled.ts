@@ -76,7 +76,7 @@ try {
     return out;
   }, BUDGET_MS);
 
-  const q = (xs: number[], p: number) => [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(p * xs.length))];
+  const q = (xs: number[], p: number) => [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(p * xs.length))]!;
   console.log(`CPU throttled ${throttle}x, ${count} positions from ${games} Medium-vs-Hard games on two-way hex.\n`);
   console.log('| Level | Median ms | 90th percentile ms | Max ms | Budget ran out |');
   console.log('| --- | --- | --- | --- | --- |');

@@ -133,7 +133,7 @@ function walk(
 ): void {
   if (depth >= ctx.minLen && node.word && !ctx.played.has(node.word)) out.push(node.word);
   if (depth >= ctx.maxLen || depth >= path.length) return;
-  const cell = path[depth];
+  const cell = path[depth]!;
   const existing = ctx.board[cell];
   if (!existing) {
     for (const child of node.children.values()) walk(ctx, child, path, depth + 1, out);
@@ -148,7 +148,7 @@ function walk(
 function countWalk(ctx: MoveContext, node: TrieNode, path: readonly CellIndex[], depth: number): number {
   let n = depth >= ctx.minLen && node.word && !ctx.played.has(node.word) ? 1 : 0;
   if (depth >= ctx.maxLen || depth >= path.length) return n;
-  const existing = ctx.board[path[depth]];
+  const existing = ctx.board[path[depth]!];
   if (!existing) {
     for (const child of node.children.values()) n += countWalk(ctx, child, path, depth + 1);
   } else if (depth === 0) {

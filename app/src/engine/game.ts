@@ -42,7 +42,7 @@ export function anchorsOf(state: GameState, player: Player): Anchor[] {
     const g = geometryOf(state.rules);
     return player === 0 ? [{ cell: g.blueCorner, modes: ['start'] }] : [{ cell: g.orangeCorner, modes: ['end'] }];
   }
-  return state.words[last].cells.map((cell) => ({ cell, modes: ['start', 'end'] }));
+  return state.words[last]!.cells.map((cell) => ({ cell, modes: ['start', 'end'] }));
 }
 
 export function moveContext(state: GameState, player: Player = state.toMove): MoveContext {

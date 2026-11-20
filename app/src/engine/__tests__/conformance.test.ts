@@ -28,7 +28,7 @@ function decode(text: string, size: number): Placement {
     word,
     row: Number(r),
     col: Number(c),
-    dir: SIM_DIRS[d],
+    dir: SIM_DIRS[d]!,
     anchor: Number(r) * size + Number(c),
     anchorAt: 'start',
   };

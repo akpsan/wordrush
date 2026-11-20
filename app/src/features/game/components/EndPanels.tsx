@@ -10,7 +10,7 @@ import '../styles/panels.css';
 /** The moment a player is boxed in, before the results. */
 export function BoxedInPanel({ game, onContinue }: { game: GameState; onContinue: () => void }) {
   const result = game.result!;
-  const word = result.boxedWord !== undefined ? game.words[result.boxedWord].word.toUpperCase() : '';
+  const word = result.boxedWord !== undefined ? game.words[result.boxedWord]!.word.toUpperCase() : '';
   return (
     <div className="panel alert" role="alert">
       <div className="ph">
@@ -49,7 +49,7 @@ function headline(game: GameState, match: Match): { title: string; sub: string; 
   const sb = squares(game, 1);
   switch (result.reason) {
     case 'boxed-in': {
-      const word = result.boxedWord !== undefined ? game.words[result.boxedWord].word.toUpperCase() : '';
+      const word = result.boxedWord !== undefined ? game.words[result.boxedWord]!.word.toUpperCase() : '';
       return {
         title: t('over.boxed.title', { winner, loser }),
         sub: t('over.boxed.sub', { WORD: word, n: game.turn }),
@@ -74,7 +74,7 @@ function aiHeadline(game: GameState, match: AiMatch): { title: string; sub: stri
   const sb = squares(game, 1);
   switch (result.reason) {
     case 'boxed-in': {
-      const WORD = result.boxedWord !== undefined ? game.words[result.boxedWord].word.toUpperCase() : '';
+      const WORD = result.boxedWord !== undefined ? game.words[result.boxedWord]!.word.toUpperCase() : '';
       const n = game.turn;
       return won
         ? { title: t('cpu.over.won.title', params), sub: t('cpu.over.won.sub', { WORD, n }), score: '' }

@@ -125,7 +125,7 @@ describe('playing against the AI', () => {
     expect(s.typed).toBe('');
     expect(s.game.result).toBeNull();
     const team = checkEntry(s.game, lex, 'team');
-    s = run([{ type: 'aiPlay', move: team.ok ? team.spots[0] : (undefined as never) }], s);
+    s = run([{ type: 'aiPlay', move: team.ok ? team.spots[0]! : (undefined as never) }], s);
     expect(s.game.words.map((w) => w.word)).toEqual(['team']);
     expect(s.lastPlay).toEqual({ wordIndex: 0, gain: 4 });
     expect(s.match).toEqual(vsAi);
@@ -134,7 +134,7 @@ describe('playing against the AI', () => {
   it('ignores an AI move on the person\'s turn', () => {
     const s = createSession(undefined, undefined, { ...vsAi, human: 0 });
     const team = checkEntry(s.game, lex, 'team');
-    expect(run([{ type: 'aiPlay', move: team.ok ? team.spots[0] : (undefined as never) }], s)).toBe(s);
+    expect(run([{ type: 'aiPlay', move: team.ok ? team.spots[0]! : (undefined as never) }], s)).toBe(s);
   });
 });
 
@@ -145,7 +145,7 @@ describe('screen reader', () => {
     const tea = legalMoves(g0, lex).find((m) => m.word === 'tea' && m.dir === 'across')!;
     const announced = (dir: string) => {
       let g = play(g0, lex, tea);
-      g = play(g, lex, legalMoves(g, lex)[0]);
+      g = play(g, lex, legalMoves(g, lex)[0]!);
       const m = legalMoves(g, lex).find((p) => p.dir === dir)!;
       return aiAnnouncement(createSession(play(g, lex, m), undefined, vsAi), 'playing');
     };

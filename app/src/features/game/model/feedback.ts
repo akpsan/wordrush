@@ -117,7 +117,7 @@ export function aiTurnView(s: Session, lex: Lexicon, phase: 'thinking' | 'playin
   if (match.mode !== 'ai') return null;
   const ai = otherPlayer(match.human);
   const params = aiParams(match);
-  const aiWord = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]].word.toUpperCase() : '';
+  const aiWord = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]!]!.word.toUpperCase() : '';
   const line =
     phase === 'playing'
       ? t('cpu.playing', { ...params, WORD: aiWord })
@@ -129,10 +129,10 @@ export function aiTurnView(s: Session, lex: Lexicon, phase: 'thinking' | 'playin
   let note: Feedback | null = null;
   if (mine === null && match.first === 'random') note = neutral(t('cpu.random.result.orange', params));
   else if (mine !== null) {
-    const WORD = game.words[mine].word.toUpperCase();
+    const WORD = game.words[mine]!.word.toUpperCase();
     const justPlayed = phase === 'thinking' && s.lastPlay?.wordIndex === mine;
     note = neutral(
-      justPlayed ? t('wait.youPlayed', { WORD, n: s.lastPlay.gain }) : t('wait.theyPlayed', { player: t('player.you'), WORD }),
+      justPlayed ? t('wait.youPlayed', { WORD, n: s.lastPlay!.gain }) : t('wait.theyPlayed', { player: t('player.you'), WORD }),
       match.human,
     );
   }
@@ -146,7 +146,7 @@ export function aiAnnouncement(s: Session, phase: 'idle' | 'thinking' | 'playing
   const ai = otherPlayer(match.human);
   const params = aiParams(match);
   if (phase === 'thinking') return plain('cpu.sr.thinking', params);
-  const last = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]] : null;
+  const last = game.lastWord[ai] !== null ? game.words[game.lastWord[ai]!]! : null;
   if (phase === 'playing' && last) {
     const hexWay = game.rules.shape === 'hex' && (last.dir === 'down' || last.dir === 'up');
     const way = plain(hexWay ? (`dir.hex.${last.dir}` as const) : (`dir.${last.dir}` as const));

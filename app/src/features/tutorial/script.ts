@@ -81,7 +81,7 @@ export const STEPS: readonly Step[] = [
     note: 'learn.2.note',
     board: 'chain',
   },
-  { kind: 'watch', tag: 'learn.3.tag', coach: 'learn.3.coach', move: CHAIN[1] },
+  { kind: 'watch', tag: 'learn.3.tag', coach: 'learn.3.coach', move: CHAIN[1]! },
   {
     kind: 'type',
     tag: 'learn.4.tag',
@@ -93,7 +93,7 @@ export const STEPS: readonly Step[] = [
     flip: 'learn.4.flip',
     board: 'chain',
   },
-  { kind: 'watch', tag: 'learn.5.tag', coach: 'learn.5.coach', move: CHAIN[3] },
+  { kind: 'watch', tag: 'learn.5.tag', coach: 'learn.5.coach', move: CHAIN[3]! },
   {
     kind: 'type',
     tag: 'learn.6.tag',
@@ -199,7 +199,7 @@ export const HEX_STEPS: readonly Step[] = [
     note: 'learn.hex.2.note',
     board: 'chain',
   },
-  { kind: 'watch', tag: 'learn.3.tag', coach: 'learn.3.coach', move: HEX_CHAIN[1] },
+  { kind: 'watch', tag: 'learn.3.tag', coach: 'learn.3.coach', move: HEX_CHAIN[1]! },
   {
     kind: 'type',
     tag: 'learn.4.tag',
@@ -211,7 +211,7 @@ export const HEX_STEPS: readonly Step[] = [
     flip: 'learn.hex.4.flip',
     board: 'chain',
   },
-  { kind: 'watch', tag: 'learn.5.tag', coach: 'learn.5.coach', move: HEX_CHAIN[3] },
+  { kind: 'watch', tag: 'learn.5.tag', coach: 'learn.5.coach', move: HEX_CHAIN[3]! },
   {
     kind: 'type',
     tag: 'learn.6.tag',

@@ -35,8 +35,8 @@ export function Sheet({ title, onClose, children }: SheetProps) {
     if (e.key !== 'Tab' || !ref.current) return;
     const items = [...ref.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
     if (!items.length) return;
-    const first = items[0];
-    const last = items[items.length - 1];
+    const first = items[0]!;
+    const last = items[items.length - 1]!;
     if (e.shiftKey && document.activeElement === first) {
       e.preventDefault();
       last.focus();

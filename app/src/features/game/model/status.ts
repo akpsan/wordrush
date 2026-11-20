@@ -46,7 +46,7 @@ export interface PlayerStatus {
 export function letterChoices(game: GameState, player: Player): string[] {
   const last = game.lastWord[player];
   if (last === null) return [];
-  return [...new Set(game.words[last].word.split(''))];
+  return [...new Set(game.words[last]!.word.split(''))];
 }
 
 export function waysOutFor(game: GameState, lex: Lexicon, player: Player): number {
@@ -122,7 +122,7 @@ export function playerStatus(s: Session, lex: Lexicon, player: Player): PlayerSt
     // Only the player about to move gets the pulsing alarm; the other card keeps its quieter warning icon.
     alarm: shown === 1 && !game.result && game.toMove === player,
     squares: squares(game, player),
-    delta: last && last.player === player ? t('squares.delta', { n: s.lastPlay.gain }) : null,
+    delta: last && last.player === player ? t('squares.delta', { n: s.lastPlay!.gain }) : null,
   };
 }
 

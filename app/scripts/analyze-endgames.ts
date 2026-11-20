@@ -26,7 +26,7 @@ const memo = new Map<string, number>();
 function room(state: GameState, lex: Lexicon, p: Player, depth = 0): number {
   if (depth >= HORIZON) return 0;
   const last = state.lastWord[p];
-  const key = `${depth}|${last === null ? '' : state.words[last].cells.join(',')}|${state.board.map((c) => (c ? c.letter : '.')).join('')}`;
+  const key = `${depth}|${last === null ? '' : state.words[last]!.cells.join(',')}|${state.board.map((c) => (c ? c.letter : '.')).join('')}`;
   const hit = memo.get(key);
   if (hit !== undefined) return hit;
   const s: GameState = { ...state, toMove: p, result: null };
@@ -64,7 +64,7 @@ function analyze(moves: Placement[], lex: Lexicon): Analysis {
   // First ply index i (state after i moves) from which the loser stays doomed to the end.
   let doomedFrom = -1;
   for (let i = states.length - 1; i >= 0; i--) {
-    const s = states[i];
+    const s = states[i]!;
     if (s.lastWord[loser] === null) break; // no word yet: room isn't defined
     if (room(s, lex, loser) >= HORIZON) break;
     doomedFrom = i;
@@ -73,9 +73,9 @@ function analyze(moves: Placement[], lex: Lexicon): Analysis {
   if (doomedFrom < 0) return { ...base, decorative: 0, cause: 'never' };
   const decorative = moves.length - doomedFrom;
   if (doomedFrom === 0) return { ...base, decorative, cause: 'start' };
-  const before = states[doomedFrom - 1];
+  const before = states[doomedFrom - 1]!;
   const mover = before.toMove;
-  const wordsLeft = room(states[doomedFrom], lex, loser);
+  const wordsLeft = room(states[doomedFrom]!, lex, loser);
   if (mover !== loser) return { ...base, decorative, cause: 'opponent', wordsLeft };
   // A self-box: which of the loser's moves at that turn would have kept their room open?
   const options = legalMoves(before, lex);
@@ -91,7 +91,7 @@ function analyze(moves: Placement[], lex: Lexicon): Analysis {
 function decode(text: string, size: number): Placement {
   const [word, pos] = text.split('@') as [string, string];
   const [r, c, d] = pos.split(',') as [string, string, string];
-  return { word, row: Number(r), col: Number(c), dir: SIM_DIRS[d], anchor: Number(r) * size + Number(c), anchorAt: 'start' };
+  return { word, row: Number(r), col: Number(c), dir: SIM_DIRS[d]!, anchor: Number(r) * size + Number(c), anchorAt: 'start' };
 }
 
 function aiGame(a: Level, b: Level, seed: number, lex: Lexicon, familiar: ReadonlySet<string>): Placement[] {

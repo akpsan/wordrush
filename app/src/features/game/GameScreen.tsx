@@ -68,7 +68,7 @@ export function GameScreen(props: GameScreenProps) {
   const playing = stage === 'playing';
   const aiBusy = phase !== 'idle';
   const yourTurn = playing && !aiBusy && !isAi(match, game.toMove);
-  const lastPlayByAi = session.lastPlay !== null && isAi(match, game.words[session.lastPlay.wordIndex].player);
+  const lastPlayByAi = session.lastPlay !== null && isAi(match, game.words[session.lastPlay.wordIndex]!.player);
 
   useReportGameOver(result, phase, () => onGameOver?.(game, match));
 

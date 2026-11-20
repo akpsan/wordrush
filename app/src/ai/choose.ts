@@ -53,7 +53,7 @@ export function chooseMove(level: Level, state: GameState, ctx: AiContext): Plac
     case 'easy':
       return easy(state, moves, ctx);
     case 'medium':
-      return ranked(state, moves, ctx, MEDIUM, 60)[0].move;
+      return ranked(state, moves, ctx, MEDIUM, 60)[0]!.move;
     case 'hard':
       return hard(state, moves, ctx);
   }
@@ -68,7 +68,7 @@ function easy(state: GameState, moves: Placement[], ctx: AiContext): Placement {
   const shortest = Math.min(...moves.map((m) => m.word.length));
   const short = moves.filter((m) => m.word.length <= Math.max(shortest, 4));
   if (ctx.rng() < EASY_CARELESS) return pick(short, ctx.rng);
-  return ranked(state, short, ctx, EASY, 12)[0].move;
+  return ranked(state, short, ctx, EASY, 12)[0]!.move;
 }
 
 function hard(state: GameState, moves: Placement[], ctx: AiContext): Placement {
@@ -79,14 +79,14 @@ function hard(state: GameState, moves: Placement[], ctx: AiContext): Placement {
   // far past it. A candidate whose reply search is cut short is dropped, not judged on part of it.
   const stop = ctx.outOfTime;
   const shortlist = ranked(state, moves, ctx, HARD, 60, stop).slice(0, 6);
-  let best: Placement = shortlist[0].move; // the one-ply best, if time runs out before any look-ahead
+  let best: Placement = shortlist[0]!.move; // the one-ply best, if time runs out before any look-ahead
   let bestValue = -Infinity;
   for (const { move, value: firstValue } of shortlist) {
     const after = play(state, ctx.lex, move);
     let value = firstValue;
     if (!after.result) {
       const replies = legalMoves(after, ctx.lex);
-      const reply = ranked(after, replies, ctx, HARD, 30, stop)[0].move;
+      const reply = ranked(after, replies, ctx, HARD, 30, stop)[0]!.move;
       if (stop?.()) break;
       value = evaluateMyTurn(play(after, ctx.lex, reply), ctx.lex, me, HARD);
     }
