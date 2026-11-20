@@ -5,7 +5,7 @@ import type { Lexicon } from './lexicon';
 import { allMoves, countMoves, hasAnyMove, placementKey, placementsForWord, type MoveContext } from './placements';
 import { geometryOf } from './geometry';
 import { STANDARD_RULES, type Rules } from './rules';
-import type { Anchor, Board, GameResult, Placement, PlayedWord, Player } from './types';
+import type { Anchor, Board, GameResult, MoveLike, PlayedWord, Player } from './types';
 
 export interface GameState {
   readonly rules: Rules;
@@ -67,7 +67,7 @@ export const countLegalMoves = (state: GameState, lex: Lexicon, player: Player =
   countMoves(moveContext(state, player), lex);
 
 /** True if the placement is a real, unplayed word in a legal spot for the player to move. */
-export function isLegal(state: GameState, lex: Lexicon, p: Placement): boolean {
+export function isLegal(state: GameState, lex: Lexicon, p: MoveLike): boolean {
   if (state.result) return false;
   const ctx = moveContext(state);
   if (!lex.has(p.word) || ctx.played.has(p.word)) return false;
@@ -80,7 +80,7 @@ export function isLegal(state: GameState, lex: Lexicon, p: Placement): boolean {
  * After the move: a full board ends the game on squares; otherwise, if the next
  * player has no move, they're boxed in and the mover wins.
  */
-export function play(state: GameState, lex: Lexicon, p: Placement): GameState {
+export function play(state: GameState, lex: Lexicon, p: MoveLike): GameState {
   if (!isLegal(state, lex, p)) throw new Error(`Illegal move: ${placementKey(p)}`);
   const { rules } = state;
   const mover = state.toMove;
@@ -117,6 +117,11 @@ function resultAfterMove(state: GameState, lex: Lexicon, mover: Player): GameRes
 }
 
 /** The player to move gives up. Only allowed on their own turn. */
+/** Rebuild a game from its moves, starting from a new one. Throws on an illegal move, as `play` does. */
+export function replayMoves(rules: Rules, lex: Lexicon, moves: readonly MoveLike[]): GameState {
+  return moves.reduce((state, m) => play(state, lex, m), newGame(rules));
+}
+
 export function giveUp(state: GameState): GameState {
   if (state.result) return state;
   return { ...state, result: { winner: otherPlayer(state.toMove), reason: 'gave-up' } };
