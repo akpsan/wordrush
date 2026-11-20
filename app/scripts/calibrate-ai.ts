@@ -28,7 +28,7 @@ function novice(state: GameState, rng: Rng): Placement | null {
   const all = legalMoves(state, lex);
   const everyday = all.filter((m) => familiar.has(m.word));
   const moves = everyday.length ? everyday : all;
-  return moves.length ? moves[Math.floor(rng() * moves.length)]! : null;
+  return moves.length ? moves[Math.floor(rng() * moves.length)] : null;
 }
 
 function playGame(blue: Side, orange: Side, seed: number): { winner: 0 | 1; turns: number } {

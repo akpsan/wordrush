@@ -81,7 +81,7 @@ describe('Learn to play on the hexagon', () => {
   it('plays two-way hex rules, like new hex games', () => expect(hp.start.rules.twoWay).toBe(true));
 
   it('SEA bumps into your C going across, as the lesson shows; with two-way words it still fits elsewhere', () => {
-    const before = { ...hp.chain[5]!, toMove: 0 as const };
+    const before = { ...hp.chain[5], toMove: 0 as const };
     const check = checkEntry(before, lex, 'sea');
     expect(check.ok).toBe(true);
     const spots = check.ok ? check.spots : [];

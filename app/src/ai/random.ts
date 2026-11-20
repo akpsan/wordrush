@@ -13,7 +13,7 @@ export function createRng(seed: number): Rng {
   };
 }
 
-export const pick = <T>(items: readonly T[], rng: Rng): T => items[Math.floor(rng() * items.length)]!;
+export const pick = <T>(items: readonly T[], rng: Rng): T => items[Math.floor(rng() * items.length)];
 
 /** A random sample of up to `k` items, without repeats. */
 export function sample<T>(items: readonly T[], k: number, rng: Rng): T[] {
@@ -21,7 +21,7 @@ export function sample<T>(items: readonly T[], k: number, rng: Rng): T[] {
   const n = Math.min(k, copy.length);
   for (let i = 0; i < n; i++) {
     const j = i + Math.floor(rng() * (copy.length - i));
-    [copy[i], copy[j]] = [copy[j]!, copy[i]!];
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy.slice(0, n);
 }

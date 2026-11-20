@@ -44,7 +44,7 @@ describe('using hints in a game', () => {
     const view = hintView(s)!;
     const spot = s.hints.current!.spot;
     const link = spot.anchorAt === 'start' ? 0 : spot.word.length - 1;
-    expect(view.tiles[link]!.letter).toBe(spot.word[link]!.toUpperCase()); // the known link letter
+    expect(view.tiles[link].letter).toBe(spot.word[link].toUpperCase()); // the known link letter
     expect(view.tiles.filter((t) => t.revealed)).toHaveLength(1);
     expect(hintsLeft(s)).toBe(2);
     s = run([hint], s);

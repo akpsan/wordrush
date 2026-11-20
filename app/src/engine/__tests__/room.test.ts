@@ -23,7 +23,7 @@ function positions(): { state: GameState; player: Player }[] {
     let s = newGame(HEX_TWO_WAY_RULES);
     while (!s.result) {
       const moves = legalMoves(s, lex).sort((a, b) => a.word.length - b.word.length || a.word.localeCompare(b.word));
-      s = play(s, lex, moves[(g * 7 + s.turn * 3) % Math.min(moves.length, 5)]!);
+      s = play(s, lex, moves[(g * 7 + s.turn * 3) % Math.min(moves.length, 5)]);
       // Late positions only: that's where dead ends are, and the plain search is slow in open ones.
       if (s.turn >= 9) for (const player of [0, 1] as const) out.push({ state: s, player });
     }
@@ -43,7 +43,7 @@ describe('room', () => {
 
   it('answers "open" when its budget runs out, so a short answer is always proven', () => {
     let s = newGame(HEX_TWO_WAY_RULES);
-    s = play(s, lex, legalMoves(s, lex)[0]!);
+    s = play(s, lex, legalMoves(s, lex)[0]);
     expect(roomOf(s, lex, 0, 3, 1)).toBe(3);
   });
 });

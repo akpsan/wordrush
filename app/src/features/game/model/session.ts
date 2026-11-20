@@ -123,7 +123,7 @@ export function sessionReducer(lex: Lexicon, hintWords?: ReadonlySet<string>) {
         const { spots, index } = entryView(s, lex);
         if (spots.length < 2) return s;
         const step = action.type === 'flip' ? 1 : spots.length - 1;
-        const next = spots[(index + step) % spots.length]!;
+        const next = spots[(index + step) % spots.length];
         return { ...s, preferred: { anchor: next.anchor, anchorAt: next.anchorAt, dir: next.dir } };
       }
       case 'filter':

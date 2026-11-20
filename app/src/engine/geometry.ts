@@ -80,4 +80,4 @@ function build(shape: Shape, size: number, twoWay: boolean): Geometry {
 
 /** True if (row, col) is on the board. */
 export const onBoard = (g: Geometry, row: number, col: number): boolean =>
-  row >= 0 && col >= 0 && row < g.size && col < g.size && g.valid[row * g.size + col]!;
+  row >= 0 && col >= 0 && row < g.size && col < g.size && g.valid[row * g.size + col];

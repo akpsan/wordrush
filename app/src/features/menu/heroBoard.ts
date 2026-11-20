@@ -48,7 +48,7 @@ export function heroBoard(lex: Lexicon, shape: Shape = 'square'): { cells: HeroC
   const game = heroGame(lex, shape);
   const order = new Map<number, number>();
   game.words.forEach((w) => w.cells.forEach((c) => order.has(c) || order.set(c, order.size)));
-  const recent = new Set(game.lastWord.flatMap((i) => (i === null ? [] : game.words[i]!.cells)));
+  const recent = new Set(game.lastWord.flatMap((i) => (i === null ? [] : game.words[i].cells)));
   const cells = game.board.map((cell, index): HeroCell => {
     if (!cell) return { letter: '', className: 'cell', delay: 0 };
     const cls = ['cell', cell.owner === 0 ? 'a' : 'b', 'loop'];

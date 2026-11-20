@@ -54,7 +54,7 @@ export function writeWord(
     const existing = next[cell];
     next[cell] = existing
       ? { ...existing, words: [...existing.words, wordIndex] }
-      : { letter: word[k]!, owner: player, words: [wordIndex] };
+      : { letter: word[k], owner: player, words: [wordIndex] };
   });
   return next;
 }
