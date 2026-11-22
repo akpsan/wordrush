@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../dictionary';
-import { HEX_RULES, HEX_TWO_WAY_RULES, cellsFor, fitsOnlyBackwards, geometryOf, legalMoves, moveContext, newGame, play, waysOut, type Placement } from '..';
+import { HEX_RULES, HEX_TWO_WAY_RULES, cellsFor, fitsOnlyBackwards, geometryOf, legalMoves, moveContext, neighbours, newGame, play, rulesFor, waysOut, type Placement } from '..';
 
 const lex = getLexicon();
 const g = geometryOf(HEX_RULES);
@@ -67,5 +67,46 @@ describe('reading direction', () => {
   it('two-way words add the backward directions on hex', () => {
     expect(geometryOf(HEX_RULES).dirs).toHaveLength(3);
     expect(geometryOf(HEX_TWO_WAY_RULES).dirs).toEqual(['across', 'down', 'downLeft', 'left', 'up', 'upRight']);
+  });
+});
+
+describe('neighbours', () => {
+  it('on a square board is the in-grid cells above, below, left and right', () => {
+    const sq = geometryOf(rulesFor('square'));
+    const n = sq.size;
+    for (let i = 0; i < n * n; i++) {
+      const r = Math.floor(i / n);
+      const c = i % n;
+      const reference: number[] = [];
+      if (r > 0) reference.push(i - n);
+      if (r < n - 1) reference.push(i + n);
+      if (c > 0) reference.push(i - 1);
+      if (c < n - 1) reference.push(i + 1);
+      expect(neighbours(sq, i)).toEqual(reference);
+    }
+  });
+
+  it('on a hex board gives an interior cell its six valid neighbours', () => {
+    const centre = R * g.size + R;
+    const found = neighbours(g, centre);
+    expect(found).toEqual([centre - g.size, centre + g.size, centre - 1, centre + 1, centre - g.size + 1, centre + g.size - 1]);
+    expect(found.every((i) => g.valid[i])).toBe(true);
+  });
+
+  it('on a hex board gives edge and corner cells only their on-board neighbours', () => {
+    const s = g.size;
+    expect(neighbours(g, g.blueCorner)).toEqual([s + R, R + 1, s + R - 1]);
+    expect(neighbours(g, g.orangeCorner)).toEqual([g.orangeCorner - s, g.orangeCorner - 1, g.orangeCorner - s + 1]);
+    expect(neighbours(g, R + 2)).toEqual([s + R + 2, R + 1, R + 3, s + R + 1]); // top edge
+  });
+
+  it('on a hex board is symmetric and never leaves the hexagon', () => {
+    for (let i = 0; i < g.size * g.size; i++) {
+      if (!g.valid[i]) continue;
+      for (const j of neighbours(g, i)) {
+        expect(g.valid[j]).toBe(true);
+        expect(neighbours(g, j)).toContain(i);
+      }
+    }
   });
 });

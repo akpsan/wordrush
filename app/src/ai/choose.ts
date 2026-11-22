@@ -17,6 +17,7 @@ import {
   exitsOf,
   legalMoves,
   moveContext,
+  neighbours,
   play,
   type GameState,
   type Lexicon,
@@ -159,16 +160,9 @@ export function candidates(state: GameState, moves: readonly Placement[], rng: R
 function nearMoves(state: GameState, moves: readonly Placement[]): Placement[] {
   if (state.lastWord[state.toMove] !== null) return []; // chained moves already touch letters
   const g = geometryOf(state.rules);
-  const n = g.size;
   const near = new Set<number>();
   state.board.forEach((cell, i) => {
-    if (!cell) return;
-    const r = Math.floor(i / n);
-    const c = i % n;
-    if (r > 0) near.add(i - n);
-    if (r < n - 1) near.add(i + n);
-    if (c > 0) near.add(i - 1);
-    if (c < n - 1) near.add(i + 1);
+    if (cell) neighbours(g, i).forEach((c) => near.add(c));
   });
   if (near.size === 0) return [];
   return moves.filter((m) => (cellsFor(g, m.row, m.col, m.dir, m.word.length) ?? []).some((c) => near.has(c)));

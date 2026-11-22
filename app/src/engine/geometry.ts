@@ -81,3 +81,21 @@ function build(shape: Shape, size: number, twoWay: boolean): Geometry {
 /** True if (row, col) is on the board. */
 export const onBoard = (g: Geometry, row: number, col: number): boolean =>
   row >= 0 && col >= 0 && row < g.size && col < g.size && g.valid[row * g.size + col]!;
+
+const SQUARE_STEPS: readonly (readonly [number, number])[] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+const HEX_STEPS: readonly (readonly [number, number])[] = [...SQUARE_STEPS, [-1, 1], [1, -1]];
+
+/**
+ * The cells next to `cell`: up, down, left and right on a square board, and the six axial
+ * neighbours (those four plus up-right and down-left) on a hex board. Cells off the board are left out.
+ */
+export function neighbours(g: Geometry, cell: CellIndex): CellIndex[] {
+  const row = Math.floor(cell / g.size);
+  const col = cell % g.size;
+  const steps = g.shape === 'hex' ? HEX_STEPS : SQUARE_STEPS;
+  const out: CellIndex[] = [];
+  for (const [dr, dc] of steps) {
+    if (onBoard(g, row + dr, col + dc)) out.push((row + dr) * g.size + col + dc);
+  }
+  return out;
+}
