@@ -4,7 +4,7 @@
  * engine, so a damaged or out-of-date save can never produce an illegal board: it's discarded.
  */
 
-import { newGame, play, rulesFor, type Dir, type Shape, type GameState, type Lexicon } from '../../engine';
+import { replayMoves, rulesFor, type Dir, type Shape, type GameState, type Lexicon } from '../../engine';
 import { load, remove, save } from '../../platform/storage';
 import { LEVELS } from '../../ai';
 import { FRIEND, type Match } from './model/match';
@@ -79,12 +79,9 @@ export function loadSavedGame(lex: Lexicon): SavedSession | null {
   const match = readMatch(saved.match);
   if (!match) return null;
   try {
-    let game = newGame(rulesFor(saved.shape === 'hex' ? 'hex' : 'square'));
     // Array.isArray above narrows `moves` to any[]; read it back through its declared type.
     const moves: readonly SavedMove[] = saved.moves;
-    for (const m of moves) {
-      game = play(game, lex, { ...m, anchor: 0, anchorAt: 'start' });
-    }
+    const game = replayMoves(rulesFor(saved.shape === 'hex' ? 'hex' : 'square'), lex, moves);
     if (game.result) return null;
     const h = saved.hints;
     const hints =

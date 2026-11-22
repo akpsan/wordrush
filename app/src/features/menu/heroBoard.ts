@@ -4,7 +4,7 @@
  * (The mockup used CUB and ARC; CUB isn't in the word list, so SUB and GAS take their place.)
  */
 
-import { HEX_RULES, newGame, play, playScripted, type Dir, type GameState, type Lexicon, type ScriptedMove, type Shape } from '../../engine';
+import { HEX_RULES, playScripted, replayMoves, type Dir, type GameState, type Lexicon, type ScriptedMove, type Shape } from '../../engine';
 
 const MOVES: readonly ScriptedMove[] = [
   { word: 'team', dir: 'across' },
@@ -33,7 +33,7 @@ const HEX_MOVES: readonly { word: string; row: number; col: number; dir: Dir }[]
 
 function heroGame(lex: Lexicon, shape: Shape): GameState {
   if (shape === 'square') return playScripted(lex, MOVES);
-  return HEX_MOVES.reduce((g, m) => play(g, lex, { ...m, anchor: 0, anchorAt: 'start' }), newGame(HEX_RULES));
+  return replayMoves(HEX_RULES, lex, HEX_MOVES);
 }
 
 export interface HeroCell {
