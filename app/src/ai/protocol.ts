@@ -1,6 +1,6 @@
 /** Messages between the game and the AI worker. Games travel as move lists and are replayed on arrival. */
 
-import { newGame, play, rulesFor, type Dir, type Shape, type GameState, type Lexicon, type Placement } from '../engine';
+import { replayMoves, rulesFor, type Dir, type Shape, type GameState, type Lexicon, type Placement } from '../engine';
 import type { Level } from './choose';
 
 export interface MoveRecord {
@@ -31,4 +31,4 @@ export const toRecords = (game: GameState): MoveRecord[] =>
 
 /** Rebuild a game from its moves. The engine checks every move, so a bad list throws. */
 export const replay = (moves: readonly MoveRecord[], lex: Lexicon, shape: Shape = 'square'): GameState =>
-  moves.reduce((g, m) => play(g, lex, { ...m, anchor: 0, anchorAt: 'start' }), newGame(rulesFor(shape)));
+  replayMoves(rulesFor(shape), lex, moves);

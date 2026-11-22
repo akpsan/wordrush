@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 import everyday from '../../../../data/dictionaries/everyday-3to5.txt?raw';
-import { HEX_RULES, HEX_TWO_WAY_RULES, countLegalMoves, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type Placement, type Rules } from '..';
+import { HEX_RULES, HEX_TWO_WAY_RULES, countLegalMoves, createLexicon, legalMoves, newGame, parseWordList, play, type Dir, type GameState, type MoveLike, type Rules } from '..';
 import fixture from './fixtures/sim-games.json';
 import hexFixture from './fixtures/sim-hex-games.json';
 import hex2Fixture from './fixtures/sim-hex2-games.json';
@@ -21,17 +21,10 @@ interface SimGame {
 /** The simulator's direction letters (DIR_NAMES): lowercase is the same line read backwards. */
 const SIM_DIRS: Record<string, Dir> = { H: 'across', V: 'down', D: 'downLeft', h: 'left', v: 'up', d: 'upRight' };
 
-function decode(text: string, size: number): Placement {
+function decode(text: string): MoveLike {
   const [word, pos] = text.split('@') as [string, string];
   const [r, c, d] = pos.split(',') as [string, string, string];
-  return {
-    word,
-    row: Number(r),
-    col: Number(c),
-    dir: SIM_DIRS[d]!,
-    anchor: Number(r) * size + Number(c),
-    anchorAt: 'start',
-  };
+  return { word, row: Number(r), col: Number(c), dir: SIM_DIRS[d]! };
 }
 
 function replayAll(games: SimGame[], rules: Rules, lex: ReturnType<typeof createLexicon>) {
@@ -43,7 +36,7 @@ function replayAll(games: SimGame[], rules: Rules, lex: ReturnType<typeof create
       if (nLegal !== null) expect(n, `game ${g}, turn ${state.turn}`).toBe(nLegal);
       // The AI's fast counter must agree with the full list, first moves included.
       expect(countLegalMoves(state, lex), `count, game ${g}, turn ${state.turn}`).toBe(n);
-      state = play(state, lex, decode(move, state.rules.size));
+      state = play(state, lex, decode(move));
     }
     expect(state.result, `game ${g} should be over`).not.toBeNull();
     expect(state.result!.reason).toBe(sim.reason === 'cornered' ? 'boxed-in' : 'full-board');

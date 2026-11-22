@@ -42,6 +42,9 @@ export interface Placement {
   readonly anchorAt: AnchorMode;
 }
 
+/** What it takes to replay a move: a placement without the link cell it used. */
+export type MoveLike = Pick<Placement, 'word' | 'row' | 'col' | 'dir'>;
+
 export interface PlayedWord {
   readonly word: string;
   readonly row: number;

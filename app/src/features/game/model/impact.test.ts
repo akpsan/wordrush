@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getLexicon } from '../../../dictionary';
-import { HEX_TWO_WAY_RULES, legalMoves, newGame, play, type Dir } from '../../../engine';
+import { HEX_TWO_WAY_RULES, legalMoves, newGame, play, replayMoves, type MoveLike } from '../../../engine';
 import { impactOf, impactLine } from './impact';
 import { createSession } from './session';
 import { playerStatus } from './status';
@@ -38,15 +38,18 @@ describe('word impact', () => {
   it('warns about a dead end that the word counts would hide', () => {
     // Turn 10 of a Medium-vs-Hard game on two-way hex: ABLE leaves Orange 3+ words to play, but they all
     // lead into the same pocket, with room for just 1 more word.
-    const MOVES: [string, number, number, Dir][] = [
-      ['abs', 0, 5, 'down'], ['close', 6, 5, 'down'], ['bass', 5, 5, 'up'], ['cargo', 6, 5, 'upRight'],
-      ['bases', 5, 5, 'downLeft'], ['cells', 6, 5, 'across'], ['sans', 7, 3, 'left'], ['cakes', 6, 5, 'downLeft'],
-      ['see', 7, 0, 'up'],
+    const MOVES: MoveLike[] = [
+      { word: 'abs', row: 0, col: 5, dir: 'down' },
+      { word: 'close', row: 6, col: 5, dir: 'down' },
+      { word: 'bass', row: 5, col: 5, dir: 'up' },
+      { word: 'cargo', row: 6, col: 5, dir: 'upRight' },
+      { word: 'bases', row: 5, col: 5, dir: 'downLeft' },
+      { word: 'cells', row: 6, col: 5, dir: 'across' },
+      { word: 'sans', row: 7, col: 3, dir: 'left' },
+      { word: 'cakes', row: 6, col: 5, dir: 'downLeft' },
+      { word: 'see', row: 7, col: 0, dir: 'up' },
     ];
-    const g = MOVES.reduce(
-      (s, [word, row, col, dir]) => play(s, lex, { word, row, col, dir, anchor: 0, anchorAt: 'start' }),
-      newGame(HEX_TWO_WAY_RULES),
-    );
+    const g = replayMoves(HEX_TWO_WAY_RULES, lex, MOVES);
     const able = legalMoves(g, lex).find((m) => m.word === 'able' && m.row === 7 && m.col === 4 && m.dir === 'down')!;
     const i = impactOf(g, lex, able)!;
     expect(i.you.after).toBe(3); // the old line said "you 3+ words"
@@ -58,15 +61,19 @@ describe('word impact', () => {
   });
 
   it("shows the dead end on the player's card once the word is played", () => {
-    const MOVES: [string, number, number, Dir][] = [
-      ['abs', 0, 5, 'down'], ['close', 6, 5, 'down'], ['bass', 5, 5, 'up'], ['cargo', 6, 5, 'upRight'],
-      ['bases', 5, 5, 'downLeft'], ['cells', 6, 5, 'across'], ['sans', 7, 3, 'left'], ['cakes', 6, 5, 'downLeft'],
-      ['see', 7, 0, 'up'], ['able', 7, 4, 'down'],
+    const MOVES: MoveLike[] = [
+      { word: 'abs', row: 0, col: 5, dir: 'down' },
+      { word: 'close', row: 6, col: 5, dir: 'down' },
+      { word: 'bass', row: 5, col: 5, dir: 'up' },
+      { word: 'cargo', row: 6, col: 5, dir: 'upRight' },
+      { word: 'bases', row: 5, col: 5, dir: 'downLeft' },
+      { word: 'cells', row: 6, col: 5, dir: 'across' },
+      { word: 'sans', row: 7, col: 3, dir: 'left' },
+      { word: 'cakes', row: 6, col: 5, dir: 'downLeft' },
+      { word: 'see', row: 7, col: 0, dir: 'up' },
+      { word: 'able', row: 7, col: 4, dir: 'down' },
     ];
-    const g = MOVES.reduce(
-      (s, [word, row, col, dir]) => play(s, lex, { word, row, col, dir, anchor: 0, anchorAt: 'start' }),
-      newGame(HEX_TWO_WAY_RULES),
-    );
+    const g = replayMoves(HEX_TWO_WAY_RULES, lex, MOVES);
     // ABLE was the tenth word, Orange's. It's Blue's turn, so Orange's card warns without the pulsing alarm.
     const orange = playerStatus(createSession(g), lex, 1);
     expect(orange.ways).toBe(3); // the count alone would say "3+ words to play"
