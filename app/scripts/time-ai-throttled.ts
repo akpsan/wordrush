@@ -11,6 +11,13 @@
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
 
+/** What `window.__load` (set up below) returns for each module path: the app's own module types. */
+interface LoadModule {
+  (path: '/src/ai/index.ts'): Promise<typeof import('../src/ai/index.ts')>;
+  (path: '/src/engine/index.ts'): Promise<typeof import('../src/engine/index.ts')>;
+  (path: '/src/dictionary/index.ts'): Promise<typeof import('../src/dictionary/index.ts')>;
+}
+
 const throttle = Number(process.argv[2] ?? 4);
 const games = Number(process.argv[3] ?? 6);
 const BUDGET_MS = Number(process.argv[4] ?? 2500); // default: keep in step with src/ai/worker.ts
@@ -27,7 +34,7 @@ try {
 
   // Positions: every position where an AI is to move, from games between Medium and Hard.
   const count = await page.evaluate(async (n) => {
-    const load = (globalThis as unknown as { __load: (p: string) => Promise<any> }).__load; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const load = (globalThis as unknown as { __load: LoadModule }).__load;
     const ai = await load('/src/ai/index.ts');
     const eng = await load('/src/engine/index.ts');
     const dict = await load('/src/dictionary/index.ts');
@@ -48,7 +55,7 @@ try {
 
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: throttle });
   const results = await page.evaluate(async (budget) => {
-    const load = (globalThis as unknown as { __load: (p: string) => Promise<any> }).__load; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const load = (globalThis as unknown as { __load: LoadModule }).__load;
     const ai = await load('/src/ai/index.ts');
     const dict = await load('/src/dictionary/index.ts');
     const lex = dict.getLexicon();

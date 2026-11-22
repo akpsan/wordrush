@@ -79,7 +79,9 @@ export function loadSavedGame(lex: Lexicon): SavedSession | null {
   const match = readMatch(saved.match);
   if (!match) return null;
   try {
-    const game = replayMoves(rulesFor(saved.shape === 'hex' ? 'hex' : 'square'), lex, saved.moves);
+    // Array.isArray above narrows `moves` to any[]; read it back through its declared type.
+    const moves: readonly SavedMove[] = saved.moves;
+    const game = replayMoves(rulesFor(saved.shape === 'hex' ? 'hex' : 'square'), lex, moves);
     if (game.result) return null;
     const h = saved.hints;
     const hints =
