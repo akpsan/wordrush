@@ -45,6 +45,7 @@ app/src/
 - `model/`: pure functions and the session reducer. They turn engine state into exactly what each part of the screen shows (`boardView`, `playerStatus`, `feedbackFor`, `entryView`). Unit-tested without a browser.
 - `components/`: render what the model hands them. No rules, no copy decisions.
 - `useGame.ts`: the one hook joining the reducer to React. `useAiTurn.ts` runs the AI's turn (thinking, the word appearing, settling) on top of it.
+- `useGameView.ts`: derives everything the screen shows from the session, the AI phase and the settings (`players`, `cells`, `feedback`, `impact`, the stage and turn flags), so the screen holds no derivation.
 - `GameScreen.tsx`: assembles the components and owns screen-only state (which sheet is open).
 - `styles/`: the design's CSS for this feature, split from `design/handoff/design/wordrush.css`.
 
