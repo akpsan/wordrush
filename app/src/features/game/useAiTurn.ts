@@ -1,10 +1,10 @@
 /**
  * Runs the AI's turn, with the timing from the design's dev notes:
  *
- * 1. Thinking: at least 0.8s (Easy), 1.0s (Medium) or 1.4s (Hard), ±150ms so it never feels
- *    mechanical. If the search takes longer, it waits for it (Hard has its own ~2.5s budget).
- * 2. Playing: the word is on the board and its new letters pop in 180ms apart.
- * 3. A ~300ms settle, then it's the person's turn.
+ * 1. Thinking: at least 0.5s (Easy), 0.7s (Medium) or 1.0s (Hard), ±100ms so it never feels
+ *    mechanical. (The design said 0.8s / 1.0s / 1.4s; shortened in 2026-11, see docs/ui-decisions.md.) If the search takes longer, it waits for it (Hard has its own ~2.5s budget).
+ * 2. Playing: the word is on the board and its new letters pop in 140ms apart.
+ * 3. A ~200ms settle, then it's the person's turn.
  *
  * Under reduced motion: a short static "thinking" (0.6s), then the word appears at once.
  * Tapping the board while the word appears finishes it straight away (`skip`).
@@ -18,11 +18,11 @@ import type { Session, SessionAction } from './model/session';
 
 export type AiPhase = 'idle' | 'thinking' | 'playing';
 
-const MIN_THINK_MS: Record<Level, number> = { easy: 800, medium: 1000, hard: 1400 };
-const JITTER_MS = 150;
+const MIN_THINK_MS: Record<Level, number> = { easy: 500, medium: 700, hard: 1000 };
+const JITTER_MS = 100;
 const REDUCED_THINK_MS = 600;
-export const AI_LETTER_MS = 180;
-const SETTLE_MS = 300;
+export const AI_LETTER_MS = 140;
+const SETTLE_MS = 200;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
