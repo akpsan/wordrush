@@ -60,23 +60,23 @@ export function chooseMove(level: Level, state: GameState, ctx: AiContext): Plac
   }
 }
 
-const EASY: Weights = { own: 1, opp: 0 };
 const MEDIUM: Weights = { own: 3, opp: 0 };
 const HARD: Weights = { own: 2, opp: 2 };
 /**
- * Easy (Pip) should be a level newcomers can beat. Half its moves are a random short word, and the rest
- * the best of only 4 candidates. Measured 2026-11-22 on two-way hex, 40 games each: a careful newcomer
- * (never plays a word the game warns about) beats it 48% (was 25-40% at 0.25 and 12), a random-word
- * newcomer 43% (was 15-33%); Medium still beats it 83% (docs/product.md).
+ * Easy (Pip) should be a level newcomers can beat. Half its moves are a random short word; the rest the
+ * short word that claims the most squares, without looking at the room it leaves itself, the way a
+ * newcomer reaches for the biggest word. Measured 2026-11-28 on two-way hex, 40 games each: a careful
+ * newcomer (never plays a word the game warns about) beats it 58% (48% when the rest were the best of
+ * 4 candidates), a random-word newcomer 53% (43%); Medium still beats it 78% (docs/product.md).
  */
 const EASY_CARELESS = 0.5;
-const EASY_CANDIDATES = 4;
 
 function easy(state: GameState, moves: Placement[], ctx: AiContext): Placement {
   const shortest = Math.min(...moves.map((m) => m.word.length));
   const short = moves.filter((m) => m.word.length <= Math.max(shortest, 4));
   if (ctx.rng() < EASY_CARELESS) return pick(short, ctx.rng);
-  return ranked(state, short, ctx, EASY, EASY_CANDIDATES)[0]!.move;
+  const most = Math.max(...short.map((m) => gain(state, m)));
+  return pick(short.filter((m) => gain(state, m) === most), ctx.rng);
 }
 
 function hard(state: GameState, moves: Placement[], ctx: AiContext): Placement {
